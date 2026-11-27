@@ -111,11 +111,11 @@
     .mag-c7 { background: radial-gradient(circle at 32% 28%, #818cf8, #4f46e5 72%, #4338ca); }
 
     /* 分區格線與柔和底色 */
-    .zone-0 { background-color: #f1f5f9; }
-    .zone-1 { background-color: #fefce8; } /* 1-5 柔和淺黃 */
-    .zone-2 { background-color: #ecfdf5; } /* 6-10 柔和淺綠 */
-    .zone-3 { background-color: #f0f9ff; } /* 11-15 柔和淺藍 */
-    .zone-4 { background-color: #fff7ed; } /* 16-20 柔和暖橘淡金 */
+    .zone-0 { background-color: #e2e8f0; }
+    .zone-1 { background-color: #fef08a; } /* 1-5 柔和淺黃 */
+    .zone-2 { background-color: #bbf7d0; } /* 6-10 柔和淺綠 */
+    .zone-3 { background-color: #bae6fd; } /* 11-15 柔和淺藍 */
+    .zone-4 { background-color: #fed7aa; } /* 16-20 柔和暖橘淡金 */
 
     /* 區間粗分隔線（0|1, 5|6, 10|11, 15|16） */
     .zone-divider-right {
@@ -221,9 +221,6 @@
           <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🥢 擦餐具 +1</button>
           <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🪥 刷牙 +1</button>
           <button id="batchGoodCustomBtn" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-amber-300 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">🌟 好表現</button>
-          <span class="ml-auto text-sm font-extrabold text-indigo-700">已選 <span id="batchSelectedCount">0</span> 人</span>
-          <button id="batchSelectAllBtn" class="text-sm font-bold border border-indigo-200 bg-white text-indigo-700 px-3 py-1.5 rounded-lg">全選</button>
-          <button id="batchClearAllBtn" class="text-sm font-bold border border-indigo-200 bg-white text-indigo-700 px-3 py-1.5 rounded-lg">清除</button>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
           <span class="text-sm font-extrabold text-rose-700 mr-1">扣分</span>
@@ -275,16 +272,16 @@
               <!-- 右側 21 格對應的大區間（1格起點 + 5 + 5 + 5 + 5） -->
               <div class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
                 <div class="col-span-1 bg-slate-200/80 text-slate-600 flex items-center justify-center py-1.5 zone-divider-right text-[11px]">🔋起點</div>
-                <div class="col-span-5 bg-yellow-100/90 text-yellow-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
+                <div class="col-span-5 bg-yellow-300 text-yellow-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
                   <span>⭐ 1 個榮譽章</span><span class="text-[11px] opacity-75">(1–5)</span>
                 </div>
-                <div class="col-span-5 bg-emerald-100/90 text-emerald-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
+                <div class="col-span-5 bg-emerald-300 text-emerald-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
                   <span>⭐⭐ 2 個榮譽章</span><span class="text-[11px] opacity-75">(6–10)</span>
                 </div>
-                <div class="col-span-5 bg-sky-100/90 text-sky-900 flex items-center justify-center gap-1 py-1.5 zone-divider-gold">
+                <div class="col-span-5 bg-sky-300 text-sky-900 flex items-center justify-center gap-1 py-1.5 zone-divider-gold">
                   <span>⭐⭐⭐ 3 個榮譽章</span><span class="text-[11px] opacity-75">(11–15)</span>
                 </div>
-                <div class="col-span-5 bg-orange-100/95 text-orange-900 flex items-center justify-center gap-1 py-1.5">
+                <div class="col-span-5 bg-orange-300 text-orange-900 flex items-center justify-center gap-1 py-1.5">
                   <span>⭐⭐⭐⭐ 4 個榮譽章</span><span class="text-[11px] opacity-75">(16–20)</span>
                 </div>
               </div>
@@ -292,9 +289,12 @@
 
             <!-- 第二層：數字刻度 0 到 20 -->
             <div class="flex items-stretch text-xs font-extrabold">
-              <div class="w-[248px] shrink-0 flex items-center justify-between bg-slate-50 border-r-2 border-slate-300 px-3 py-1 text-[11px] text-slate-500">
-                <span>老師：點姓名可多選</span>
-                <span>📋 明細</span>
+              <div class="w-[248px] shrink-0 flex items-center justify-between gap-1 bg-indigo-50 border-r-2 border-slate-300 px-2 py-1">
+                <span class="text-sm font-extrabold text-indigo-700 whitespace-nowrap">已選 <span id="batchSelectedCount">0</span> 人</span>
+                <div class="flex gap-1.5">
+                  <button type="button" id="batchSelectAllBtn" class="text-sm font-bold border border-indigo-300 bg-white hover:bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg whitespace-nowrap">全選</button>
+                  <button type="button" id="batchClearAllBtn" class="text-sm font-bold border border-indigo-300 bg-white hover:bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg whitespace-nowrap">清除</button>
+                </div>
               </div>
               <div id="scaleNumbersRow" class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
                 <!-- 由 JS 產生 0 ~ 20 刻度 -->
@@ -1021,7 +1021,7 @@
         else if (i >= 11 && i <= 15) zoneClass = 'zone-3';
         else if (i >= 16) zoneClass = 'zone-4';
 
-        let divider = 'border-r border-slate-200/70';
+        let divider = 'border-r border-white';
         if (i === 0 || i === 5 || i === 10) divider = 'zone-divider-right';
         else if (i === 15) divider = 'zone-divider-gold';
         else if (i === 20) divider = '';
