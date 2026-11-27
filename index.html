@@ -3,42 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>班級榮譽加分板</title>
+  <title>楠梓國小．森林榮譽加分板</title>
   <!-- 載入 Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- 載入思源黑體與 Inter 字型，確保教室大屏字體清晰大器 -->
+  <!-- 載入粉圓體、思源黑體與圓角數字字型 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Inter:wght@600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
 
   <style>
     /* 基礎字型與版面設定 */
     body {
-      font-family: 'Huninn', 'jf-openhuninn-2.0', 'Noto Sans TC', 'Inter', system-ui, -apple-system, sans-serif;
-      background-color: #f8fafc;
-      color: #1e293b;
+      font-family: 'Huninn', 'jf-openhuninn-2.0', 'Nunito', 'Noto Sans TC', 'Inter', system-ui, -apple-system, sans-serif;
+      color: #292524;
       -webkit-tap-highlight-color: transparent;
+      background-color: #ecfdf5 !important;
+      background-image:
+        radial-gradient(circle at 18px 18px, rgba(167, 243, 208, 0.55) 4px, transparent 5px),
+        radial-gradient(circle at 52px 46px, rgba(253, 230, 138, 0.55) 3px, transparent 4px),
+        linear-gradient(180deg, #dcfce7 0%, #fefce8 52%, #fef3c7 100%);
+      background-size: 72px 72px, 72px 72px, 100% 100%;
+    }
+
+    /* 森林頂部工具列 */
+    header {
+      background: rgba(255, 253, 247, 0.94) !important;
+      border-bottom: 4px dashed #86efac !important;
+      box-shadow: 0 4px 14px rgba(20, 83, 45, 0.08);
+    }
+
+    #pageTitle {
+      color: #166534 !important;
+    }
+
+    #batchToolbar {
+      background: linear-gradient(180deg, #f0fdf4 0%, #fefce8 100%) !important;
+      border-top: 2px solid #bbf7d0 !important;
+    }
+
+    #batchToolbar button, header button {
+      border-radius: 999px;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease;
+    }
+
+    #batchToolbar button:hover, header button:hover {
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    #batchToolbar button:active {
+      transform: scale(0.96);
     }
 
     /* 實體立體磁鐵棋子樣式 */
     .magnet-token {
       position: absolute;
       top: 50%;
-      width: 30px;
-      height: 30px;
+      width: 31px;
+      height: 31px;
       border-radius: 9999px;
       transform: translate(-50%, -50%);
-      transition: left 0.48s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.2s ease, box-shadow 0.2s ease;
+      transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 13px;
       color: #ffffff;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
       box-shadow:
-        0 3px 6px rgba(15, 23, 42, 0.28),
-        inset 0 2px 4px rgba(255, 255, 255, 0.65),
+        0 3px 6px rgba(20, 83, 45, 0.28),
+        inset 0 2px 4px rgba(255, 255, 255, 0.7),
         inset 0 -3px 5px rgba(0, 0, 0, 0.22);
       cursor: pointer;
       z-index: 15;
@@ -53,29 +87,29 @@
       width: 10px;
       height: 6px;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.48);
       transform: rotate(-20deg);
       pointer-events: none;
     }
 
     .magnet-token:hover {
-      transform: translate(-50%, -50%) scale(1.16);
+      transform: translate(-50%, -50%) scale(1.18);
       z-index: 25;
     }
 
-    /* 超越 20 分的金色光環動畫 */
+    /* 超越 20 分的松鼠金色光環動畫 */
     @keyframes crownPulse {
       0%, 100% {
         box-shadow:
-          0 0 0 3px rgba(250, 204, 21, 0.9),
-          0 0 14px 4px rgba(245, 158, 11, 0.7),
-          inset 0 2px 4px rgba(255, 255, 255, 0.75);
+          0 0 0 3px rgba(250, 204, 21, 0.95),
+          0 0 14px 4px rgba(245, 158, 11, 0.75),
+          inset 0 2px 4px rgba(255, 255, 255, 0.8);
       }
       50% {
         box-shadow:
-          0 0 0 6px rgba(253, 224, 71, 0.55),
-          0 0 22px 8px rgba(245, 158, 11, 0.9),
-          inset 0 2px 4px rgba(255, 255, 255, 0.85);
+          0 0 0 6px rgba(253, 224, 71, 0.6),
+          0 0 22px 8px rgba(217, 119, 6, 0.9),
+          inset 0 2px 4px rgba(255, 255, 255, 0.9);
       }
     }
 
@@ -84,63 +118,112 @@
       border: 2px solid #fef08a;
     }
 
-    /* 充電站磁鐵：停在起點，顯示負分 */
+    /* 充電站磁鐵：樹洞充電站樣式 */
     .magnet-token.magnet-charge {
-      width: 36px; height: 26px; border-radius: 4px;
-      background: #1f2937; color: #fde047; border: 2px dashed #fde047;
-      text-shadow: none; box-shadow: 0 2px 5px rgba(15, 23, 42, 0.3);
+      width: 38px;
+      height: 27px;
+      border-radius: 8px;
+      background: #451a03;
+      color: #fde047;
+      border: 2px dashed #facc15;
+      text-shadow: none;
+      box-shadow: 0 2px 6px rgba(69, 26, 3, 0.35);
     }
     .magnet-token.magnet-charge::after { display: none; }
 
-    /* 負分磁鐵微警示樣式 */
-    .magnet-negative {
-      filter: saturate(0.65);
-      box-shadow:
-        0 0 0 2.5px rgba(239, 68, 68, 0.75),
-        0 2px 5px rgba(15, 23, 42, 0.25);
-    }
+    /* 磁鐵配色組（森林果實與陽光色系） */
+    .mag-c0 { background: radial-gradient(circle at 32% 28%, #4ade80, #16a34a 72%, #15803d); }
+    .mag-c1 { background: radial-gradient(circle at 32% 28%, #fb923c, #ea580c 72%, #c2410c); }
+    .mag-c2 { background: radial-gradient(circle at 32% 28%, #38bdf8, #0284c7 72%, #0369a1); }
+    .mag-c3 { background: radial-gradient(circle at 32% 28%, #facc15, #ca8a04 72%, #a16207); }
+    .mag-c4 { background: radial-gradient(circle at 32% 28%, #f472b6, #db2777 72%, #be185d); }
+    .mag-c5 { background: radial-gradient(circle at 32% 28%, #a3e635, #65a30d 72%, #4d7c0f); }
+    .mag-c6 { background: radial-gradient(circle at 32% 28%, #d97706, #92400e 72%, #78350f); }
+    .mag-c7 { background: radial-gradient(circle at 32% 28%, #c084fc, #9333ea 72%, #7e22ce); }
 
-    /* 磁鐵配色組（呼應教室彩色磁鐵） */
-    .mag-c0 { background: radial-gradient(circle at 32% 28%, #60a5fa, #2563eb 72%, #1d4ed8); }
-    .mag-c1 { background: radial-gradient(circle at 32% 28%, #a3e635, #65a30d 72%, #4d7c0f); }
-    .mag-c2 { background: radial-gradient(circle at 32% 28%, #34d399, #059669 72%, #047857); }
-    .mag-c3 { background: radial-gradient(circle at 32% 28%, #c084fc, #9333ea 72%, #7e22ce); }
-    .mag-c4 { background: radial-gradient(circle at 32% 28%, #fb923c, #ea580c 72%, #c2410c); }
-    .mag-c5 { background: radial-gradient(circle at 32% 28%, #22d3ee, #0891b2 72%, #0e7490); }
-    .mag-c6 { background: radial-gradient(circle at 32% 28%, #d6a35c, #a16207 72%, #854d0e); }
-    .mag-c7 { background: radial-gradient(circle at 32% 28%, #818cf8, #4f46e5 72%, #4338ca); }
-
-    /* 分區格線與柔和底色 */
-    .zone-0 { background-color: #e2e8f0; }
-    .zone-1 { background-color: #fef08a; } /* 1-5 柔和淺黃 */
-    .zone-2 { background-color: #bbf7d0; } /* 6-10 柔和淺綠 */
-    .zone-3 { background-color: #bae6fd; } /* 11-15 柔和淺藍 */
-    .zone-4 { background-color: #fed7aa; } /* 16-20 柔和暖橘淡金 */
+    /* 森林分區格線與柔和底色 */
+    .zone-0 { background-color: #f5f5f4; }
+    .zone-1 { background-color: #fef9c3; } /* 1-5 陽光淺黃 */
+    .zone-2 { background-color: #dcfce7; } /* 6-10 嫩葉淺綠 */
+    .zone-3 { background-color: #e0f2fe; } /* 11-15 溪流淺藍 */
+    .zone-4 { background-color: #ffedd5; } /* 16-20 松果暖橘 */
 
     /* 區間粗分隔線（0|1, 5|6, 10|11, 15|16） */
     .zone-divider-right {
-      border-right: 2.5px solid #94a3b8 !important;
+      border-right: 2.5px solid #a8a29e !important;
     }
     .zone-divider-gold {
       border-right: 2.5px solid #d97706 !important;
     }
 
+    /* 原木框主加分板 */
+    .wood-board-frame {
+      border: 4px solid #b45309;
+      border-radius: 1.75rem;
+      box-shadow:
+        0 8px 0 #92400e,
+        0 14px 28px rgba(120, 53, 15, 0.16);
+    }
+
+    /* 動物榮譽看板卡片 */
+    #stampBoard > div {
+      border-width: 3px;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 0 rgba(20, 83, 45, 0.12);
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #stampBoard > div:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    .animal {
+      font-size: 2.15rem;
+      line-height: 1.2;
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+    #stampBoard > div:hover .animal {
+      transform: rotate(-8deg) scale(1.15);
+    }
+
+    /* 楠梓小松鼠輕微搖尾巴動畫 */
+    @keyframes squirrelBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(3deg); }
+    }
+    .squirrel-mascot {
+      animation: squirrelBounce 2.8s ease-in-out infinite;
+    }
+
+    /* 森林草地頁尾 */
+    .forest-footer {
+      text-align: center;
+      font-size: 1.45rem;
+      letter-spacing: 0.25em;
+      padding: 16px 8px 14px;
+      background: linear-gradient(180deg, transparent 0%, rgba(187, 247, 208, 0.55) 100%);
+      border-top: 3px dotted #86efac;
+      margin-top: 12px;
+    }
+
+    .week-tile {
+      border-width: 3px;
+      border-radius: 1.25rem;
+      padding: 8px 4px;
+      text-align: center;
+      background: #fff;
+      transition: transform 0.15s ease;
+    }
+    .week-tile:hover {
+      transform: translateY(-2px);
+      background: #fef9c3;
+    }
+
     /* 美化捲軸 */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f0fdf4; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb { background: #86efac; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4ade80; }
 
     /* 彈出視窗動畫 */
     @keyframes modalPop {
@@ -151,170 +234,180 @@
       animation: modalPop 0.2s ease-out forwards;
     }
 
-    /* ===== 童趣風格 ===== */
-    body {
-      background-color: #e0f2fe !important;
-      background-image:
-        radial-gradient(circle at 12px 12px, rgba(255,255,255,0.8) 4px, transparent 5px),
-        linear-gradient(180deg, #e0f2fe 0%, #fef9c3 55%, #fce7f3 100%);
-      background-size: 44px 44px, 100% 100%;
+    @media (prefers-reduced-motion: reduce) {
+      #batchToolbar button, #stampBoard > div, .week-tile, .squirrel-mascot {
+        transition: none;
+        animation: none;
+      }
     }
-    header { border-bottom: 5px dashed #f9a8d4; }
-    #pageTitle { color: #be185d; }
-    #batchToolbar button, header button { border-radius: 999px; }
-    #batchToolbar button, #stampBoard > div { transition: transform 0.15s; }
-    #batchToolbar button:hover, #stampBoard > div:hover { transform: translateY(-2px) scale(1.03); }
-    #stampBoard > div { border-width: 3px; border-radius: 1.5rem; box-shadow: 0 4px 0 rgba(15, 23, 42, 0.08); }
-    .animal { font-size: 2rem; line-height: 1.2; display: block; }
-    .kid-footer { text-align: center; font-size: 1.6rem; letter-spacing: 0.35em; padding: 14px 0 10px; }
-    .week-tile { border-width: 3px; border-radius: 1.25rem; padding: 8px 4px; text-align: center; background: #fff; }
-    .week-tile:hover { transform: translateY(-2px); background: #fef9c3; }
-    @media (prefers-reduced-motion: reduce) { #batchToolbar button, #stampBoard > div, .week-tile { transition: none; } }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-50">
+<body class="min-h-screen flex flex-col">
+
+  <!-- 森林彩葉紙花畫布 -->
+  <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-[80]"></canvas>
 
   <!-- ==================== 頂部工具列 ==================== -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+  <header class="sticky top-0 z-40 backdrop-blur">
     <div class="max-w-[1600px] mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
       
-      <!-- 左側：標題、班級切換、週次切換 -->
+      <!-- 左側：楠梓國小松鼠吉祥物、標題、班級切換、週次切換 -->
       <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-        <div class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xl shadow-sm">
-            🌈
+        <div class="flex items-center gap-2.5">
+          <!-- 楠梓國小可愛松鼠吉祥物徽章 -->
+          <div class="squirrel-mascot w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-amber-600 flex items-center justify-center shadow-md border-2 border-amber-100 shrink-0" title="楠梓國小吉祥物：可愛小松鼠">
+            <svg viewBox="0 0 64 64" class="w-9 h-9" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- 蓬鬆大尾巴 -->
+              <path d="M44 46C55 44 60 33 56 22C53 14 44 12 40 19C37 24 41 30 45 30C42 34 39 40 44 46Z" fill="#B45309"/>
+              <path d="M45 43C53 41 56 32 53 24C51 18 45 17 42 22" stroke="#FDE68A" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- 身體與肚子 -->
+              <ellipse cx="30" cy="42" rx="12" ry="13" fill="#D97706"/>
+              <ellipse cx="27" cy="43" rx="7" ry="9" fill="#FEF3C7"/>
+              <!-- 頭部與耳朵 -->
+              <circle cx="23" cy="21" r="4.5" fill="#B45309"/>
+              <circle cx="33" cy="20" r="4.5" fill="#B45309"/>
+              <circle cx="28" cy="26" r="11" fill="#D97706"/>
+              <!-- 腮紅與眼睛 -->
+              <circle cx="24" cy="25" r="2.2" fill="#1C1917"/>
+              <circle cx="24.7" cy="24.2" r="0.8" fill="#FFFFFF"/>
+              <circle cx="21" cy="28" r="2" fill="#FDA4AF" opacity="0.85"/>
+              <circle cx="33" cy="28" r="2" fill="#FDA4AF" opacity="0.85"/>
+              <!-- 小鼻子與微笑 -->
+              <circle cx="27.5" cy="27.5" r="1.4" fill="#78350F"/>
+              <path d="M25.5 29.8Q27.5 31.5 29.5 29.8" stroke="#78350F" stroke-width="1.6" stroke-linecap="round"/>
+              <!-- 抱著一顆小橡果 -->
+              <ellipse cx="23" cy="40" rx="4.5" ry="5.5" fill="#F59E0B"/>
+              <path d="M18.5 38.5C19 35.5 27 35.5 27.5 38.5Z" fill="#78350F"/>
+            </svg>
           </div>
           <div>
-            <h1 id="pageTitle" class="text-base sm:text-lg font-extrabold text-slate-800 leading-tight tracking-tight">班級榮譽加分板</h1>
-            <p id="termSubtitle" class="text-[11px] font-bold text-indigo-600"></p>
+            <div class="flex items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-[11px] font-black text-emerald-800">🐿️ 楠梓國小森林樂園</span>
+            </div>
+            <h1 id="pageTitle" class="text-base sm:text-lg font-black leading-tight tracking-tight mt-0.5">班級榮譽加分板</h1>
+            <p id="termSubtitle" class="text-[11px] font-bold text-amber-700"></p>
           </div>
         </div>
 
-        <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+        <div class="h-7 w-px bg-emerald-200 hidden sm:block"></div>
 
         <!-- 班級選擇器 -->
-        <div class="flex items-center gap-1.5 bg-slate-100 rounded-xl px-2.5 py-1.5 border border-slate-200">
-          <span class="text-xs font-bold text-slate-500">班級</span>
-          <select id="classSelect" class="bg-transparent text-sm font-bold text-slate-800 focus:outline-none cursor-pointer pr-1">
+        <div class="flex items-center gap-1.5 bg-emerald-50 rounded-full px-3 py-1.5 border-2 border-emerald-200">
+          <span class="text-xs font-extrabold text-emerald-700">🌲 班級</span>
+          <select id="classSelect" class="bg-transparent text-sm font-black text-emerald-950 focus:outline-none cursor-pointer pr-1">
           </select>
         </div>
 
-        <!-- 週次切換器（第 1 週～第 20 週，預設第 10 週） -->
-        <div class="flex items-center bg-amber-50 rounded-xl border border-amber-200 overflow-hidden shadow-xs">
-          <button id="prevWeekBtn" title="上一週" class="px-2.5 py-1.5 text-amber-800 hover:bg-amber-100 active:bg-amber-200 font-bold transition">◀</button>
-          <select id="weekSelect" class="bg-transparent text-sm font-extrabold text-amber-900 px-1.5 py-1.5 focus:outline-none cursor-pointer text-center">
+        <!-- 週次切換器 -->
+        <div class="flex items-center bg-amber-50 rounded-full border-2 border-amber-300 overflow-hidden shadow-xs">
+          <button id="prevWeekBtn" title="上一週" class="px-2.5 py-1.5 text-amber-800 hover:bg-amber-100 active:bg-amber-200 font-black transition">◀</button>
+          <select id="weekSelect" class="bg-transparent text-sm font-black text-amber-950 px-1.5 py-1.5 focus:outline-none cursor-pointer text-center">
           </select>
-          <button id="nextWeekBtn" title="下一週" class="px-2.5 py-1.5 text-amber-800 hover:bg-amber-100 active:bg-amber-200 font-bold transition">▶</button>
+          <button id="nextWeekBtn" title="下一週" class="px-2.5 py-1.5 text-amber-800 hover:bg-amber-100 active:bg-amber-200 font-black transition">▶</button>
         </div>
-        <button id="weekPickerBtn" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border-2 border-violet-300 bg-violet-100 text-violet-800 hover:bg-violet-200">🗓️ 週次查詢</button>
-        <button id="thisWeekBtn" class="hidden px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-pink-500 hover:bg-pink-600 text-white">🏠 回到本週</button>
+        <button id="weekPickerBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-teal-300 bg-teal-50 text-teal-800 hover:bg-teal-100">🗓️ 週次查詢</button>
+        <button id="thisWeekBtn" class="hidden px-3.5 py-1.5 text-xs sm:text-sm font-black bg-orange-500 hover:bg-orange-600 text-white shadow-xs">🐿️ 回到本週</button>
       </div>
 
       <!-- 右側：功能操作按鈕 -->
       <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-        <!-- 本週結算總覽 -->
-        <button id="summaryBtn" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition flex items-center gap-1.5 shadow-xs">
+        <button id="summaryBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-emerald-300 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 flex items-center gap-1.5 shadow-xs">
           <span>📊</span><span>本週結算</span>
         </button>
 
-        <!-- 班級與設定 -->
-        <button id="settingsBtn" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition flex items-center gap-1.5 shadow-xs">
+        <button id="settingsBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 flex items-center gap-1.5 shadow-xs">
           <span>⚙️</span><span class="hidden sm:inline">名單與設定</span>
         </button>
 
-        <!-- 音效開關 -->
-        <button id="soundToggleBtn" title="切換提示音效" class="w-9 h-9 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 flex items-center justify-center text-base transition shadow-xs">
+        <button id="soundToggleBtn" title="切換森林提示音效" class="w-9 h-9 border-2 border-emerald-200 bg-white hover:bg-emerald-50 flex items-center justify-center text-base shadow-xs">
           🔊
         </button>
-
       </div>
     </div>
 
     <!-- ==================== 固定加扣分列 ==================== -->
-    <div id="batchToolbar" class="border-t border-slate-200 bg-slate-50">
+    <div id="batchToolbar">
       <div class="max-w-[1600px] mx-auto px-3 sm:px-5 py-2 space-y-1.5">
         <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-sm font-extrabold text-emerald-700 mr-1">加分</span>
-          <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">☀️ 準時到校 +1</button>
-          <button data-batch-add="作業繳齊" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">📚 作業繳齊 +1</button>
-          <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🥢 擦餐具 +1</button>
-          <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🪥 刷牙 +1</button>
-          <button id="batchGoodCustomBtn" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-amber-300 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">🌟 好表現</button>
+          <span class="text-sm font-black text-emerald-800 mr-1 bg-emerald-100 px-2.5 py-0.5 rounded-full">🌰 集松果加分</span>
+          <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">☀️ 準時到校 +1</button>
+          <button data-batch-add="作業繳齊" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📚 作業繳齊 +1</button>
+          <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🥢 擦餐具 +1</button>
+          <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🪥 刷牙 +1</button>
+          <button id="batchGoodCustomBtn" class="px-3.5 py-1 text-sm font-black border-2 border-amber-400 bg-amber-200 text-amber-950 hover:bg-amber-300 shadow-xs">🌟 好表現</button>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-sm font-extrabold text-rose-700 mr-1">扣分</span>
-          <button data-top-deduct="遲到" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">⏰ 遲到</button>
-          <button data-top-deduct="上課不專心" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">💬 上課不專心</button>
-          <button data-top-deduct="桌面沒整理" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🧹 桌面沒整理</button>
-          <button data-top-deduct="學用品沒帶" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">✏️ 學用品沒帶</button>
-          <button data-top-deduct="聯絡簿未簽" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">📓 聯絡簿未簽</button>
+          <span class="text-sm font-black text-rose-800 mr-1 bg-rose-100 px-2.5 py-0.5 rounded-full">🍂 小提醒扣分</span>
+          <button data-top-deduct="遲到" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">⏰ 遲到</button>
+          <button data-top-deduct="上課不專心" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">💬 上課不專心</button>
+          <button data-top-deduct="桌面沒整理" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🧹 桌面沒整理</button>
+          <button data-top-deduct="學用品沒帶" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">✏️ 學用品沒帶</button>
+          <button data-top-deduct="聯絡簿未簽" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📓 聯絡簿未簽</button>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-sm font-extrabold text-cyan-700 mr-1">🔋 補電任務</span>
-          <button data-charge="整理書櫃" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">📚 整理書櫃</button>
-          <button data-charge="幫忙擦黑板" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">🧽 幫忙擦黑板</button>
-          <button data-charge="補交作業" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">📝 補交作業</button>
-          <span class="text-xs font-bold text-slate-500">限充電站的同學</span>
-        </div>
-        <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-sm font-extrabold text-indigo-700 mr-1">其他</span>
-          <button data-custom="add" class="px-3 py-1.5 rounded-lg text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white">＋ 其他加分</button>
-          <button data-custom="deduct" class="px-3 py-1.5 rounded-lg text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white">－ 其他扣分</button>
+          <span class="text-sm font-black text-amber-900 mr-1 bg-amber-100 px-2.5 py-0.5 rounded-full">🌳 樹洞補電任務</span>
+          <button data-charge="整理書櫃" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📚 整理書櫃</button>
+          <button data-charge="幫忙擦黑板" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">🧽 幫忙擦黑板</button>
+          <button data-charge="補交作業" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📝 補交作業</button>
+          <span class="text-xs font-bold text-amber-800/80">（限在樹洞充電站的同學）</span>
+          <span class="mx-1 text-slate-300 hidden sm:inline">|</span>
+          <button data-custom="add" class="px-3.5 py-1 text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">＋ 其他加分</button>
+          <button data-custom="deduct" class="px-3.5 py-1 text-sm font-black bg-rose-600 hover:bg-rose-700 text-white shadow-xs">－ 其他扣分</button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- ==================== 主版面：實體磁鐵加分板 ==================== -->
+  <!-- ==================== 主版面：森林實體磁鐵加分板 ==================== -->
   <main class="flex-1 max-w-[1600px] w-full mx-auto px-2 sm:px-4 py-3">
     
-    <button type="button" id="setupBanner" class="hidden w-full mb-2 rounded-2xl border-4 border-rose-500 bg-amber-200 hover:bg-amber-300 px-4 py-3 text-lg font-black text-rose-800 text-center animate-pulse"></button>
+    <button type="button" id="setupBanner" class="hidden w-full mb-2.5 rounded-2xl border-4 border-orange-400 bg-amber-100 hover:bg-amber-200 px-4 py-3 text-lg font-black text-amber-950 text-center animate-pulse shadow-sm"></button>
 
-    <!-- 印章看板 -->
-    <div id="stampBoard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-2"></div>
-    <div id="chargeStrip" class="hidden mb-2 flex-wrap items-center gap-1.5 rounded-xl border border-cyan-300 bg-cyan-50 px-3 py-1.5 text-sm font-bold text-cyan-900"></div>
-    <div id="weekQuickStats" class="mb-2 text-sm font-bold text-slate-600"></div>
+    <!-- 森林動物榮譽章看板 -->
+    <div id="stampBoard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-2.5"></div>
+    <div id="chargeStrip" class="hidden mb-2.5 flex-wrap items-center gap-1.5 rounded-2xl border-2 border-amber-400 bg-amber-50 px-3.5 py-2 text-sm font-extrabold text-amber-950 shadow-xs"></div>
+    <div id="weekQuickStats" class="mb-2.5 text-sm font-extrabold text-emerald-900 bg-white/80 inline-block px-3.5 py-1 rounded-full border border-emerald-200"></div>
 
-    <!-- 磁鐵加分板容器（窄螢幕可水平捲動，教室大屏與電腦螢幕完整展開） -->
-    <div class="bg-white rounded-2xl border-2 border-slate-300 shadow-md overflow-hidden">
+    <!-- 原木框磁鐵加分板容器 -->
+    <div class="bg-white wood-board-frame overflow-hidden">
       <div class="overflow-x-auto">
         <div class="min-w-[960px]">
           
-          <!-- 表頭區（分區標籤 + 0~20 刻度） -->
-          <div class="sticky top-0 z-20 bg-slate-100 border-b-2 border-slate-300 select-none">
+          <!-- 表頭區（森林動物階梯 + 0~20 刻度） -->
+          <div class="sticky top-0 z-20 bg-amber-50 border-b-2 border-amber-300 select-none">
             <!-- 第一層：大區間標題 -->
-            <div class="flex items-stretch text-xs font-extrabold border-b border-slate-200">
+            <div class="flex items-stretch text-xs font-black border-b border-amber-200">
               <!-- 左側固定欄寬：座號 + 姓名 + 分數/章 -->
-              <div class="w-[248px] shrink-0 flex items-center bg-slate-100 border-r-2 border-slate-300 px-2 py-1.5 text-slate-600">
+              <div class="w-[248px] shrink-0 flex items-center bg-amber-100/80 border-r-2 border-amber-300 px-2 py-2 text-amber-950">
                 <span class="w-10 text-center">座號</span>
                 <span class="w-24 pl-1">姓名</span>
-                <span class="flex-1 text-right pr-1">分數 / 章數</span>
+                <span class="flex-1 text-right pr-1">松果 / 榮譽章</span>
               </div>
               <!-- 右側 21 格對應的大區間（1格起點 + 5 + 5 + 5 + 5） -->
               <div class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
-                <div class="col-span-1 bg-slate-200/80 text-slate-600 flex items-center justify-center py-1.5 zone-divider-right text-[11px]">🔋起點</div>
-                <div class="col-span-5 bg-yellow-300 text-yellow-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
-                  <span>🐣 1 個榮譽章</span><span class="text-[11px] opacity-75">(1–5)</span>
+                <div class="col-span-1 bg-stone-200 text-stone-700 flex items-center justify-center py-2 zone-divider-right text-[11px]">🌱起點</div>
+                <div class="col-span-5 bg-yellow-200 text-yellow-950 flex items-center justify-center gap-1 py-2 zone-divider-right">
+                  <span>🐣 小雞 1章</span><span class="text-[11px] opacity-80">(1–5)</span>
                 </div>
-                <div class="col-span-5 bg-emerald-300 text-emerald-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
-                  <span>🐰 2 個榮譽章</span><span class="text-[11px] opacity-75">(6–10)</span>
+                <div class="col-span-5 bg-emerald-200 text-emerald-950 flex items-center justify-center gap-1 py-2 zone-divider-right">
+                  <span>🐰 白兔 2章</span><span class="text-[11px] opacity-80">(6–10)</span>
                 </div>
-                <div class="col-span-5 bg-sky-300 text-sky-900 flex items-center justify-center gap-1 py-1.5 zone-divider-gold">
-                  <span>🐻 3 個榮譽章</span><span class="text-[11px] opacity-75">(11–15)</span>
+                <div class="col-span-5 bg-sky-200 text-sky-950 flex items-center justify-center gap-1 py-2 zone-divider-gold">
+                  <span>🐻 棕熊 3章</span><span class="text-[11px] opacity-80">(11–15)</span>
                 </div>
-                <div class="col-span-5 bg-orange-300 text-orange-900 flex items-center justify-center gap-1 py-1.5">
-                  <span>🦊 4 個榮譽章</span><span class="text-[11px] opacity-75">(16–20)</span>
+                <div class="col-span-5 bg-orange-200 text-orange-950 flex items-center justify-center gap-1 py-2">
+                  <span>🦊 小狐 4章</span><span class="text-[11px] opacity-80">(16–20)</span>
                 </div>
               </div>
             </div>
 
             <!-- 第二層：數字刻度 0 到 20 -->
-            <div class="flex items-stretch text-xs font-extrabold">
-              <div class="w-[248px] shrink-0 flex items-center justify-between gap-1 bg-indigo-50 border-r-2 border-slate-300 px-2 py-1">
-                <span class="text-sm font-extrabold text-indigo-700 whitespace-nowrap">已選 <span id="batchSelectedCount">0</span> 人</span>
+            <div class="flex items-stretch text-xs font-black">
+              <div class="w-[248px] shrink-0 flex items-center justify-between gap-1 bg-emerald-50 border-r-2 border-amber-300 px-2 py-1">
+                <span class="text-sm font-black text-emerald-800 whitespace-nowrap">已選 <span id="batchSelectedCount">0</span> 人</span>
                 <div class="flex gap-1.5">
-                  <button type="button" id="batchSelectAllBtn" class="text-sm font-bold border border-indigo-300 bg-white hover:bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg whitespace-nowrap">全選</button>
-                  <button type="button" id="batchClearAllBtn" class="text-sm font-bold border border-indigo-300 bg-white hover:bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg whitespace-nowrap">清除</button>
+                  <button type="button" id="batchSelectAllBtn" class="text-xs font-extrabold border-2 border-emerald-300 bg-white hover:bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full whitespace-nowrap">全選</button>
+                  <button type="button" id="batchClearAllBtn" class="text-xs font-extrabold border-2 border-emerald-300 bg-white hover:bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full whitespace-nowrap">清除</button>
                 </div>
               </div>
               <div id="scaleNumbersRow" class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
@@ -324,7 +417,7 @@
           </div>
 
           <!-- 學生資料列容器 -->
-          <div id="boardBody" class="divide-y divide-slate-200/90">
+          <div id="boardBody" class="divide-y divide-amber-200/70">
             <!-- 由 JS 動態渲染學生列 -->
           </div>
         </div>
@@ -333,74 +426,68 @@
   </main>
 
   <!-- ==================== 彈出視窗 1：學生個人加扣分面板 ==================== -->
-  <div id="studentActionModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-modal">
-      <!-- 頂部資訊 -->
-      <div class="px-5 py-4 bg-gradient-to-r from-slate-50 to-amber-50/60 border-b border-slate-200 flex items-center justify-between">
+  <div id="studentActionModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 backdrop-blur-xs p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-emerald-300 w-full max-w-lg overflow-hidden animate-modal">
+      <div class="px-5 py-4 bg-gradient-to-r from-emerald-50 to-amber-50 border-b-2 border-emerald-200 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div id="actionModalBadge" class="w-11 h-11 rounded-full flex items-center justify-center text-white font-black text-lg shadow-md"></div>
           <div>
-            <h2 id="actionModalName" class="text-xl font-black text-slate-800"></h2>
-            <p id="actionModalStats" class="text-xs font-bold text-slate-500 mt-0.5"></p>
+            <h2 id="actionModalName" class="text-xl font-black text-stone-800"></h2>
+            <p id="actionModalStats" class="text-xs font-bold text-emerald-700 mt-0.5"></p>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="actionOpenLogBtn" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">📋 本週明細</button>
-          <button data-close-modal="studentActionModal" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-slate-300 text-slate-700 font-bold flex items-center justify-center transition">✕</button>
+          <button id="actionOpenLogBtn" class="px-3 py-1.5 rounded-full bg-white border-2 border-emerald-200 hover:bg-emerald-50 text-xs font-extrabold text-emerald-800 transition">📋 本週明細</button>
+          <button data-close-modal="studentActionModal" class="w-8 h-8 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-900 font-black flex items-center justify-center transition">✕</button>
         </div>
       </div>
 
-      <!-- 內容操作區 -->
       <div class="p-5 space-y-4 max-h-[78vh] overflow-y-auto">
-        <!-- 學生自助加分提示（僅在未解鎖且開啟自助模式時顯示） -->
-        <div id="selfAddNotice" class="hidden rounded-2xl bg-sky-50 border border-sky-200 px-3.5 py-2.5 text-xs font-bold text-sky-800">
-          🌟 學生自助加分模式：每日每項日常表現限加分一次，完成後請由老師或同學確認喔！
+        <div id="selfAddNotice" class="hidden rounded-2xl bg-sky-50 border-2 border-sky-200 px-3.5 py-2.5 text-xs font-bold text-sky-800">
+          🐿️ 小松鼠自助加分模式：每日每項日常表現限加分一次，完成後請由老師或同學確認喔！
         </div>
 
-        <!-- 加分區塊 (+1) -->
         <div>
-          <h3 class="text-sm font-extrabold text-emerald-700 mb-2.5 flex items-center gap-1.5">
+          <h3 class="text-sm font-black text-emerald-700 mb-2.5 flex items-center gap-1.5">
             <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">+</span>
-            加分項目（+1 分）
+            集松果加分（+1 分）
           </h3>
           <div id="dailyAddButtons" class="grid grid-cols-2 gap-2.5">
             <button data-add-item="準時到校" class="add-item-btn p-3 rounded-2xl border-2 border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100 active:scale-[0.98] text-left transition flex items-center justify-between">
               <span class="font-extrabold text-emerald-950 text-sm">☀️ 準時到校</span>
-              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-lg border border-emerald-200">+1</span>
+              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-full border border-emerald-200">+1</span>
             </button>
             <button data-add-item="作業繳齊" class="add-item-btn p-3 rounded-2xl border-2 border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100 active:scale-[0.98] text-left transition flex items-center justify-between">
               <span class="font-extrabold text-emerald-950 text-sm">📚 作業繳齊</span>
-              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-lg border border-emerald-200">+1</span>
+              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-full border border-emerald-200">+1</span>
             </button>
             <button data-add-item="擦餐具" class="add-item-btn p-3 rounded-2xl border-2 border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100 active:scale-[0.98] text-left transition flex items-center justify-between">
               <span class="font-extrabold text-emerald-950 text-sm">🥢 擦餐具</span>
-              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-lg border border-emerald-200">+1</span>
+              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-full border border-emerald-200">+1</span>
             </button>
             <button data-add-item="刷牙" class="add-item-btn p-3 rounded-2xl border-2 border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100 active:scale-[0.98] text-left transition flex items-center justify-between">
               <span class="font-extrabold text-emerald-950 text-sm">🪥 刷牙</span>
-              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-lg border border-emerald-200">+1</span>
+              <span class="text-xs font-black text-emerald-700 bg-white px-2 py-0.5 rounded-full border border-emerald-200">+1</span>
             </button>
           </div>
 
-          <!-- 好表現（含可選填備註，教師模式專屬） -->
-          <div id="goodBehaviorBox" class="mt-2.5 p-3 rounded-2xl border-2 border-amber-200 bg-amber-50/70">
+          <div id="goodBehaviorBox" class="mt-2.5 p-3 rounded-2xl border-2 border-amber-300 bg-amber-50/80">
             <div class="flex items-center gap-2">
-              <input id="goodBehaviorNote" type="text" maxlength="40" placeholder="好表現備註（選填，例：幫忙同學、主動撿垃圾）" class="flex-1 bg-white border border-amber-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
-              <button id="goodBehaviorAddBtn" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white font-extrabold text-sm shadow-sm transition shrink-0">
+              <input id="goodBehaviorNote" type="text" maxlength="40" placeholder="好表現備註（選填，例：幫忙同學、主動撿垃圾）" class="flex-1 bg-white border border-amber-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
+              <button id="goodBehaviorAddBtn" class="px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white font-black text-sm shadow-sm transition shrink-0">
                 🌟 好表現 +1
               </button>
             </div>
           </div>
         </div>
 
-        <!-- 扣分區塊 (-1，教師模式限定) -->
-        <div id="deductSection" class="pt-3 border-t border-slate-200">
-          <h3 class="text-sm font-extrabold text-rose-700 mb-2.5 flex items-center justify-between">
+        <div id="deductSection" class="pt-3 border-t border-stone-200">
+          <h3 class="text-sm font-black text-rose-700 mb-2.5 flex items-center justify-between">
             <span class="flex items-center gap-1.5">
               <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center text-xs">−</span>
               扣分項目（-1 分，教師限定）
             </span>
-            <span id="deductLockHint" class="hidden text-xs font-bold text-slate-400">🔒 需解鎖教師模式</span>
+            <span id="deductLockHint" class="hidden text-xs font-bold text-stone-400">🔒 需解鎖教師模式</span>
           </h3>
 
           <div id="deductButtonsWrap" class="space-y-2.5">
@@ -413,7 +500,7 @@
             </div>
             <div class="flex items-center gap-2">
               <input id="deductOtherNote" type="text" maxlength="40" placeholder="其他扣分原因（選填）" class="flex-1 bg-white border border-rose-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400" />
-              <button id="deductOtherBtn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-extrabold text-sm shadow-sm transition shrink-0">
+              <button id="deductOtherBtn" class="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-black text-sm shadow-sm transition shrink-0">
                 其他 -1
               </button>
             </div>
@@ -424,58 +511,56 @@
   </div>
 
   <!-- ==================== 彈出視窗 2：個人本週加減分明細 ==================== -->
-  <div id="studentLogModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-modal">
-      <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+  <div id="studentLogModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 backdrop-blur-xs p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-amber-300 w-full max-w-lg overflow-hidden animate-modal">
+      <div class="px-5 py-4 bg-amber-50 border-b border-amber-200 flex items-center justify-between">
         <div>
-          <h2 id="logModalTitle" class="text-lg font-black text-slate-800"></h2>
-          <p id="logModalSubtitle" class="text-xs font-bold text-slate-500 mt-0.5"></p>
+          <h2 id="logModalTitle" class="text-lg font-black text-stone-800"></h2>
+          <p id="logModalSubtitle" class="text-xs font-bold text-amber-800 mt-0.5"></p>
         </div>
-        <button data-close-modal="studentLogModal" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold flex items-center justify-center transition">✕</button>
+        <button data-close-modal="studentLogModal" class="w-8 h-8 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-900 font-black flex items-center justify-center transition">✕</button>
       </div>
       <div id="logModalBody" class="p-4 max-h-[65vh] overflow-y-auto space-y-2">
       </div>
-      <div class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+      <div class="px-5 py-3 bg-stone-50 border-t border-stone-200 flex items-center justify-between text-xs text-stone-500">
         <span id="logModalFootHint">紀錄自動留存，防止爭議</span>
-        <button data-close-modal="studentLogModal" class="px-4 py-1.5 rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-700 transition">關閉</button>
+        <button data-close-modal="studentLogModal" class="px-4 py-1.5 rounded-full bg-emerald-700 text-white font-bold hover:bg-emerald-800 transition">關閉</button>
       </div>
     </div>
   </div>
 
   <!-- ==================== 彈出視窗 4：本週結算總覽與 CSV 匯出 ==================== -->
-  <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
-      <div class="px-5 py-4 bg-emerald-50 border-b border-emerald-200 flex flex-wrap items-center justify-between gap-2">
+  <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 backdrop-blur-xs p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-emerald-300 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
+      <div class="px-5 py-4 bg-emerald-50 border-b-2 border-emerald-200 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 id="summaryModalTitle" class="text-lg font-black text-emerald-950">📊 本週結算總覽</h2>
           <p id="summaryModalSub" class="text-xs font-bold text-emerald-700 mt-0.5"></p>
         </div>
         <div class="flex items-center gap-2">
-          <button id="exportCsvBtn" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-extrabold shadow-sm transition flex items-center gap-1.5">
+          <button id="exportCsvBtn" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-black shadow-sm transition flex items-center gap-1.5">
             <span>⬇️</span><span>匯出 CSV 報表</span>
           </button>
-          <button data-close-modal="summaryModal" class="w-8 h-8 rounded-full bg-emerald-200/70 hover:bg-emerald-300 text-emerald-900 font-bold flex items-center justify-center transition">✕</button>
+          <button data-close-modal="summaryModal" class="w-8 h-8 rounded-full bg-emerald-200/70 hover:bg-emerald-300 text-emerald-900 font-black flex items-center justify-center transition">✕</button>
         </div>
       </div>
 
-      <!-- 統計卡片 -->
-      <div id="summaryCards" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-4 bg-slate-50 border-b border-slate-200">
+      <div id="summaryCards" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-4 bg-amber-50/50 border-b border-emerald-100">
       </div>
 
-      <!-- 表格 -->
       <div class="flex-1 overflow-y-auto p-4">
         <table class="w-full text-sm text-left border-collapse">
-          <thead class="sticky top-0 bg-slate-100 text-slate-600 text-xs font-extrabold">
+          <thead class="sticky top-0 bg-emerald-100 text-emerald-900 text-xs font-black">
             <tr>
               <th class="py-2.5 px-3 rounded-tl-xl">座號</th>
               <th class="py-2.5 px-3">姓名</th>
-              <th class="py-2.5 px-3 text-center">本週總分</th>
+              <th class="py-2.5 px-3 text-center">本週松果</th>
               <th class="py-2.5 px-3 text-center">應蓋榮譽章</th>
               <th class="py-2.5 px-3 text-center">加分合計</th>
               <th class="py-2.5 px-3 text-center rounded-tr-xl">扣分合計</th>
             </tr>
           </thead>
-          <tbody id="summaryTableBody" class="divide-y divide-slate-100">
+          <tbody id="summaryTableBody" class="divide-y divide-stone-100">
           </tbody>
         </table>
       </div>
@@ -483,107 +568,99 @@
   </div>
 
   <!-- ==================== 彈出視窗 5：班級名單管理與系統設定 ==================== -->
-  <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/55 backdrop-blur-xs p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
-      <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-        <h2 class="text-lg font-black text-slate-800">⚙️ 班級名單管理與系統設定</h2>
-        <button data-close-modal="settingsModal" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold flex items-center justify-center transition">✕</button>
+  <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/55 backdrop-blur-xs p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-amber-300 w-full max-w-2xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
+      <div class="px-5 py-4 bg-amber-50 border-b border-amber-200 flex items-center justify-between">
+        <h2 class="text-lg font-black text-amber-950">⚙️ 楠梓國小班級名單與系統設定</h2>
+        <button data-close-modal="settingsModal" class="w-8 h-8 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-900 font-black flex items-center justify-center transition">✕</button>
       </div>
 
-      <!-- 分頁標籤 -->
-      <div class="flex border-b border-slate-200 bg-slate-50/60 px-4 pt-2 gap-1">
-        <button data-tab="roster" class="settings-tab px-4 py-2 text-sm font-extrabold rounded-t-xl border-b-2 border-indigo-600 text-indigo-700 bg-white">👥 班級與名單</button>
-        <button data-tab="prefs" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-slate-500 hover:text-slate-800">📅 學期與週次</button>
-        <button data-tab="backup" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-slate-500 hover:text-slate-800">💾 備份與分享</button>
+      <div class="flex border-b border-stone-200 bg-stone-50/60 px-4 pt-2 gap-1">
+        <button data-tab="roster" class="settings-tab px-4 py-2 text-sm font-black rounded-t-xl border-b-2 border-emerald-600 text-emerald-800 bg-white">👥 班級與名單</button>
+        <button data-tab="prefs" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">📅 學期與週次</button>
+        <button data-tab="backup" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">💾 備份與分享</button>
       </div>
 
       <div class="p-5 overflow-y-auto flex-1 space-y-5">
-        <!-- 分頁 1：班級與名單管理 -->
         <div id="tab-roster" class="space-y-5">
-          <!-- 本班專屬網址 -->
           <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 space-y-2">
-            <h3 class="text-sm font-extrabold text-amber-900">🔗 本班專屬網址</h3>
+            <h3 class="text-sm font-black text-amber-900">🔗 本班專屬網址</h3>
             <div class="flex gap-2">
-              <input id="classUrlInput" readonly class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
-              <button type="button" id="copyUrlBtn" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-extrabold whitespace-nowrap">複製網址</button>
+              <input id="classUrlInput" readonly class="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white text-sm" />
+              <button type="button" id="copyUrlBtn" class="px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-sm font-black whitespace-nowrap">複製網址</button>
             </div>
-            <p class="text-xs text-slate-600">請在本班電腦把此網址加入書籤。名單與分數只存在這台電腦的瀏覽器，網址本身不含名單。</p>
+            <p class="text-xs text-stone-600">請在本班電腦把此網址加入書籤。名單與分數只存在這台電腦的瀏覽器，網址本身不含名單。</p>
           </div>
 
-          <!-- 編輯目前班級名單 -->
-          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-3">
-            <h3 class="text-sm font-extrabold text-emerald-900">✏️ 編輯目前班級名單</h3>
+          <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 space-y-3">
+            <h3 class="text-sm font-black text-emerald-900">✏️ 編輯目前班級名單</h3>
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">班級名稱</label>
-              <input id="editClassName" type="text" maxlength="30" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+              <label class="block text-xs font-bold text-stone-600 mb-1">班級名稱</label>
+              <input id="editClassName" type="text" maxlength="30" class="w-full px-3 py-2 rounded-xl border border-emerald-300 bg-white text-sm" />
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">學生名單（每行「座號 姓名」；可改字、新增或刪除整行）</label>
-              <textarea id="editRoster" rows="8" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm"></textarea>
+              <label class="block text-xs font-bold text-stone-600 mb-1">學生名單（每行「座號 姓名」；可改字、新增或刪除整行）</label>
+              <textarea id="editRoster" rows="8" class="w-full px-3 py-2 rounded-xl border border-emerald-300 bg-white text-sm"></textarea>
             </div>
-            <button type="button" id="saveRosterBtn" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-extrabold">儲存名單修改</button>
+            <button type="button" id="saveRosterBtn" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-black">儲存名單修改</button>
           </div>
 
-          <!-- 現有班級列表 -->
           <div>
-            <h3 class="text-sm font-extrabold text-slate-700 mb-2">已建立的班級</h3>
+            <h3 class="text-sm font-black text-stone-700 mb-2">已建立的班級</h3>
             <div id="classListContainer" class="space-y-2"></div>
           </div>
 
-          <!-- 建立新班級 / 自動匯入名單 -->
-          <div class="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 space-y-3">
-            <h3 class="text-sm font-extrabold text-indigo-900">➕ 建立新班級並自動匯入名單</h3>
+          <div class="p-4 rounded-2xl bg-teal-50/70 border-2 border-teal-200 space-y-3">
+            <h3 class="text-sm font-black text-teal-900">➕ 建立新班級並自動匯入名單</h3>
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">新班級名稱</label>
-              <input id="newClassNameInput" type="text" placeholder="例如：三年二班、115學年五甲" class="w-full px-3 py-2 rounded-xl border border-indigo-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+              <label class="block text-xs font-bold text-stone-600 mb-1">新班級名稱</label>
+              <input id="newClassNameInput" type="text" placeholder="例如：楠梓國小三年二班、115學年五甲" class="w-full px-3 py-2 rounded-xl border border-teal-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-400" />
             </div>
 
             <div>
               <div class="flex items-center justify-between mb-1">
-                <label class="text-xs font-bold text-slate-600">貼上學生名單（每行一人，支援 Excel 直接複製貼上，可含座號或純姓名）</label>
-                <label class="text-xs font-bold text-indigo-700 hover:underline cursor-pointer bg-white px-2.5 py-1 rounded-lg border border-indigo-200">
+                <label class="text-xs font-bold text-stone-600">貼上學生名單（每行一人，支援 Excel 直接複製貼上，可含座號或純姓名）</label>
+                <label class="text-xs font-bold text-teal-800 hover:underline cursor-pointer bg-white px-2.5 py-1 rounded-full border border-teal-300">
                   📄 上傳 CSV / TXT
                   <input id="rosterFileInput" type="file" accept=".csv,.txt" class="hidden" />
                 </label>
               </div>
-              <textarea id="newClassRosterTextarea" rows="5" placeholder="範例：&#10;1 王小明&#10;2 陳美美&#10;或直接貼上純姓名：&#10;王小明&#10;陳美美" class="w-full px-3 py-2 rounded-xl border border-indigo-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"></textarea>
+              <textarea id="newClassRosterTextarea" rows="5" placeholder="範例：&#10;1 王小明&#10;2 陳美美&#10;或直接貼上純姓名：&#10;王小明&#10;陳美美" class="w-full px-3 py-2 rounded-xl border border-teal-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"></textarea>
             </div>
 
             <div class="flex items-center justify-between">
-              <span id="rosterPreviewCount" class="text-xs font-bold text-indigo-700">尚未輸入名單</span>
-              <button id="createClassBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-sm transition">
+              <span id="rosterPreviewCount" class="text-xs font-bold text-teal-800">尚未輸入名單</span>
+              <button id="createClassBtn" class="px-4 py-2 rounded-full bg-teal-600 hover:bg-teal-700 text-white font-black text-sm shadow-sm transition">
                 自動建立班級
               </button>
             </div>
           </div>
         </div>
 
-        <!-- 分頁 2：學期與週次 -->
         <div id="tab-prefs" class="hidden space-y-3">
-            <div class="grid grid-cols-2 gap-3">
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">學年度</label><input id="setYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">學期</label><select id="setSem" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">開學日</label><input id="setStart" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">休業式</label><input id="setEnd" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-              <div class="col-span-2"><label class="block text-xs font-bold text-slate-600 mb-1">開學日那一週算第幾週</label><input id="setFirst" type="number" min="0" max="10" value="1" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-            </div>
-            <p id="setPreview" class="text-sm font-bold text-indigo-700 bg-indigo-50 rounded-xl px-3 py-2"></p>
-            <button type="button" id="saveTermBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold">儲存學期設定</button>
-            <p class="text-xs text-slate-500">換到另一個學年度或學期時，原學期紀錄會保存；把學年度與學期改回來就能調閱。</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">學年度</label><input id="setYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">學期</label><select id="setSem" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">開學日</label><input id="setStart" type="date" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">休業式</label><input id="setEnd" type="date" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+            <div class="col-span-2"><label class="block text-xs font-bold text-stone-600 mb-1">開學日那一週算第幾週</label><input id="setFirst" type="number" min="0" max="10" value="1" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+          </div>
+          <p id="setPreview" class="text-sm font-bold text-emerald-800 bg-emerald-50 rounded-xl px-3 py-2"></p>
+          <button type="button" id="saveTermBtn" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-black">儲存學期設定</button>
+          <p class="text-xs text-stone-500">換到另一個學年度或學期時，原學期紀錄會保存；把學年度與學期改回來就能調閱。</p>
         </div>
 
-        <!-- 分頁 3：備份與分享 -->
         <div id="tab-backup" class="hidden space-y-4">
-          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2.5">
-            <h3 class="text-sm font-extrabold text-slate-800">📤 匯出完整資料備份（JSON）</h3>
-            <p class="text-xs text-slate-600">包含所有班級名單與各週加減分紀錄，方便更換教室電腦或定期備份（不會匯出您的教師密碼）。</p>
-            <button id="exportJsonBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-sm transition">下載 JSON 備份檔</button>
+          <div class="p-4 rounded-2xl border border-stone-200 bg-stone-50 space-y-2.5">
+            <h3 class="text-sm font-black text-stone-800">📤 匯出完整資料備份（JSON）</h3>
+            <p class="text-xs text-stone-600">包含所有班級名單與各週加減分紀錄，方便更換教室電腦或定期備份。</p>
+            <button id="exportJsonBtn" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-sm transition">下載 JSON 備份檔</button>
           </div>
 
-          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2.5">
-            <h3 class="text-sm font-extrabold text-slate-800">📥 匯入備份檔（JSON）</h3>
-            <p class="text-xs text-slate-600">從先前的 JSON 備份檔還原班級與各週紀錄。</p>
-            <label class="inline-block px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-extrabold text-sm cursor-pointer transition">
+          <div class="p-4 rounded-2xl border border-stone-200 bg-stone-50 space-y-2.5">
+            <h3 class="text-sm font-black text-stone-800">📥 匯入備份檔（JSON）</h3>
+            <p class="text-xs text-stone-600">從先前的 JSON 備份檔還原班級與各週紀錄。</p>
+            <label class="inline-block px-4 py-2 rounded-full bg-white border-2 border-stone-300 hover:bg-stone-100 text-stone-800 font-black text-sm cursor-pointer transition">
               選擇 JSON 檔案匯入
               <input id="importJsonInput" type="file" accept=".json" class="hidden" />
             </label>
@@ -594,73 +671,77 @@
   </div>
 
   <!-- ==================== 彈出視窗 6：批次好表現 / 批次扣分輸入 ==================== -->
-  <div id="batchDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-modal">
-      <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-        <h2 id="batchDetailTitle" class="text-lg font-black text-slate-800"></h2>
-        <button data-close-modal="batchDetailModal" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold flex items-center justify-center transition">✕</button>
+  <div id="batchDetailModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 backdrop-blur-xs p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-amber-300 w-full max-w-md overflow-hidden animate-modal">
+      <div class="px-5 py-4 bg-amber-50 border-b border-amber-200 flex items-center justify-between">
+        <h2 id="batchDetailTitle" class="text-lg font-black text-stone-800"></h2>
+        <button data-close-modal="batchDetailModal" class="w-8 h-8 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-900 font-black flex items-center justify-center transition">✕</button>
       </div>
       <div id="batchDetailBody" class="p-5 space-y-3"></div>
     </div>
   </div>
 
-  <!-- ==================== 彈出視窗 7：自訂確認對話框（取代 confirm） ==================== -->
-  <div id="confirmModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-900/55 backdrop-blur-xs p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-sm overflow-hidden animate-modal">
+  <!-- ==================== 彈出視窗 7：自訂確認對話框 ==================== -->
+  <div id="confirmModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-stone-900/55 backdrop-blur-xs p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-rose-300 w-full max-w-sm overflow-hidden animate-modal">
       <div class="p-5 space-y-3">
-        <h3 id="confirmTitle" class="text-lg font-black text-slate-800">確認操作</h3>
-        <p id="confirmMessage" class="text-sm text-slate-600 leading-relaxed"></p>
+        <h3 id="confirmTitle" class="text-lg font-black text-stone-800">確認操作</h3>
+        <p id="confirmMessage" class="text-sm text-stone-600 leading-relaxed"></p>
         <div class="flex justify-end gap-2 pt-2">
-          <button id="confirmCancelBtn" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-100 transition">取消</button>
-          <button id="confirmOkBtn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-sm transition">確定執行</button>
+          <button id="confirmCancelBtn" class="px-4 py-2 rounded-full border border-stone-200 text-stone-600 font-bold text-sm hover:bg-stone-100 transition">取消</button>
+          <button id="confirmOkBtn" class="px-4 py-2 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-black text-sm shadow-sm transition">確定執行</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="kid-footer" aria-hidden="true">🌷🌼🐝🌻🦋🌷🐞🌼🌈</div>
+  <!-- ==================== 森林草地頁尾 ==================== -->
+  <footer class="forest-footer" aria-hidden="true">
+    🌲🐿️🌰🍄🌿🐣🐰🐻🦊🌻🍀🌈
+    <div class="text-xs font-extrabold tracking-normal text-emerald-800/80 mt-1">楠梓國小．森林好習慣榮譽樂園</div>
+  </footer>
 
   <!-- ==================== 週次查詢 ==================== -->
-  <div id="weekPickerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/55 p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border-4 border-violet-300 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
-      <div class="px-5 py-3 bg-violet-100 flex items-center justify-between gap-2">
-        <h2 id="weekPickerTitle" class="text-xl font-black text-violet-900">🗓️ 週次查詢</h2>
-        <button data-close-modal="weekPickerModal" class="w-9 h-9 rounded-full bg-white text-slate-700 font-bold" aria-label="關閉">✕</button>
+  <div id="weekPickerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/55 p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-teal-300 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
+      <div class="px-5 py-3 bg-teal-100 flex items-center justify-between gap-2">
+        <h2 id="weekPickerTitle" class="text-xl font-black text-teal-950">🗓️ 週次查詢</h2>
+        <button data-close-modal="weekPickerModal" class="w-9 h-9 rounded-full bg-white text-stone-700 font-black" aria-label="關閉">✕</button>
       </div>
-      <p class="px-5 pt-3 text-sm font-bold text-slate-600">點一下週次就能查看。🌟 代表這週有紀錄。</p>
+      <p class="px-5 pt-3 text-sm font-bold text-stone-600">點一下週次就能查看。🌟 代表這週有紀錄。</p>
       <div id="weekGrid" class="p-5 overflow-y-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
     </div>
   </div>
 
   <!-- ==================== 首次設定引導 ==================== -->
-  <div id="wizardModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 p-3">
+  <div id="wizardModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/70 p-3">
     <div class="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 w-full max-w-xl overflow-hidden animate-modal flex flex-col max-h-[92vh]">
-      <div class="px-5 py-4 bg-gradient-to-r from-amber-300 to-orange-300">
-        <h2 class="text-2xl font-black text-slate-900">👋 老師您好！請先新增學生名單</h2>
-        <p class="text-sm font-bold text-slate-800 mt-1">完成下面兩步，就能產生您班級的加分板。</p>
+      <div class="px-5 py-4 bg-gradient-to-r from-emerald-200 via-amber-200 to-orange-200">
+        <h2 class="text-2xl font-black text-emerald-950">🐿️ 楠梓國小老師您好！請先新增名單</h2>
+        <p class="text-sm font-bold text-stone-800 mt-1">完成下面兩步，就能產生您班級的森林加分板。</p>
       </div>
       <div class="p-5 overflow-y-auto space-y-5">
         <div class="space-y-2">
-          <h3 class="text-base font-black text-indigo-800">① 班級與學生名單</h3>
-          <input id="wizName" type="text" placeholder="班級名稱，例如：三年二班" class="w-full px-3 py-2 rounded-xl border-2 border-indigo-300 text-sm" />
-          <textarea id="wizRoster" rows="6" placeholder="從 Excel 複製「座號、姓名」兩欄貼上，一行一人&#10;1 王小明&#10;2 陳美美" class="w-full px-3 py-2 rounded-xl border-2 border-indigo-300 text-sm"></textarea>
-          <p id="wizCount" class="text-sm font-bold text-indigo-700">尚未輸入名單</p>
+          <h3 class="text-base font-black text-emerald-800">① 班級與學生名單</h3>
+          <input id="wizName" type="text" placeholder="班級名稱，例如：三年二班" class="w-full px-3 py-2 rounded-xl border-2 border-emerald-300 text-sm" />
+          <textarea id="wizRoster" rows="6" placeholder="從 Excel 複製「座號、姓名」兩欄貼上，一行一人&#10;1 王小明&#10;2 陳美美" class="w-full px-3 py-2 rounded-xl border-2 border-emerald-300 text-sm"></textarea>
+          <p id="wizCount" class="text-sm font-bold text-emerald-700">尚未輸入名單</p>
         </div>
         <div class="space-y-2">
-          <h3 class="text-base font-black text-indigo-800">② 學期日期（自動排週次）</h3>
-            <div class="grid grid-cols-2 gap-3">
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">學年度</label><input id="wizYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">學期</label><select id="wizSem" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">開學日</label><input id="wizStart" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">休業式</label><input id="wizEnd" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-              <div class="col-span-2"><label class="block text-xs font-bold text-slate-600 mb-1">開學日那一週算第幾週</label><input id="wizFirst" type="number" min="0" max="10" value="1" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
-            </div>
-            <p id="wizPreview" class="text-sm font-bold text-indigo-700 bg-indigo-50 rounded-xl px-3 py-2"></p>
+          <h3 class="text-base font-black text-emerald-800">② 學期日期（自動排週次）</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">學年度</label><input id="wizYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">學期</label><select id="wizSem" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">開學日</label><input id="wizStart" type="date" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+            <div><label class="block text-xs font-bold text-stone-600 mb-1">休業式</label><input id="wizEnd" type="date" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+            <div class="col-span-2"><label class="block text-xs font-bold text-stone-600 mb-1">開學日那一週算第幾週</label><input id="wizFirst" type="number" min="0" max="10" value="1" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
+          </div>
+          <p id="wizPreview" class="text-sm font-bold text-emerald-800 bg-emerald-50 rounded-xl px-3 py-2"></p>
         </div>
       </div>
-      <div class="px-5 py-3 border-t border-slate-200 flex justify-between gap-2">
-        <button type="button" data-close-modal="wizardModal" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 font-bold text-sm">稍後再設定</button>
-        <button type="button" id="wizSaveBtn" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-base">✅ 完成，開始使用</button>
+      <div class="px-5 py-3 border-t border-stone-200 flex justify-between gap-2">
+        <button type="button" data-close-modal="wizardModal" class="px-4 py-2 rounded-full border border-stone-300 text-stone-600 font-bold text-sm">稍後再設定</button>
+        <button type="button" id="wizSaveBtn" class="px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-base">✅ 完成，開始使用</button>
       </div>
     </div>
   </div>
@@ -669,53 +750,89 @@
   <div id="toastContainer" class="fixed bottom-5 right-5 z-[70] flex flex-col gap-2 pointer-events-none"></div>
 
   <script>
-    /**
-     * ============================================================================
-     * 班級榮譽加分板 - 主程式邏輯
-     * 特色：localStorage 自動儲存、學期週次自動編排、
-     *       Web Audio 提示音、批次加扣分、多班級自動匯入、CSV 結算報表。
-     * ============================================================================
-     */
-
     const STORAGE_KEY = 'class_honor_board_tw_v1';
     const DAILY_ADD_ITEMS = ['準時到校', '作業繳齊', '擦餐具', '刷牙'];
     const DEDUCT_ITEMS = ['遲到', '上課不專心', '桌面沒整理', '學用品沒帶', '聯絡簿未簽'];
 
-    // 預設為空白座號，姓名請由「名單與設定」匯入（避免姓名公開在網頁上）
     const DEFAULT_STUDENTS_RAW = Array.from({ length: 29 }, (_, i) => `學生${i + 1}`);
 
-    // 應用程式狀態
     let appState = null;
-    const isTeacherUnlocked = true; // 已取消教師模式，一律可操作
+    const isTeacherUnlocked = true;
     let isBatchMode = false;
     let selectedStudentIds = new Set();
     let activeStudentId = null;
-    let pendingAuthCallback = null;
     let audioCtx = null;
+
+    // ==================== 森林彩葉紙花特效 ====================
+    let confettiParticles = [];
+    let confettiAnimating = false;
+
+    function launchForestConfetti(intensity = 38) {
+      const canvas = document.getElementById('confettiCanvas');
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const colors = ['#22c55e', '#facc15', '#fb923c', '#38bdf8', '#f472b6', '#a3e635'];
+      for (let i = 0; i < intensity; i++) {
+        confettiParticles.push({
+          x: canvas.width * (0.2 + Math.random() * 0.6),
+          y: canvas.height * 0.25,
+          vx: (Math.random() - 0.5) * 14,
+          vy: -Math.random() * 11 - 4,
+          size: Math.random() * 7 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rot: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.25,
+          life: 1
+        });
+      }
+      if (!confettiAnimating) {
+        confettiAnimating = true;
+        requestAnimationFrame(stepConfetti);
+      }
+    }
+
+    function stepConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      confettiParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.36; // 重力
+        p.vx *= 0.98;
+        p.rot += p.vRot;
+        p.life -= 0.014;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        // 葉片與小圓果形狀
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      confettiParticles = confettiParticles.filter(p => p.life > 0 && p.y < canvas.height + 20);
+      if (confettiParticles.length > 0) {
+        requestAnimationFrame(stepConfetti);
+      } else {
+        confettiAnimating = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
 
     // ==================== 工具函式 ====================
 
-    /** 簡易不可逆雜湊函式（支援離線 file:// 環境與一般瀏覽器） */
-    function hashPassword(str) {
-      const salted = 'CHB_TW_SALT_9487::' + str;
-      let h1 = 0xdeadbeef ^ salted.length;
-      let h2 = 0x41c6ce57 ^ salted.length;
-      for (let i = 0; i < salted.length; i++) {
-        const ch = salted.charCodeAt(i);
-        h1 = Math.imul(h1 ^ ch, 2654435761);
-        h2 = Math.imul(h2 ^ ch, 1597334677);
-      }
-      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-      return (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
-    }
-
-    /** 產生唯一 ID */
     function genId(prefix = 'id') {
       return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     }
 
-    /** 取得今日日期字串 YYYY-MM-DD */
     function getTodayStr() {
       const d = new Date();
       const y = d.getFullYear();
@@ -724,7 +841,6 @@
       return `${y}-${m}-${day}`;
     }
 
-    /** 格式化時間戳記 */
     function formatTime(ts) {
       const d = new Date(ts);
       const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -734,7 +850,6 @@
       return `${m}/${day} ${hh}:${mm}`;
     }
 
-    /** 依分數計算應蓋榮譽章數 */
     function calcStamps(score) {
       if (score <= 0) return 0;
       if (score <= 5) return 1;
@@ -744,7 +859,6 @@
       return 5;
     }
 
-    /** 播放輕快柔和的 Web Audio 提示音 */
     function playSound(type) {
       if (!appState?.settings?.soundEnabled) return;
       try {
@@ -758,23 +872,18 @@
         const now = audioCtx.currentTime;
 
         if (type === 'add') {
-          // 輕快上升雙音
-          playTone(587.33, now, 0.11, 'sine', 0.14); // D5
-          playTone(880.0, now + 0.08, 0.16, 'sine', 0.14); // A5
+          playTone(587.33, now, 0.11, 'sine', 0.14);
+          playTone(880.0, now + 0.08, 0.16, 'sine', 0.14);
         } else if (type === 'milestone') {
-          // 跨區間 / 超過20分慶祝和弦
-          playTone(523.25, now, 0.12, 'triangle', 0.15); // C5
-          playTone(659.25, now + 0.08, 0.12, 'triangle', 0.15); // E5
-          playTone(783.99, now + 0.16, 0.14, 'triangle', 0.15); // G5
-          playTone(1046.5, now + 0.24, 0.26, 'sine', 0.16); // C6
+          playTone(523.25, now, 0.12, 'triangle', 0.15);
+          playTone(659.25, now + 0.08, 0.12, 'triangle', 0.15);
+          playTone(783.99, now + 0.16, 0.14, 'triangle', 0.15);
+          playTone(1046.5, now + 0.24, 0.26, 'sine', 0.16);
         } else if (type === 'deduct') {
-          // 溫和提醒低音
           playTone(330.0, now, 0.14, 'triangle', 0.12);
           playTone(261.63, now + 0.11, 0.2, 'triangle', 0.12);
         }
-      } catch (e) {
-        // 忽略不支援音訊的環境錯誤
-      }
+      } catch (e) {}
     }
 
     function playTone(freq, startTime, duration, waveType, peakGain) {
@@ -791,17 +900,16 @@
       osc.stop(startTime + duration + 0.02);
     }
 
-    /** 顯示浮動提示訊息 Toast */
     function showToast(message, type = 'info') {
       const container = document.getElementById('toastContainer');
       const el = document.createElement('div');
       const colorMap = {
-        success: 'bg-emerald-600 text-white',
-        error: 'bg-rose-600 text-white',
-        warning: 'bg-amber-500 text-white',
-        info: 'bg-slate-800 text-white'
+        success: 'bg-emerald-600 text-white border-2 border-emerald-300',
+        error: 'bg-rose-600 text-white border-2 border-rose-300',
+        warning: 'bg-amber-500 text-white border-2 border-amber-200',
+        info: 'bg-stone-800 text-white border-2 border-stone-600'
       };
-      el.className = `${colorMap[type] || colorMap.info} px-4 py-2.5 rounded-2xl shadow-lg text-sm font-bold flex items-center gap-2 transition-all duration-300 translate-y-2 opacity-0`;
+      el.className = `${colorMap[type] || colorMap.info} px-4 py-2.5 rounded-full shadow-lg text-sm font-extrabold flex items-center gap-2 transition-all duration-300 translate-y-2 opacity-0`;
       el.textContent = message;
       container.appendChild(el);
       requestAnimationFrame(() => {
@@ -813,7 +921,6 @@
       }, 2600);
     }
 
-    /** 自訂確認視窗（絕不使用瀏覽器原生 confirm） */
     function showConfirm(title, message, onConfirm) {
       const modal = document.getElementById('confirmModal');
       document.getElementById('confirmTitle').textContent = title;
@@ -838,7 +945,6 @@
       cancelBtn.onclick = cleanup;
     }
 
-    /** 開關指定彈出視窗 */
     function openModal(id) {
       const el = document.getElementById(id);
       if (!el) return;
@@ -868,7 +974,7 @@
           allowStudentSelfAdd: false
         },
         currentClassId: 'class_default',
-        currentWeek: 10, // 預設開啟第 10 週
+        currentWeek: 10,
         classes: [
           {
             id: 'class_default',
@@ -934,14 +1040,11 @@
       return logs.reduce((sum, item) => sum + (item.delta || 0), 0);
     }
 
-    /** 檢查該生今日是否已經加過某項日常分（防學生自助重複點擊） */
     function hasAddedToday(studentId, itemName) {
       const today = getTodayStr();
       const logs = getStudentLogs(studentId);
       return logs.some(l => l.type === 'add' && l.item === itemName && l.dateStr === today);
     }
-
-    // ==================== 教師模式驗證流程 ====================
 
     function requireTeacherMode(onSuccess) {
       onSuccess();
@@ -965,12 +1068,12 @@
         : '🗓️ 週次查詢';
       document.getElementById('weekGrid').innerHTML = getWeekList().map(w => {
         const hasLog = Object.values((cls.weeklyLogs || {})[String(w.no)] || {}).some(l => l.length);
-        const border = w.no === appState.currentWeek ? 'border-violet-600' : (w.no === today ? 'border-pink-400' : 'border-slate-200');
+        const border = w.no === appState.currentWeek ? 'border-teal-600' : (w.no === today ? 'border-orange-400' : 'border-stone-200');
         return `
           <button type="button" data-week="${w.no}" class="week-tile ${border}">
-            <div class="text-base font-black text-slate-800">第 ${w.no} 週</div>
-            <div class="text-xs font-bold text-slate-500">${w.range || '&nbsp;'}</div>
-            <div class="text-xs font-black h-5 text-pink-600">${w.no === today ? '📍本週 ' : ''}${hasLog ? '🌟' : ''}</div>
+            <div class="text-base font-black text-stone-800">第 ${w.no} 週</div>
+            <div class="text-xs font-bold text-stone-500">${w.range || '&nbsp;'}</div>
+            <div class="text-xs font-black h-5 text-orange-600">${w.no === today ? '🐿️本週 ' : ''}${hasLog ? '🌟' : ''}</div>
           </button>`;
       }).join('');
       openModal('weekPickerModal');
@@ -981,7 +1084,6 @@
     const classUrl = cls => `${location.href.split(/[?#]/)[0]}?class=${encodeURIComponent(cls.name)}`;
     const hasClassParam = () => new URLSearchParams(location.search).has('class');
 
-    /** 依網址 ?class=班級名稱 開啟班級；此電腦沒有就建立空白班級 */
     function openClassFromUrl() {
       const name = (new URLSearchParams(location.search).get('class') || '').trim().slice(0, 30);
       if (!name) return;
@@ -1006,17 +1108,15 @@
       saveState();
     }
 
-    /** 專屬網址模式：網址與標題跟著目前班級 */
     function syncClassPage() {
       if (!hasClassParam()) return;
       const cls = getCurrentClass();
       history.replaceState(null, '', classUrl(cls));
-      document.title = `${cls.name} 榮譽加分板`;
-      document.getElementById('pageTitle').textContent = document.title;
+      document.title = `楠梓國小．森林榮譽加分板 (${cls.name})`;
+      document.getElementById('pageTitle').textContent = `${cls.name} 榮譽加分板`;
       document.getElementById('classSelect').parentElement.classList.add('hidden');
     }
 
-    /** 更新名單：先比對姓名、再比對座號，保留原有加扣分紀錄 */
     function mergeRoster(cls, parsed) {
       const used = new Set();
       const matched = parsed.map(p => {
@@ -1083,7 +1183,6 @@
     const md = d => `${d.getMonth() + 1}/${d.getDate()}`;
     const weeksBetween = (a, b) => Math.round((mondayOf(b) - mondayOf(a)) / 604800000);
 
-    /** 回傳目前班級可選的週次 */
     function getWeekList(term = getCurrentClass().term) {
       if (!term) return Array.from({ length: 22 }, (_, i) => ({ no: i + 1, range: '' }));
       const start = toDate(term.start);
@@ -1095,7 +1194,6 @@
       });
     }
 
-    /** 今天所在週次（學期外則取第一週或最後一週） */
     function getTodayWeek(term = getCurrentClass().term) {
       if (!term) return null;
       const list = getWeekList(term);
@@ -1145,7 +1243,6 @@
       updateTermPreview(p);
     }
 
-    /** 套用學期設定；不同學年度/學期的紀錄分開保存 */
     function applyTerm(cls, term) {
       const key = t => `${t.year}-${t.sem}`;
       if (cls.term && key(cls.term) !== key(term)) {
@@ -1167,7 +1264,7 @@
       const cls = getCurrentClass();
       const el = document.getElementById('setupBanner');
       const msg = isPlaceholderRoster(cls)
-        ? '👉 尚未新增學生名單！請點這裡新增班級名單'
+        ? '🐿️ 尚未新增學生名單！請點這裡新增班級名單'
         : (!cls.term ? '📅 尚未設定開學日與休業式！請點這裡自動排週次' : '');
       el.textContent = msg;
       el.classList.toggle('hidden', !msg);
@@ -1203,6 +1300,7 @@
       renderBoard();
       history.replaceState(null, '', classUrl(cls));
       syncClassPage();
+      launchForestConfetti(50);
       showToast(`設定完成！共 ${parsed.length} 位學生。已產生本班專屬網址，請加入書籤`, 'success');
     }
 
@@ -1234,7 +1332,6 @@
           done();
         }
       });
-      // 同一瀏覽器開多個班級分頁時，避免互相覆蓋
       window.addEventListener('storage', e => {
         if (e.key !== STORAGE_KEY || !e.newValue) return;
         const { currentClassId, currentWeek } = appState;
@@ -1271,13 +1368,13 @@
       const row = document.getElementById('scaleNumbersRow');
       let html = '';
       for (let i = 0; i <= 20; i++) {
-        let zoneClass = 'zone-0 text-slate-500';
-        if (i >= 1 && i <= 5) zoneClass = 'zone-1 text-yellow-900';
-        else if (i >= 6 && i <= 10) zoneClass = 'zone-2 text-emerald-900';
-        else if (i >= 11 && i <= 15) zoneClass = 'zone-3 text-sky-900';
-        else if (i >= 16) zoneClass = 'zone-4 text-orange-900';
+        let zoneClass = 'zone-0 text-stone-500';
+        if (i >= 1 && i <= 5) zoneClass = 'zone-1 text-yellow-950';
+        else if (i >= 6 && i <= 10) zoneClass = 'zone-2 text-emerald-950';
+        else if (i >= 11 && i <= 15) zoneClass = 'zone-3 text-sky-950';
+        else if (i >= 16) zoneClass = 'zone-4 text-orange-950';
 
-        let divider = 'border-r border-slate-200/80';
+        let divider = 'border-r border-stone-200/80';
         if (i === 0 || i === 5 || i === 10) divider = 'zone-divider-right';
         else if (i === 15) divider = 'zone-divider-gold';
         else if (i === 20) divider = '';
@@ -1288,20 +1385,17 @@
     }
 
     function renderTopControls() {
-      // 班級下拉選單
       const classSelect = document.getElementById('classSelect');
       classSelect.innerHTML = appState.classes
         .map(c => `<option value="${c.id}" ${c.id === appState.currentClassId ? 'selected' : ''}>${escapeHtml(c.name)}</option>`)
         .join('');
 
-      // 週次下拉選單（依學期日期）
       const weekSelect = document.getElementById('weekSelect');
       const weeks = getWeekList();
       if (!weeks.some(w => w.no === appState.currentWeek)) appState.currentWeek = getTodayWeek() ?? weeks[0].no;
       const wkHtml = weeks.map(w => `<option value="${w.no}" ${w.no === appState.currentWeek ? 'selected' : ''}>第 ${w.no} 週${w.range ? `（${w.range}）` : ''}</option>`).join('');
       weekSelect.innerHTML = wkHtml;
 
-      // 音效圖示
       document.getElementById('soundToggleBtn').textContent = appState.settings.soundEnabled ? '🔊' : '🔇';
 
       const term = getCurrentClass().term;
@@ -1312,7 +1406,6 @@
       syncClassPage();
       document.getElementById('thisWeekBtn').classList.toggle('hidden', !term || appState.currentWeek === getTodayWeek());
 
-      // 點學生列即為勾選
       isBatchMode = true;
       document.getElementById('batchSelectedCount').textContent = selectedStudentIds.size;
     }
@@ -1325,7 +1418,6 @@
       let totalStamps = 0;
       let over20Count = 0;
 
-      // 建立每格背景 HTML（重複使用以提升效能）
       let gridCellsHtml = '';
       for (let i = 0; i <= 20; i++) {
         let zoneClass = 'zone-0';
@@ -1352,37 +1444,33 @@
         const leftPercent = ((clampedSlot + 0.5) / 21) * 100;
         const isSelected = selectedStudentIds.has(stu.id);
 
-        // 分數與榮譽章膠囊樣式
         const scoreBadgeHtml = `
-            <span class="text-xs font-bold whitespace-nowrap ${score < 0 ? 'text-slate-900' : 'text-slate-500'}">${score}分</span>
-            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-sm font-black border whitespace-nowrap ${stamps ? 'bg-amber-100 text-amber-900 border-amber-300' : 'bg-slate-100 text-slate-400 border-slate-200'}">🏅${stamps}</span>
+            <span class="text-xs font-extrabold whitespace-nowrap ${score < 0 ? 'text-amber-900' : 'text-stone-600'}">${score}🌰</span>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-sm font-black border whitespace-nowrap ${stamps ? 'bg-amber-100 text-amber-950 border-amber-300' : 'bg-stone-100 text-stone-400 border-stone-200'}">${stamps >= 5 ? '🐿️' : '🏅'}${stamps}</span>
         `;
 
-        // 超越 20 分的右側皇冠徽章（不佔額外欄位寬度）
         const over20FloatingHtml = score > 20
-          ? `<div class="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 z-20 px-1.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-black shadow-md border border-yellow-200 whitespace-nowrap">👑 +${score - 20} (5章)</div>`
+          ? `<div class="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 z-20 px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white text-[10px] font-black shadow-md border border-yellow-200 whitespace-nowrap">🐿️ 松鼠王 +${score - 20} (5章)</div>`
           : '';
 
         const magnetExtraClass = score > 20 ? 'magnet-over20' : (score < 0 ? 'magnet-charge' : '');
 
         return `
-          <div class="student-row group flex items-stretch h-[40px] hover:bg-indigo-50/40 transition-colors ${isSelected ? 'bg-indigo-50/80' : ''}" data-student-id="${stu.id}">
-            <!-- 左側資訊欄：座號、姓名、分數、紀錄按鈕 -->
-            <div class="w-[248px] shrink-0 flex items-center px-2 border-r-2 border-slate-300 bg-white/95 group-hover:bg-indigo-50/50 cursor-pointer select-none" data-action="open-student" data-student-id="${stu.id}">
+          <div class="student-row group flex items-stretch h-[42px] hover:bg-emerald-50/50 transition-colors ${isSelected ? 'bg-emerald-100/80' : ''}" data-student-id="${stu.id}">
+            <div class="w-[248px] shrink-0 flex items-center px-2 border-r-2 border-amber-300 bg-white/95 group-hover:bg-emerald-50/70 cursor-pointer select-none" data-action="open-student" data-student-id="${stu.id}">
               ${isBatchMode ? `
-                <input type="checkbox" class="batch-checkbox w-4 h-4 mr-1.5 accent-indigo-600 cursor-pointer rounded" data-student-id="${stu.id}" ${isSelected ? 'checked' : ''} />
+                <input type="checkbox" class="batch-checkbox w-4 h-4 mr-1.5 accent-emerald-600 cursor-pointer rounded" data-student-id="${stu.id}" ${isSelected ? 'checked' : ''} />
               ` : ''}
-              <span class="w-8 text-center font-extrabold text-sm text-slate-500">${stu.seat}</span>
-              <span class="w-[78px] font-extrabold text-[15px] text-slate-800 truncate pl-0.5">${escapeHtml(stu.name)}</span>
+              <span class="w-8 text-center font-black text-sm text-stone-500">${stu.seat}</span>
+              <span class="w-[78px] font-black text-[15px] text-stone-800 truncate pl-0.5">${escapeHtml(stu.name)}</span>
               <div class="flex-1 flex items-center justify-end gap-1">
                 ${scoreBadgeHtml}
-                <button type="button" data-action="open-log" data-student-id="${stu.id}" title="查看本週加減分明細" class="w-6 h-6 rounded-lg hover:bg-slate-200/80 flex items-center justify-center text-xs text-slate-500 hover:text-slate-800 transition">
+                <button type="button" data-action="open-log" data-student-id="${stu.id}" title="查看本週加減分明細" class="w-6 h-6 rounded-lg hover:bg-amber-100 flex items-center justify-center text-xs text-stone-500 hover:text-stone-800 transition">
                   📋
                 </button>
               </div>
             </div>
 
-            <!-- 右側 0~20 進度軌與立體磁鐵 -->
             <div class="flex-1 relative cursor-pointer" data-action="open-student" data-student-id="${stu.id}">
               <div class="grid h-full w-full" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
                 ${gridCellsHtml}
@@ -1398,28 +1486,40 @@
 
       body.innerHTML = rowsHtml;
 
-      const cardStyle = ['bg-slate-100 border-slate-300', 'bg-yellow-100 border-yellow-300', 'bg-emerald-100 border-emerald-300', 'bg-sky-100 border-sky-300', 'bg-orange-100 border-orange-300', 'bg-amber-200 border-amber-400'];
+      // 森林動物榮譽章看板（21分以上為楠梓國小吉祥物：可愛松鼠 🐿️）
+      const cardStyle = [
+        'bg-stone-100 border-stone-300',
+        'bg-yellow-100 border-yellow-400',
+        'bg-emerald-100 border-emerald-400',
+        'bg-sky-100 border-sky-400',
+        'bg-orange-100 border-orange-400',
+        'bg-gradient-to-br from-amber-100 via-yellow-200 to-orange-200 border-amber-500'
+      ];
+      const animalNames = ['橡果種子', '森林小雞', '跳跳白兔', '暖暖棕熊', '聰明小狐', '楠梓小松鼠王'];
+      const animalIcons = ['🌱', '🐣', '🐰', '🐻', '🦊', '🐿️'];
       const ranges = ['0分', '1–5分', '6–10分', '11–15分', '16–20分', '21分以上'];
+
       const low = students.filter(s => getStudentScore(s.id) < 0);
       const strip = document.getElementById('chargeStrip');
       strip.classList.toggle('hidden', low.length === 0);
       strip.classList.toggle('flex', low.length > 0);
-      strip.innerHTML = '<span>🐢 充電站 🔋</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2 rounded-full bg-white border border-cyan-300 text-slate-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1 rounded bg-slate-800 text-yellow-300">${-getStudentScore(s.id)}</span> 分</span>`).join('');
+      strip.innerHTML = '<span>🌳 樹洞充電站 🔋</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-400 text-stone-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1.5 rounded bg-amber-900 text-yellow-300">${-getStudentScore(s.id)}</span> 顆松果</span>`).join('');
+
       document.getElementById('stampBoard').innerHTML = ranges.map((range, n) => {
         const list = students.filter(s => { const v = getStudentScore(s.id); return v >= 0 && calcStamps(v) === n; });
         return `
-          <div class="rounded-2xl border-2 p-2 text-center ${cardStyle[n]}">
-            <span class="animal" aria-hidden="true">${['🌱', '🐣', '🐰', '🐻', '🦊', '🦄'][n]}</span>
-            <div class="text-2xl font-black text-slate-800">${n === 5 ? '👑' : '🏅'} ${n} 個章</div>
-            <div class="text-xs font-bold text-slate-600">${range}｜${list.length} 人</div>
-            <div class="flex flex-wrap justify-center gap-1 mt-1">${list.map(s => `<span title="${escapeHtml(s.name)}" class="min-w-[26px] px-1 rounded-full bg-white border border-slate-300 text-sm font-black text-slate-800">${s.seat}</span>`).join('')}</div>
+          <div class="p-2.5 text-center ${cardStyle[n]}">
+            <span class="animal" aria-hidden="true">${animalIcons[n]}</span>
+            <div class="text-xs font-black text-amber-900/80">${animalNames[n]}</div>
+            <div class="text-xl font-black text-stone-800 mt-0.5">${n === 5 ? '👑' : '🏅'} ${n} 個章</div>
+            <div class="text-xs font-bold text-stone-600">${range}｜${list.length} 人</div>
+            <div class="flex flex-wrap justify-center gap-1 mt-1.5">${list.map(s => `<span title="${escapeHtml(s.name)}" class="min-w-[26px] px-1 rounded-full bg-white border border-amber-300 text-sm font-black text-stone-800 shadow-2xs">${s.seat}</span>`).join('')}</div>
           </div>`;
       }).join('');
 
-      // 更新頂部快速統計
       document.getElementById('weekQuickStats').textContent =
-        `第 ${appState.currentWeek} 週 ｜ 全班 ${students.length} 人 ｜ 本週累計 ${totalStamps} 個榮譽章 ｜ 圓圈內是座號` +
-        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位突破20分` : '') +
+        `🐿️ 第 ${appState.currentWeek} 週 ｜ 全班 ${students.length} 人 ｜ 本週累計 ${totalStamps} 個榮譽章 ｜ 圓圈內是座號` +
+        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位晉升楠梓小松鼠王` : '') +
         (cls.term && appState.currentWeek !== getTodayWeek() ? ' ｜ ⚠️ 目前不是本週，加扣分會記在這一週' : '');
     }
 
@@ -1434,7 +1534,6 @@
 
     // ==================== 加分 / 扣分核心操作 ====================
 
-    /** 單人加分或扣分 */
     function recordScore(studentId, type, item, note = '') {
       const cls = getCurrentClass();
       const stu = cls.students.find(s => s.id === studentId);
@@ -1459,12 +1558,13 @@
 
       saveState();
 
-      // 音效回饋
       if (type === 'add') {
         if (newStamps > oldStamps || (oldScore === 20 && newScore === 21)) {
           playSound('milestone');
+          launchForestConfetti(45);
         } else {
           playSound('add');
+          launchForestConfetti(18);
         }
       } else {
         playSound('deduct');
@@ -1473,9 +1573,7 @@
       return { stu, oldScore, newScore, newStamps };
     }
 
-    /** 開啟學生個人加扣分面板 */
     function openStudentActionModal(studentId) {
-      // 未解鎖且未開啟學生自助加分 -> 直接改開明細（唯讀）並溫和提示
       if (!isTeacherUnlocked && !appState.settings.allowStudentSelfAdd) {
         openStudentLogModal(studentId);
         showToast('目前為展示模式，如需加減分請先解鎖教師模式', 'info');
@@ -1496,30 +1594,27 @@
 
       document.getElementById('actionModalName').textContent = `${stu.seat}號 ${stu.name}`;
       document.getElementById('actionModalStats').textContent =
-        `第 ${appState.currentWeek} 週 ｜ 目前 ${score} 分 ｜ 應蓋 ${stamps} 個榮譽章` +
-        (score > 20 ? `（👑 超越20分 +${score - 20}）` : '');
+        `第 ${appState.currentWeek} 週 ｜ 目前 ${score} 顆松果 ｜ 應蓋 ${stamps} 個榮譽章` +
+        (score > 20 ? `（🐿️ 楠梓小松鼠王 +${score - 20}）` : '');
 
-      // 清空備註欄
       document.getElementById('goodBehaviorNote').value = '';
       document.getElementById('deductOtherNote').value = '';
 
-      // 權限控制顯示
       const selfAddNotice = document.getElementById('selfAddNotice');
       const goodBox = document.getElementById('goodBehaviorBox');
       const deductWrap = document.getElementById('deductButtonsWrap');
       const deductLockHint = document.getElementById('deductLockHint');
 
-      // 更新每日 4 項按鈕狀態（若在學生自助模式且今日已加過則鎖定）
       document.querySelectorAll('.add-item-btn').forEach(btn => {
         const item = btn.dataset.addItem;
         const alreadyToday = !isTeacherUnlocked && hasAddedToday(studentId, item);
         if (alreadyToday) {
           btn.disabled = true;
-          btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-slate-100', 'border-slate-200');
+          btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-stone-100', 'border-stone-200');
           btn.querySelector('span:last-child').textContent = '今日已加';
         } else {
           btn.disabled = false;
-          btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-slate-100', 'border-slate-200');
+          btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-stone-100', 'border-stone-200');
           btn.querySelector('span:last-child').textContent = '+1';
         }
       });
@@ -1530,7 +1625,6 @@
         deductWrap.classList.remove('hidden');
         deductLockHint.classList.add('hidden');
       } else {
-        // 學生自助模式：隱藏好表現與扣分區
         selfAddNotice.classList.remove('hidden');
         goodBox.classList.add('hidden');
         deductWrap.classList.add('hidden');
@@ -1540,7 +1634,6 @@
       openModal('studentActionModal');
     }
 
-    /** 開啟學生本週加減分明細 */
     function openStudentLogModal(studentId) {
       activeStudentId = studentId;
       const cls = getCurrentClass();
@@ -1559,26 +1652,25 @@
 
       const body = document.getElementById('logModalBody');
       if (logs.length === 0) {
-        body.innerHTML = `<div class="py-10 text-center text-slate-400 font-bold text-sm">本週尚無加減分紀錄</div>`;
+        body.innerHTML = `<div class="py-10 text-center text-stone-400 font-bold text-sm">本週尚無加減分紀錄</div>`;
       } else {
-        // 由新到舊顯示
         const sorted = [...logs].reverse();
         body.innerHTML = sorted.map(log => {
           const isAdd = log.type === 'add';
           return `
-            <div class="flex items-center justify-between gap-2 p-3 rounded-2xl border ${isAdd ? 'bg-emerald-50/60 border-emerald-200' : 'bg-rose-50/60 border-rose-200'}">
+            <div class="flex items-center justify-between gap-2 p-3 rounded-2xl border ${isAdd ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'}">
               <div class="min-w-0">
                 <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded-lg text-xs font-black ${isAdd ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">
+                  <span class="px-2 py-0.5 rounded-full text-xs font-black ${isAdd ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">
                     ${log.delta > 0 ? '+' + log.delta : log.delta}
                   </span>
-                  <span class="font-extrabold text-sm text-slate-800">${escapeHtml(log.item)}</span>
-                  <span class="text-[11px] font-medium text-slate-400">${formatTime(log.ts)}</span>
+                  <span class="font-extrabold text-sm text-stone-800">${escapeHtml(log.item)}</span>
+                  <span class="text-[11px] font-medium text-stone-400">${formatTime(log.ts)}</span>
                 </div>
-                ${log.note ? `<p class="text-xs text-slate-600 mt-1 pl-1">備註：${escapeHtml(log.note)}</p>` : ''}
+                ${log.note ? `<p class="text-xs text-stone-600 mt-1 pl-1">備註：${escapeHtml(log.note)}</p>` : ''}
               </div>
               ${isTeacherUnlocked ? `
-                <button type="button" data-delete-log="${log.id}" data-student-id="${studentId}" class="shrink-0 px-2.5 py-1 rounded-xl bg-white border border-slate-200 hover:bg-rose-100 hover:text-rose-700 hover:border-rose-300 text-xs font-bold text-slate-600 transition">
+                <button type="button" data-delete-log="${log.id}" data-student-id="${studentId}" class="shrink-0 px-2.5 py-1 rounded-full bg-white border border-stone-200 hover:bg-rose-100 hover:text-rose-700 hover:border-rose-300 text-xs font-bold text-stone-600 transition">
                   復原
                 </button>
               ` : ''}
@@ -1590,10 +1682,9 @@
       openModal('studentLogModal');
     }
 
-    /** 批次套用加減分 */
     function applyBatchScore(type, item, note = '', points = 1) {
       if (selectedStudentIds.size === 0) {
-        showToast('請先勾選至少一位學生！', 'warning');
+        showToast('請先點選至少一位學生！', 'warning');
         return;
       }
       const ids = Array.from(selectedStudentIds)
@@ -1612,7 +1703,12 @@
         });
       });
       saveState();
-      playSound(type === 'add' ? 'add' : 'deduct');
+      if (type === 'add' && ids.length > 0) {
+        playSound('add');
+        launchForestConfetti(Math.min(55, 16 + ids.length * 3));
+      } else {
+        playSound('deduct');
+      }
       selectedStudentIds.clear();
       renderTopControls();
       renderBoard();
@@ -1626,7 +1722,7 @@
       const students = cls.students;
 
       document.getElementById('summaryModalTitle').textContent = `📊 ${cls.name} — 第 ${appState.currentWeek} 週結算總覽`;
-      document.getElementById('summaryModalSub').textContent = '榮譽章標準：≤0分(0章)、1–5分(1章)、6–10分(2章)、11–15分(3章)、16–20分(4章)、21分以上(5章)';
+      document.getElementById('summaryModalSub').textContent = '榮譽章標準：≤0分(0章)、1–5分(1章)、6–10分(2章)、11–15分(3章)、16–20分(4章)、21分以上(5章小松鼠王)';
 
       let totalStamps = 0;
       let totalAdds = 0;
@@ -1646,37 +1742,37 @@
         if (score > 20) over20++;
 
         return `
-          <tr class="hover:bg-slate-50">
-            <td class="py-2 px-3 font-bold text-slate-500">${stu.seat}</td>
-            <td class="py-2 px-3 font-extrabold text-slate-800">${escapeHtml(stu.name)}</td>
-            <td class="py-2 px-3 text-center font-black ${score < 0 ? 'text-rose-600' : (score > 20 ? 'text-amber-600' : 'text-slate-800')}">${score}</td>
+          <tr class="hover:bg-emerald-50/40">
+            <td class="py-2 px-3 font-bold text-stone-500">${stu.seat}</td>
+            <td class="py-2 px-3 font-extrabold text-stone-800">${escapeHtml(stu.name)}</td>
+            <td class="py-2 px-3 text-center font-black ${score < 0 ? 'text-rose-600' : (score > 20 ? 'text-amber-600' : 'text-stone-800')}">${score}</td>
             <td class="py-2 px-3 text-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-extrabold ${stamps === 5 ? 'bg-amber-200 text-amber-950' : (stamps > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500')}">
-                ${stamps === 5 ? '👑 ' : ''}${stamps} 個章
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-extrabold ${stamps === 5 ? 'bg-amber-200 text-amber-950' : (stamps > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-500')}">
+                ${stamps === 5 ? '🐿️ ' : ''}${stamps} 個章
               </span>
             </td>
             <td class="py-2 px-3 text-center font-bold text-emerald-700">+${addCount}</td>
-            <td class="py-2 px-3 text-center font-bold ${deductCount > 0 ? 'text-rose-600' : 'text-slate-400'}">${deductCount > 0 ? '-' + deductCount : '0'}</td>
+            <td class="py-2 px-3 text-center font-bold ${deductCount > 0 ? 'text-rose-600' : 'text-stone-400'}">${deductCount > 0 ? '-' + deductCount : '0'}</td>
           </tr>
         `;
       }).join('');
 
       document.getElementById('summaryTableBody').innerHTML = rows;
       document.getElementById('summaryCards').innerHTML = `
-        <div class="bg-white rounded-2xl p-3 border border-slate-200">
-          <div class="text-xs font-bold text-slate-500">本週總榮譽章</div>
+        <div class="bg-white rounded-2xl p-3 border-2 border-emerald-200">
+          <div class="text-xs font-bold text-stone-500">本週總榮譽章</div>
           <div class="text-xl font-black text-emerald-700 mt-0.5">${totalStamps} 個</div>
         </div>
-        <div class="bg-white rounded-2xl p-3 border border-slate-200">
-          <div class="text-xs font-bold text-slate-500">突破 20 分（5章）</div>
+        <div class="bg-white rounded-2xl p-3 border-2 border-amber-200">
+          <div class="text-xs font-bold text-stone-500">楠梓小松鼠王（5章）</div>
           <div class="text-xl font-black text-amber-600 mt-0.5">${over20} 人</div>
         </div>
-        <div class="bg-white rounded-2xl p-3 border border-slate-200">
-          <div class="text-xs font-bold text-slate-500">全班加分合計</div>
+        <div class="bg-white rounded-2xl p-3 border-2 border-sky-200">
+          <div class="text-xs font-bold text-stone-500">全班加分合計</div>
           <div class="text-xl font-black text-sky-700 mt-0.5">${totalAdds} 分</div>
         </div>
-        <div class="bg-white rounded-2xl p-3 border border-slate-200">
-          <div class="text-xs font-bold text-slate-500">全班扣分合計</div>
+        <div class="bg-white rounded-2xl p-3 border-2 border-rose-200">
+          <div class="text-xs font-bold text-stone-500">全班扣分合計</div>
           <div class="text-xl font-black text-rose-600 mt-0.5">${totalDeducts} 分</div>
         </div>
       `;
@@ -1698,12 +1794,11 @@
         lines.push([stu.seat, `"${stu.name.replace(/"/g, '""')}"`, `第${appState.currentWeek}週`, score, stamps, addCount, deductCount].join(','));
       });
 
-      // 加入 UTF-8 BOM 確保 Excel 開啟繁體中文不亂碼
       const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${cls.name}_第${appState.currentWeek}週_榮譽加分結算.csv`;
+      a.download = `楠梓國小_${cls.name}_第${appState.currentWeek}週_榮譽加分結算.csv`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -1713,17 +1808,14 @@
 
     // ==================== 班級與名單管理 ====================
 
-    /** 解析貼上或上傳的名單文字（支援純姓名、座號+姓名、CSV/Tab分隔） */
     function parseRosterText(text) {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
       const result = [];
       let autoSeat = 1;
 
       lines.forEach(line => {
-        // 略過常見表頭
         if (/^(座號|編號|姓名|座號[,\t\s]+姓名)$/.test(line)) return;
 
-        // 嘗試擷取「數字 + 分隔符 + 姓名」
         const match = line.match(/^(\d{1,3})[\s,，.．、\t]+(.+)$/);
         if (match) {
           const seat = parseInt(match[1], 10);
@@ -1733,7 +1825,6 @@
             autoSeat = Math.max(autoSeat, seat + 1);
           }
         } else {
-          // 若是純姓名（或 CSV 單欄）
           const name = line.split(/[,\t]/)[0].trim();
           if (name && !/^\d+$/.test(name)) {
             result.push({ seat: autoSeat++, name });
@@ -1746,40 +1837,36 @@
 
     function renderSettingsModal() {
       fillRosterEditor();
-      // 1. 現有班級清單
       const container = document.getElementById('classListContainer');
       container.innerHTML = appState.classes.map(cls => {
         const isCurrent = cls.id === appState.currentClassId;
         return `
-          <div class="flex items-center justify-between p-3 rounded-2xl border ${isCurrent ? 'border-indigo-300 bg-indigo-50/50' : 'border-slate-200 bg-white'}">
+          <div class="flex items-center justify-between p-3 rounded-2xl border-2 ${isCurrent ? 'border-emerald-300 bg-emerald-50/50' : 'border-stone-200 bg-white'}">
             <div>
-              <div class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
+              <div class="font-extrabold text-sm text-stone-800 flex items-center gap-2">
                 <span>${escapeHtml(cls.name)}</span>
-                ${isCurrent ? '<span class="text-[11px] bg-indigo-600 text-white px-2 py-0.5 rounded-full">目前使用中</span>' : ''}
+                ${isCurrent ? '<span class="text-[11px] bg-emerald-600 text-white px-2 py-0.5 rounded-full">目前使用中</span>' : ''}
               </div>
-              <div class="text-xs text-slate-500 mt-0.5">共 ${cls.students.length} 位學生</div>
+              <div class="text-xs text-stone-500 mt-0.5">共 ${cls.students.length} 位學生</div>
             </div>
             <div class="flex items-center gap-1.5">
-              ${!isCurrent ? `<button data-switch-class="${cls.id}" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-100 text-xs font-bold text-slate-700 transition">切換</button>` : ''}
-              ${appState.classes.length > 1 ? `<button data-delete-class="${cls.id}" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-xs font-bold text-rose-700 transition">刪除</button>` : ''}
+              ${!isCurrent ? `<button data-switch-class="${cls.id}" class="px-3 py-1.5 rounded-full bg-stone-100 hover:bg-emerald-100 text-xs font-bold text-stone-700 transition">切換</button>` : ''}
+              ${appState.classes.length > 1 ? `<button data-delete-class="${cls.id}" class="px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-xs font-bold text-rose-700 transition">刪除</button>` : ''}
             </div>
           </div>
         `;
       }).join('');
 
-      // 2. 系統設定開關
       fillTermForm('set');
     }
 
     // ==================== 事件綁定 ====================
 
     function bindEvents() {
-      // 通用關閉 Modal 按鈕
       document.querySelectorAll('[data-close-modal]').forEach(btn => {
         btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
       });
 
-      // 點擊遮罩關閉 Modal
       ['studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal', 'weekPickerModal'].forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('click', (e) => {
@@ -1787,7 +1874,6 @@
         });
       });
 
-      // 班級切換
       document.getElementById('classSelect').addEventListener('change', (e) => {
         appState.currentClassId = e.target.value;
         jumpToTodayWeek();
@@ -1797,7 +1883,6 @@
         renderBoard();
       });
 
-      // 週次切換
       document.getElementById('weekSelect').addEventListener('change', (e) => {
         appState.currentWeek = parseInt(e.target.value, 10);
         selectedStudentIds.clear();
@@ -1824,7 +1909,6 @@
         }
       });
 
-      // 音效開關
       document.getElementById('soundToggleBtn').addEventListener('click', () => {
         appState.settings.soundEnabled = !appState.settings.soundEnabled;
         saveState();
@@ -1846,7 +1930,6 @@
         renderBoard();
       });
 
-      // 批次快速加分按鈕（4項日常）
       document.querySelectorAll('.batch-action-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           requireTeacherMode(() => applyBatchScore('add', btn.dataset.batchAdd, '', 1));
@@ -1870,7 +1953,7 @@
       document.querySelectorAll('[data-charge]').forEach(btn => {
         btn.addEventListener('click', () => {
           requireTeacherMode(() => {
-            if (selectedStudentIds.size === 0) return showToast('請先點選充電站的同學', 'warning');
+            if (selectedStudentIds.size === 0) return showToast('請先點選樹洞充電站的同學', 'warning');
             const skipped = [...selectedStudentIds].filter(id => getStudentScore(id) >= 0);
             skipped.forEach(id => selectedStudentIds.delete(id));
             if (selectedStudentIds.size === 0) {
@@ -1886,12 +1969,10 @@
         });
       });
 
-      // 好表現
       document.getElementById('batchGoodCustomBtn').addEventListener('click', () => {
         requireTeacherMode(() => askScore('add', '好表現'));
       });
 
-      /** 點選項目後輸入分數 */
       function askScore(type, item, fixedNote = '') {
         if (selectedStudentIds.size === 0) {
           showToast('請先點選至少一位學生！', 'warning');
@@ -1904,15 +1985,15 @@
           `${item === '其他' ? (type === 'add' ? '其他加分' : '其他扣分') : item}（已選 ${selectedStudentIds.size} 人）`;
         document.getElementById('batchDetailBody').innerHTML = `
           <form id="scoreForm" class="space-y-3">
-            ${askNote ? `<input id="scoreNote" type="text" maxlength="40" placeholder="${needReason ? '請輸入原因' : '備註（選填）'}" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm" />` : ''}
-            <div class="text-sm font-bold text-slate-600">${type === 'add' ? '加' : '扣'}幾分？</div>
+            ${askNote ? `<input id="scoreNote" type="text" maxlength="40" placeholder="${needReason ? '請輸入原因' : '備註（選填）'}" class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-sm" />` : ''}
+            <div class="text-sm font-bold text-stone-600">${type === 'add' ? '加' : '扣'}幾分？</div>
             <div class="flex items-center gap-2">
-              ${[1, 2, 3, 5].map(n => `<button type="button" data-points="${n}" class="w-12 py-2 rounded-xl text-base font-black border border-slate-300 bg-white">${sign}${n}</button>`).join('')}
-              <input id="scorePoints" type="number" min="1" max="20" step="1" value="1" aria-label="自訂分數" class="w-20 px-2 py-2 rounded-xl border border-slate-300 text-center text-base font-bold" />
+              ${[1, 2, 3, 5].map(n => `<button type="button" data-points="${n}" class="w-12 py-2 rounded-xl text-base font-black border border-stone-300 bg-white">${sign}${n}</button>`).join('')}
+              <input id="scorePoints" type="number" min="1" max="20" step="1" value="1" aria-label="自訂分數" class="w-20 px-2 py-2 rounded-xl border border-stone-300 text-center text-base font-bold" />
             </div>
             <div class="flex justify-end gap-2 pt-1">
-              <button type="button" onclick="closeModal('batchDetailModal')" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm">取消</button>
-              <button type="submit" id="scoreOkBtn" class="px-5 py-2 rounded-xl ${type === 'add' ? 'bg-emerald-600' : 'bg-rose-600'} text-white font-extrabold text-sm"></button>
+              <button type="button" onclick="closeModal('batchDetailModal')" class="px-4 py-2 rounded-full border border-stone-200 text-stone-600 font-bold text-sm">取消</button>
+              <button type="submit" id="scoreOkBtn" class="px-5 py-2 rounded-full ${type === 'add' ? 'bg-emerald-600' : 'bg-rose-600'} text-white font-black text-sm"></button>
             </div>
           </form>`;
         const input = document.getElementById('scorePoints');
@@ -1941,20 +2022,17 @@
         openModal('batchDetailModal');
       }
 
-      // 主加分板點擊委派
       document.getElementById('boardBody').addEventListener('click', (e) => {
-        // 點擊勾選框
         const checkbox = e.target.closest('.batch-checkbox');
         if (checkbox) {
           const id = checkbox.dataset.studentId;
           if (checkbox.checked) selectedStudentIds.add(id);
           else selectedStudentIds.delete(id);
           renderTopControls();
-          e.target.closest('.student-row').classList.toggle('bg-indigo-50/80', checkbox.checked);
+          e.target.closest('.student-row').classList.toggle('bg-emerald-100/80', checkbox.checked);
           return;
         }
 
-        // 點擊明細圖示
         const logBtn = e.target.closest('[data-action="open-log"]');
         if (logBtn) {
           e.stopPropagation();
@@ -1962,7 +2040,6 @@
           return;
         }
 
-        // 點擊學生列或磁鐵
         const rowTarget = e.target.closest('[data-action="open-student"]');
         if (rowTarget) {
           const id = rowTarget.dataset.studentId;
@@ -1977,7 +2054,6 @@
         }
       });
 
-      // 個人操作面板：日常 4 項加分
       document.querySelectorAll('.add-item-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           if (!activeStudentId) return;
@@ -1989,13 +2065,12 @@
           const res = recordScore(activeStudentId, 'add', item);
           if (res) {
             renderBoard();
-            openStudentActionModal(activeStudentId); // 即時刷新面板數字與按鈕狀態
+            openStudentActionModal(activeStudentId);
             showToast(`${res.stu.name}「${item}」+1！（目前 ${res.newScore} 分）`, 'success');
           }
         });
       });
 
-      // 個人操作面板：好表現 +1
       document.getElementById('goodBehaviorAddBtn').addEventListener('click', () => {
         if (!isTeacherUnlocked || !activeStudentId) return;
         const note = document.getElementById('goodBehaviorNote').value;
@@ -2007,7 +2082,6 @@
         }
       });
 
-      // 個人操作面板：固定 5 項扣分
       document.querySelectorAll('.deduct-item-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           if (!isTeacherUnlocked || !activeStudentId) return;
@@ -2021,7 +2095,6 @@
         });
       });
 
-      // 個人操作面板：其他扣分
       document.getElementById('deductOtherBtn').addEventListener('click', () => {
         if (!isTeacherUnlocked || !activeStudentId) return;
         const note = document.getElementById('deductOtherNote').value;
@@ -2033,13 +2106,11 @@
         }
       });
 
-      // 從個人操作面板切換至明細
       document.getElementById('actionOpenLogBtn').addEventListener('click', () => {
         closeModal('studentActionModal');
         if (activeStudentId) openStudentLogModal(activeStudentId);
       });
 
-      // 個人明細面板：復原單筆紀錄
       document.getElementById('logModalBody').addEventListener('click', (e) => {
         const delBtn = e.target.closest('[data-delete-log]');
         if (!delBtn || !isTeacherUnlocked) return;
@@ -2058,11 +2129,9 @@
         });
       });
 
-      // 本週結算與 CSV 匯出
       document.getElementById('summaryBtn').addEventListener('click', openSummaryModal);
       document.getElementById('exportCsvBtn').addEventListener('click', exportWeeklyCsv);
 
-      // 班級與設定按鈕（需教師模式）
       document.getElementById('settingsBtn').addEventListener('click', () => {
         requireTeacherMode(() => {
           renderSettingsModal();
@@ -2070,21 +2139,19 @@
         });
       });
 
-      // 設定視窗分頁切換
       document.querySelectorAll('.settings-tab').forEach(tab => {
         tab.addEventListener('click', () => {
           const target = tab.dataset.tab;
           document.querySelectorAll('.settings-tab').forEach(t => {
-            t.className = 'settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-slate-500 hover:text-slate-800';
+            t.className = 'settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800';
           });
-          tab.className = 'settings-tab px-4 py-2 text-sm font-extrabold rounded-t-xl border-b-2 border-indigo-600 text-indigo-700 bg-white';
+          tab.className = 'settings-tab px-4 py-2 text-sm font-black rounded-t-xl border-b-2 border-emerald-600 text-emerald-800 bg-white';
           ['roster', 'prefs', 'backup'].forEach(name => {
             document.getElementById(`tab-${name}`).classList.toggle('hidden', name !== target);
           });
         });
       });
 
-      // 即時預覽貼上的名單人數
       const rosterTextarea = document.getElementById('newClassRosterTextarea');
       rosterTextarea.addEventListener('input', () => {
         const parsed = parseRosterText(rosterTextarea.value);
@@ -2092,7 +2159,6 @@
           parsed.length > 0 ? `已辨識 ${parsed.length} 位學生` : '尚未輸入名單';
       });
 
-      // 上傳 CSV / TXT 名單檔案
       document.getElementById('rosterFileInput').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -2106,7 +2172,6 @@
         e.target.value = '';
       });
 
-      // 建立新班級
       document.getElementById('createClassBtn').addEventListener('click', () => {
         const name = document.getElementById('newClassNameInput').value.trim();
         const parsed = parseRosterText(rosterTextarea.value);
@@ -2147,7 +2212,6 @@
         showToast(`已成功建立「${name}」（共 ${parsed.length} 位學生）！`, 'success');
       });
 
-      // 切換或刪除現有班級
       document.getElementById('classListContainer').addEventListener('click', (e) => {
         const switchBtn = e.target.closest('[data-switch-class]');
         if (switchBtn) {
@@ -2181,7 +2245,6 @@
         }
       });
 
-      // 匯出 JSON 備份（含學生姓名，請妥善保管）
       document.getElementById('exportJsonBtn').addEventListener('click', () => {
         const exportObj = {
           exportedAt: new Date().toISOString(),
@@ -2192,7 +2255,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `班級榮譽加分板備份_${getTodayStr()}.json`;
+        a.download = `楠梓國小_榮譽加分板備份_${getTodayStr()}.json`;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -2200,7 +2263,6 @@
         showToast('已下載 JSON 備份檔', 'success');
       });
 
-      // 匯入 JSON 備份
       document.getElementById('importJsonInput').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
