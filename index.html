@@ -166,7 +166,7 @@
           </div>
           <div>
             <h1 class="text-base sm:text-lg font-extrabold text-slate-800 leading-tight tracking-tight">班級榮譽加分板</h1>
-            <p id="modeStatusSub" class="text-[11px] font-medium text-slate-500">展示模式（防誤觸保護中）</p>
+            <p id="termSubtitle" class="text-[11px] font-bold text-indigo-600"></p>
           </div>
         </div>
 
@@ -205,9 +205,6 @@
           🔊
         </button>
 
-        <!-- 教師模式解鎖 / 鎖定按鈕 -->
-        <button id="teacherModeBtn" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 shadow-sm">
-        </button>
       </div>
     </div>
 
@@ -249,6 +246,8 @@
   <!-- ==================== 主版面：實體磁鐵加分板 ==================== -->
   <main class="flex-1 max-w-[1600px] w-full mx-auto px-2 sm:px-4 py-3">
     
+    <button type="button" id="setupBanner" class="hidden w-full mb-2 rounded-2xl border-4 border-rose-500 bg-amber-200 hover:bg-amber-300 px-4 py-3 text-lg font-black text-rose-800 text-center animate-pulse"></button>
+
     <!-- 印章看板 -->
     <div id="stampBoard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-2"></div>
     <div id="chargeStrip" class="hidden mb-2 flex-wrap items-center gap-1.5 rounded-xl border border-cyan-300 bg-cyan-50 px-3 py-1.5 text-sm font-bold text-cyan-900"></div>
@@ -421,32 +420,6 @@
     </div>
   </div>
 
-  <!-- ==================== 彈出視窗 3：教師密碼設定 / 解鎖（不顯示任何密碼或提示） ==================== -->
-  <div id="passwordModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/55 backdrop-blur-xs p-3">
-    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-sm overflow-hidden animate-modal">
-      <div class="px-5 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-        <h2 id="pwdModalTitle" class="text-lg font-black text-slate-800">🔐 教師模式驗證</h2>
-        <button data-close-modal="passwordModal" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold flex items-center justify-center transition">✕</button>
-      </div>
-      <form id="passwordForm" class="p-5 space-y-4">
-        <p id="pwdModalDesc" class="text-sm text-slate-600 leading-relaxed"></p>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">教師密碼</label>
-          <input id="pwdInput1" type="password" autocomplete="off" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base" />
-        </div>
-        <div id="pwdConfirmWrap" class="hidden">
-          <label class="block text-xs font-bold text-slate-600 mb-1">再次輸入確認密碼</label>
-          <input id="pwdInput2" type="password" autocomplete="off" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base" />
-        </div>
-        <p id="pwdErrorMsg" class="hidden text-xs font-bold text-rose-600 bg-rose-50 px-3 py-2 rounded-xl border border-rose-200"></p>
-        <div class="flex justify-end gap-2 pt-1">
-          <button type="button" data-close-modal="passwordModal" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-100 transition">取消</button>
-          <button id="pwdSubmitBtn" type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-sm transition">確認</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <!-- ==================== 彈出視窗 4：本週結算總覽與 CSV 匯出 ==================== -->
   <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 backdrop-blur-xs p-3">
     <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
@@ -498,7 +471,7 @@
       <!-- 分頁標籤 -->
       <div class="flex border-b border-slate-200 bg-slate-50/60 px-4 pt-2 gap-1">
         <button data-tab="roster" class="settings-tab px-4 py-2 text-sm font-extrabold rounded-t-xl border-b-2 border-indigo-600 text-indigo-700 bg-white">👥 班級與名單</button>
-        <button data-tab="prefs" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-slate-500 hover:text-slate-800">🔐 權限與密碼</button>
+        <button data-tab="prefs" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-slate-500 hover:text-slate-800">📅 學期與週次</button>
         <button data-tab="backup" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-slate-500 hover:text-slate-800">💾 備份與分享</button>
       </div>
 
@@ -539,40 +512,18 @@
           </div>
         </div>
 
-        <!-- 分頁 2：權限與密碼 -->
-        <div id="tab-prefs" class="hidden space-y-5">
-          <!-- 學生自助加分開關 -->
-          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-4">
-            <div>
-              <h3 class="text-sm font-extrabold text-slate-800">允許學生自助加分（未解鎖模式）</h3>
-              <p class="text-xs text-slate-500 mt-1">開啟後，未解鎖教師模式時學生可自行點選每日 4 項日常表現（準時到校、作業繳齊、擦餐具、刷牙），系統會自動防範同日重複點擊；扣分與刪紀錄仍完全鎖定。</p>
+        <!-- 分頁 2：學期與週次 -->
+        <div id="tab-prefs" class="hidden space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">學年度</label><input id="setYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">學期</label><select id="setSem" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">開學日</label><input id="setStart" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">休業式</label><input id="setEnd" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
+              <div class="col-span-2"><label class="block text-xs font-bold text-slate-600 mb-1">開學日那一週算第幾週</label><input id="setFirst" type="number" min="0" max="10" value="1" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer shrink-0">
-              <input id="selfAddToggle" type="checkbox" class="sr-only peer" />
-              <div class="w-12 h-7 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
-            </label>
-          </div>
-
-          <!-- 修改教師密碼 -->
-          <form id="changePwdForm" class="p-4 rounded-2xl border border-slate-200 bg-white space-y-3">
-            <h3 class="text-sm font-extrabold text-slate-800">🔑 修改教師密碼</h3>
-            <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">目前密碼</label>
-              <input id="oldPwdInput" type="password" required autocomplete="off" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">新密碼</label>
-                <input id="newPwdInput1" type="password" required autocomplete="off" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1">確認新密碼</label>
-                <input id="newPwdInput2" type="password" required autocomplete="off" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-              </div>
-            </div>
-            <p id="changePwdMsg" class="hidden text-xs font-bold px-3 py-2 rounded-xl"></p>
-            <button type="submit" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-extrabold transition">更新密碼</button>
-          </form>
+            <p id="setPreview" class="text-sm font-bold text-indigo-700 bg-indigo-50 rounded-xl px-3 py-2"></p>
+            <button type="button" id="saveTermBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold">儲存學期設定</button>
+            <p class="text-xs text-slate-500">換到另一個學年度或學期時，原學期紀錄會保存；把學年度與學期改回來就能調閱。</p>
         </div>
 
         <!-- 分頁 3：備份與分享 -->
@@ -621,6 +572,39 @@
     </div>
   </div>
 
+  <!-- ==================== 首次設定引導 ==================== -->
+  <div id="wizardModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 w-full max-w-xl overflow-hidden animate-modal flex flex-col max-h-[92vh]">
+      <div class="px-5 py-4 bg-gradient-to-r from-amber-300 to-orange-300">
+        <h2 class="text-2xl font-black text-slate-900">👋 老師您好！請先新增學生名單</h2>
+        <p class="text-sm font-bold text-slate-800 mt-1">完成下面兩步，就能產生您班級的加分板。</p>
+      </div>
+      <div class="p-5 overflow-y-auto space-y-5">
+        <div class="space-y-2">
+          <h3 class="text-base font-black text-indigo-800">① 班級與學生名單</h3>
+          <input id="wizName" type="text" placeholder="班級名稱，例如：三年二班" class="w-full px-3 py-2 rounded-xl border-2 border-indigo-300 text-sm" />
+          <textarea id="wizRoster" rows="6" placeholder="從 Excel 複製「座號、姓名」兩欄貼上，一行一人&#10;1 王小明&#10;2 陳美美" class="w-full px-3 py-2 rounded-xl border-2 border-indigo-300 text-sm"></textarea>
+          <p id="wizCount" class="text-sm font-bold text-indigo-700">尚未輸入名單</p>
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-base font-black text-indigo-800">② 學期日期（自動排週次）</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">學年度</label><input id="wizYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">學期</label><select id="wizSem" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">開學日</label><input id="wizStart" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
+              <div><label class="block text-xs font-bold text-slate-600 mb-1">休業式</label><input id="wizEnd" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
+              <div class="col-span-2"><label class="block text-xs font-bold text-slate-600 mb-1">開學日那一週算第幾週</label><input id="wizFirst" type="number" min="0" max="10" value="1" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" /></div>
+            </div>
+            <p id="wizPreview" class="text-sm font-bold text-indigo-700 bg-indigo-50 rounded-xl px-3 py-2"></p>
+        </div>
+      </div>
+      <div class="px-5 py-3 border-t border-slate-200 flex justify-between gap-2">
+        <button type="button" data-close-modal="wizardModal" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-600 font-bold text-sm">稍後再設定</button>
+        <button type="button" id="wizSaveBtn" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-base">✅ 完成，開始使用</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== 浮動提示訊息（Toast） ==================== -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-[70] flex flex-col gap-2 pointer-events-none"></div>
 
@@ -628,7 +612,7 @@
     /**
      * ============================================================================
      * 班級榮譽加分板 - 主程式邏輯
-     * 特色：localStorage 自動儲存、教師密碼隱私機制、每週獨立資料（預設第10週）、
+     * 特色：localStorage 自動儲存、學期週次自動編排、
      *       Web Audio 提示音、批次加扣分、多班級自動匯入、CSV 結算報表。
      * ============================================================================
      */
@@ -642,7 +626,7 @@
 
     // 應用程式狀態
     let appState = null;
-    let isTeacherUnlocked = false; // 僅存於記憶體，重新整理頁面自動鎖定保護
+    const isTeacherUnlocked = true; // 已取消教師模式，一律可操作
     let isBatchMode = false;
     let selectedStudentIds = new Set();
     let activeStudentId = null;
@@ -900,45 +884,157 @@
     // ==================== 教師模式驗證流程 ====================
 
     function requireTeacherMode(onSuccess) {
-      if (isTeacherUnlocked) {
-        onSuccess();
-        return;
-      }
-      pendingAuthCallback = onSuccess;
-      openPasswordModal();
+      onSuccess();
     }
 
-    function openPasswordModal() {
-      const isFirstSetup = !appState.passwordHash;
-      const titleEl = document.getElementById('pwdModalTitle');
-      const descEl = document.getElementById('pwdModalDesc');
-      const confirmWrap = document.getElementById('pwdConfirmWrap');
-      const pwd1 = document.getElementById('pwdInput1');
-      const pwd2 = document.getElementById('pwdInput2');
-      const errEl = document.getElementById('pwdErrorMsg');
-      const submitBtn = document.getElementById('pwdSubmitBtn');
+    // ==================== 學期與週次 ====================
 
-      pwd1.value = '';
-      pwd2.value = '';
-      errEl.classList.add('hidden');
-      errEl.textContent = '';
+    const toDate = str => { const [y, m, d] = str.split('-').map(Number); return new Date(y, m - 1, d); };
+    const mondayOf = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay() + 6) % 7));
+    const md = d => `${d.getMonth() + 1}/${d.getDate()}`;
+    const weeksBetween = (a, b) => Math.round((mondayOf(b) - mondayOf(a)) / 604800000);
 
-      if (isFirstSetup) {
-        titleEl.textContent = '🔐 首次設定教師密碼';
-        descEl.textContent = '請設定一組專屬的教師密碼以保護扣分、刪除紀錄與班級設定功能（密碼將隱藏顯示）。';
-        confirmWrap.classList.remove('hidden');
-        pwd2.required = true;
-        submitBtn.textContent = '設定並解鎖';
-      } else {
-        titleEl.textContent = '🔐 解鎖教師模式';
-        descEl.textContent = '請輸入您設定的教師密碼，解鎖後即可進行扣分、批次操作與管理名單。';
-        confirmWrap.classList.add('hidden');
-        pwd2.required = false;
-        submitBtn.textContent = '解鎖';
+    /** 回傳目前班級可選的週次 */
+    function getWeekList(term = getCurrentClass().term) {
+      if (!term) return Array.from({ length: 22 }, (_, i) => ({ no: i + 1, range: '' }));
+      const start = toDate(term.start);
+      const first = mondayOf(start);
+      return Array.from({ length: weeksBetween(start, toDate(term.end)) + 1 }, (_, i) => {
+        const mon = new Date(first.getFullYear(), first.getMonth(), first.getDate() + i * 7);
+        const fri = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 4);
+        return { no: term.first + i, range: `${md(mon)}–${md(fri)}` };
+      });
+    }
+
+    /** 今天所在週次（學期外則取第一週或最後一週） */
+    function getTodayWeek(term = getCurrentClass().term) {
+      if (!term) return null;
+      const list = getWeekList(term);
+      const i = weeksBetween(toDate(term.start), new Date());
+      return list[Math.max(0, Math.min(list.length - 1, i))].no;
+    }
+
+    function jumpToTodayWeek() {
+      const w = getTodayWeek();
+      if (w !== null) appState.currentWeek = w;
+    }
+
+    function readTermForm(p) {
+      const v = id => document.getElementById(p + id).value;
+      const term = { year: Number(v('Year')), sem: v('Sem'), start: v('Start'), end: v('End'), first: Number(v('First')) };
+      if (!term.year) return { error: '請輸入學年度' };
+      if (!term.start || !term.end) return { error: '請填寫開學日與休業式日期' };
+      if (term.end < term.start) return { error: '休業式日期要在開學日之後' };
+      if (weeksBetween(toDate(term.start), toDate(term.end)) > 30) return { error: '學期超過 31 週，請檢查日期' };
+      if (v('First') === '' || !Number.isInteger(term.first) || term.first < 0) return { error: '請輸入開學週的週次' };
+      return { term };
+    }
+
+    function updateTermPreview(p) {
+      const { term, error } = readTermForm(p);
+      const el = document.getElementById(p + 'Preview');
+      if (error) { el.textContent = error; return; }
+      const list = getWeekList(term);
+      const now = new Date();
+      const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7);
+      const label = d => {
+        const w = list[weeksBetween(toDate(term.start), d)];
+        return w ? `第 ${w.no} 週（${w.range}）` : '學期外';
+      };
+      el.textContent = `共 ${list.length} 週（第 ${list[0].no}～${list[list.length - 1].no} 週）｜本週：${label(now)}｜下週：${label(next)}`;
+    }
+
+    function fillTermForm(p) {
+      const term = getCurrentClass().term;
+      const now = new Date();
+      const set = (id, value) => { document.getElementById(p + id).value = value; };
+      set('Year', term ? term.year : now.getFullYear() - 1911 - (now.getMonth() < 7 ? 1 : 0));
+      set('Sem', term ? term.sem : (now.getMonth() >= 1 && now.getMonth() < 7 ? '下' : '上'));
+      set('Start', term ? term.start : '');
+      set('End', term ? term.end : '');
+      set('First', term ? term.first : 1);
+      updateTermPreview(p);
+    }
+
+    /** 套用學期設定；不同學年度/學期的紀錄分開保存 */
+    function applyTerm(cls, term) {
+      const key = t => `${t.year}-${t.sem}`;
+      if (cls.term && key(cls.term) !== key(term)) {
+        if (!cls.termLogs) cls.termLogs = {};
+        cls.termLogs[key(cls.term)] = cls.weeklyLogs || {};
+        cls.weeklyLogs = cls.termLogs[key(term)] || {};
+        delete cls.termLogs[key(term)];
       }
+      cls.term = term;
+      jumpToTodayWeek();
+    }
 
-      openModal('passwordModal');
-      setTimeout(() => pwd1.focus(), 80);
+    const isPlaceholderRoster = cls => cls.students.every(s => /^學生\d+$/.test(s.name));
+
+    function renderSetupBanner() {
+      const cls = getCurrentClass();
+      const el = document.getElementById('setupBanner');
+      const msg = isPlaceholderRoster(cls)
+        ? '👉 尚未新增學生名單！請點這裡新增班級名單'
+        : (!cls.term ? '📅 尚未設定開學日與休業式！請點這裡自動排週次' : '');
+      el.textContent = msg;
+      el.classList.toggle('hidden', !msg);
+    }
+
+    function openWizard() {
+      const cls = getCurrentClass();
+      const placeholder = isPlaceholderRoster(cls);
+      document.getElementById('wizName').value = placeholder ? '' : cls.name;
+      document.getElementById('wizRoster').value = placeholder ? '' : cls.students.map(s => `${s.seat} ${s.name}`).join('\n');
+      document.getElementById('wizCount').textContent = placeholder ? '尚未輸入名單' : `目前 ${cls.students.length} 位學生`;
+      fillTermForm('wiz');
+      openModal('wizardModal');
+    }
+
+    function saveWizard() {
+      const cls = getCurrentClass();
+      const name = document.getElementById('wizName').value.trim();
+      const parsed = parseRosterText(document.getElementById('wizRoster').value);
+      if (!name) return showToast('請輸入班級名稱', 'warning');
+      if (!parsed.length) return showToast('請貼上學生名單', 'warning');
+      if (new Set(parsed.map(p => p.seat)).size !== parsed.length) return showToast('座號有重複，請檢查名單', 'warning');
+      const { term, error } = readTermForm('wiz');
+      if (error) return showToast(error, 'warning');
+      cls.name = name;
+      // 依座號沿用原本的學生代號，保留既有紀錄
+      cls.students = parsed.map((p, i) => {
+        const old = cls.students.find(s => s.seat === p.seat);
+        return { id: old ? old.id : genId('stu'), seat: p.seat, name: p.name, colorIndex: i % 8 };
+      });
+      applyTerm(cls, term);
+      selectedStudentIds.clear();
+      saveState();
+      closeModal('wizardModal');
+      renderTopControls();
+      renderBoard();
+      showToast(`設定完成！共 ${parsed.length} 位學生`, 'success');
+    }
+
+    function bindTermEvents() {
+      ['wiz', 'set'].forEach(p => ['Year', 'Sem', 'Start', 'End', 'First'].forEach(id => {
+        document.getElementById(p + id).addEventListener('input', () => updateTermPreview(p));
+      }));
+      document.getElementById('wizRoster').addEventListener('input', e => {
+        const n = parseRosterText(e.target.value).length;
+        document.getElementById('wizCount').textContent = n ? `已辨識 ${n} 位學生` : '尚未輸入名單';
+      });
+      document.getElementById('wizSaveBtn').addEventListener('click', saveWizard);
+      document.getElementById('setupBanner').addEventListener('click', openWizard);
+      document.getElementById('saveTermBtn').addEventListener('click', () => {
+        const { term, error } = readTermForm('set');
+        if (error) return showToast(error, 'warning');
+        applyTerm(getCurrentClass(), term);
+        selectedStudentIds.clear();
+        saveState();
+        renderTopControls();
+        renderBoard();
+        showToast('已依學期日期排好週次', 'success');
+      });
     }
 
     // ==================== 渲染介面 ====================
@@ -970,37 +1066,24 @@
         .map(c => `<option value="${c.id}" ${c.id === appState.currentClassId ? 'selected' : ''}>${escapeHtml(c.name)}</option>`)
         .join('');
 
-      // 週次下拉選單（1 ~ 20週）
+      // 週次下拉選單（依學期日期）
       const weekSelect = document.getElementById('weekSelect');
-      let wkHtml = '';
-      for (let w = 1; w <= 20; w++) {
-        wkHtml += `<option value="${w}" ${w === appState.currentWeek ? 'selected' : ''}>第 ${w} 週</option>`;
-      }
+      const weeks = getWeekList();
+      if (!weeks.some(w => w.no === appState.currentWeek)) appState.currentWeek = getTodayWeek() ?? weeks[0].no;
+      const wkHtml = weeks.map(w => `<option value="${w.no}" ${w.no === appState.currentWeek ? 'selected' : ''}>第 ${w.no} 週${w.range ? `（${w.range}）` : ''}</option>`).join('');
       weekSelect.innerHTML = wkHtml;
 
       // 音效圖示
       document.getElementById('soundToggleBtn').textContent = appState.settings.soundEnabled ? '🔊' : '🔇';
 
-      // 教師模式狀態按鈕與副標題
-      const tmBtn = document.getElementById('teacherModeBtn');
-      const sub = document.getElementById('modeStatusSub');
-      if (isTeacherUnlocked) {
-        tmBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white';
-        tmBtn.innerHTML = '<span>🔓</span><span>教師模式中</span>';
-        sub.textContent = '教師模式已解鎖（完整操作權限）';
-        sub.className = 'text-[11px] font-bold text-emerald-600';
-      } else {
-        tmBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 shadow-sm bg-slate-800 hover:bg-slate-700 text-white';
-        tmBtn.innerHTML = '<span>🔒</span><span>教師模式</span>';
-        sub.textContent = appState.settings.allowStudentSelfAdd
-          ? '學生自助模式（僅限每日4項加分）'
-          : '展示模式（防誤觸保護中）';
-        sub.className = 'text-[11px] font-medium text-slate-500';
-      }
+      const term = getCurrentClass().term;
+      document.getElementById('termSubtitle').textContent = term
+        ? `${term.year} 學年度${term.sem}學期`
+        : '尚未設定學期';
+      renderSetupBanner();
 
-      // 教師模式下點學生列即為勾選
-      isBatchMode = isTeacherUnlocked;
-      if (!isTeacherUnlocked) selectedStudentIds.clear();
+      // 點學生列即為勾選
+      isBatchMode = true;
       document.getElementById('batchSelectedCount').textContent = selectedStudentIds.size;
     }
 
@@ -1105,7 +1188,8 @@
       // 更新頂部快速統計
       document.getElementById('weekQuickStats').textContent =
         `第 ${appState.currentWeek} 週 ｜ 全班 ${students.length} 人 ｜ 本週累計 ${totalStamps} 個榮譽章 ｜ 圓圈內是座號` +
-        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位突破20分` : '');
+        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位突破20分` : '') +
+        (cls.term && appState.currentWeek !== getTodayWeek() ? ' ｜ ⚠️ 目前不是本週，加扣分會記在這一週' : '');
     }
 
     function escapeHtml(str) {
@@ -1239,8 +1323,8 @@
       document.getElementById('logModalTitle').textContent = `📋 ${stu.seat}號 ${stu.name} — 第 ${appState.currentWeek} 週明細`;
       document.getElementById('logModalSubtitle').textContent = `目前總分：${score} 分 ｜ 應蓋榮譽章：${stamps} 個 ｜ 共 ${logs.length} 筆紀錄`;
       document.getElementById('logModalFootHint').textContent = isTeacherUnlocked
-        ? '教師模式：可點選右側按鈕復原單筆紀錄'
-        : '如需刪除或復原紀錄，請先解鎖教師模式';
+        ? '可點選右側按鈕復原單筆紀錄'
+        : '';
 
       const body = document.getElementById('logModalBody');
       if (logs.length === 0) {
@@ -1452,8 +1536,7 @@
       }).join('');
 
       // 2. 系統設定開關
-      document.getElementById('selfAddToggle').checked = !!appState.settings.allowStudentSelfAdd;
-      document.getElementById('changePwdMsg').classList.add('hidden');
+      fillTermForm('set');
     }
 
     // ==================== 事件綁定 ====================
@@ -1465,7 +1548,7 @@
       });
 
       // 點擊遮罩關閉 Modal
-      ['studentActionModal', 'studentLogModal', 'passwordModal', 'summaryModal', 'settingsModal', 'batchDetailModal'].forEach(id => {
+      ['studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal'].forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('click', (e) => {
           if (e.target === el) closeModal(id);
@@ -1475,6 +1558,7 @@
       // 班級切換
       document.getElementById('classSelect').addEventListener('change', (e) => {
         appState.currentClassId = e.target.value;
+        jumpToTodayWeek();
         selectedStudentIds.clear();
         saveState();
         renderTopControls();
@@ -1490,7 +1574,7 @@
         renderBoard();
       });
       document.getElementById('prevWeekBtn').addEventListener('click', () => {
-        if (appState.currentWeek > 1) {
+        if (appState.currentWeek > getWeekList()[0].no) {
           appState.currentWeek--;
           selectedStudentIds.clear();
           saveState();
@@ -1499,7 +1583,7 @@
         }
       });
       document.getElementById('nextWeekBtn').addEventListener('click', () => {
-        if (appState.currentWeek < 20) {
+        if (appState.currentWeek < getWeekList().slice(-1)[0].no) {
           appState.currentWeek++;
           selectedStudentIds.clear();
           saveState();
@@ -1514,74 +1598,6 @@
         saveState();
         renderTopControls();
         if (appState.settings.soundEnabled) playSound('add');
-      });
-
-      // 教師模式鎖定 / 解鎖
-      document.getElementById('teacherModeBtn').addEventListener('click', () => {
-        if (isTeacherUnlocked) {
-          isTeacherUnlocked = false;
-          isBatchMode = false;
-          selectedStudentIds.clear();
-          renderTopControls();
-          renderBoard();
-          showToast('已鎖定教師模式，切換回展示保護狀態', 'info');
-        } else {
-          pendingAuthCallback = () => {
-            showToast('已解鎖教師模式', 'success');
-          };
-          openPasswordModal();
-        }
-      });
-
-      // 教師密碼表單送出
-      document.getElementById('passwordForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const pwd1 = document.getElementById('pwdInput1').value;
-        const pwd2 = document.getElementById('pwdInput2').value;
-        const errEl = document.getElementById('pwdErrorMsg');
-
-        if (!appState.passwordHash) {
-          // 首次設定
-          if (pwd1.length < 3) {
-            errEl.textContent = '密碼長度請至少輸入 3 個字元';
-            errEl.classList.remove('hidden');
-            return;
-          }
-          if (pwd1 !== pwd2) {
-            errEl.textContent = '兩次輸入的密碼不一致，請重新確認';
-            errEl.classList.remove('hidden');
-            return;
-          }
-          appState.passwordHash = hashPassword(pwd1);
-          saveState();
-          isTeacherUnlocked = true;
-          closeModal('passwordModal');
-          renderTopControls();
-          renderBoard();
-          showToast('教師密碼設定完成並已解鎖！', 'success');
-          if (pendingAuthCallback) {
-            const cb = pendingAuthCallback;
-            pendingAuthCallback = null;
-            cb();
-          }
-        } else {
-          // 驗證解鎖
-          if (hashPassword(pwd1) !== appState.passwordHash) {
-            errEl.textContent = '密碼不正確，請再試一次';
-            errEl.classList.remove('hidden');
-            document.getElementById('pwdInput1').select();
-            return;
-          }
-          isTeacherUnlocked = true;
-          closeModal('passwordModal');
-          renderTopControls();
-          renderBoard();
-          if (pendingAuthCallback) {
-            const cb = pendingAuthCallback;
-            pendingAuthCallback = null;
-            cb();
-          }
-        }
       });
 
       document.getElementById('batchSelectAllBtn').addEventListener('click', () => {
@@ -1880,7 +1896,8 @@
             name: p.name,
             colorIndex: idx % 8
           })),
-          weeklyLogs: { [String(appState.currentWeek)]: {} }
+          weeklyLogs: {},
+          term: getCurrentClass().term ? { ...getCurrentClass().term } : undefined
         };
 
         appState.classes.push(newClass);
@@ -1903,6 +1920,7 @@
         const switchBtn = e.target.closest('[data-switch-class]');
         if (switchBtn) {
           appState.currentClassId = switchBtn.dataset.switchClass;
+          jumpToTodayWeek();
           selectedStudentIds.clear();
           saveState();
           renderTopControls();
@@ -1931,48 +1949,7 @@
         }
       });
 
-      // 學生自助加分開關
-      document.getElementById('selfAddToggle').addEventListener('change', (e) => {
-        appState.settings.allowStudentSelfAdd = e.target.checked;
-        saveState();
-        renderTopControls();
-        showToast(e.target.checked ? '已開啟學生自助加分（限每日4項）' : '已關閉學生自助加分', 'info');
-      });
-
-      // 修改教師密碼
-      document.getElementById('changePwdForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const oldPwd = document.getElementById('oldPwdInput').value;
-        const new1 = document.getElementById('newPwdInput1').value;
-        const new2 = document.getElementById('newPwdInput2').value;
-        const msgEl = document.getElementById('changePwdMsg');
-
-        if (hashPassword(oldPwd) !== appState.passwordHash) {
-          msgEl.textContent = '目前密碼不正確';
-          msgEl.className = 'text-xs font-bold px-3 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200';
-          return;
-        }
-        if (new1.length < 3) {
-          msgEl.textContent = '新密碼長度請至少 3 個字元';
-          msgEl.className = 'text-xs font-bold px-3 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200';
-          return;
-        }
-        if (new1 !== new2) {
-          msgEl.textContent = '兩次輸入的新密碼不一致';
-          msgEl.className = 'text-xs font-bold px-3 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200';
-          return;
-        }
-
-        appState.passwordHash = hashPassword(new1);
-        saveState();
-        document.getElementById('oldPwdInput').value = '';
-        document.getElementById('newPwdInput1').value = '';
-        document.getElementById('newPwdInput2').value = '';
-        msgEl.textContent = '✅ 教師密碼已成功更新！';
-        msgEl.className = 'text-xs font-bold px-3 py-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200';
-      });
-
-      // 匯出 JSON 備份（不含密碼雜湊，方便分享給其他老師）
+      // 匯出 JSON 備份（含學生姓名，請妥善保管）
       document.getElementById('exportJsonBtn').addEventListener('click', () => {
         const exportObj = {
           exportedAt: new Date().toISOString(),
@@ -2003,7 +1980,7 @@
               showToast('檔案格式不正確，無法匯入', 'error');
               return;
             }
-            showConfirm('確認匯入備份檔？', `即將匯入 ${data.classes.length} 個班級資料，這會覆蓋目前的班級與紀錄（您的教師密碼將保留）。`, () => {
+            showConfirm('確認匯入備份檔？', `即將匯入 ${data.classes.length} 個班級資料，這會覆蓋目前的班級與紀錄。`, () => {
               appState.classes = data.classes;
               appState.currentClassId = data.classes[0].id;
               if (data.currentWeek) appState.currentWeek = data.currentWeek;
@@ -2026,10 +2003,13 @@
     // ==================== 啟動應用程式 ====================
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
+      jumpToTodayWeek();
       renderScaleHeader();
       renderTopControls();
       renderBoard();
       bindEvents();
+      bindTermEvents();
+      if (isPlaceholderRoster(getCurrentClass())) openWizard();
     });
   </script>
 </body>
