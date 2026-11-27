@@ -215,35 +215,40 @@
     <div id="batchToolbar" class="border-t border-slate-200 bg-slate-50">
       <div class="max-w-[1600px] mx-auto px-3 sm:px-5 py-2 space-y-1.5">
         <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-sm font-extrabold text-slate-700 mr-1">本次分數</span>
+          <button type="button" data-points="1" class="w-10 py-1.5 rounded-lg text-sm font-black border">1</button><button type="button" data-points="2" class="w-10 py-1.5 rounded-lg text-sm font-black border">2</button><button type="button" data-points="3" class="w-10 py-1.5 rounded-lg text-sm font-black border">3</button><button type="button" data-points="5" class="w-10 py-1.5 rounded-lg text-sm font-black border">5</button>
+          <label class="text-sm font-bold text-slate-600">自訂 <input id="customPoints" type="number" min="1" max="20" step="1" value="1" class="w-16 px-2 py-1.5 rounded-lg border border-slate-300 bg-white text-sm text-center" /></label>
+          <span class="text-xs font-bold text-slate-500">套用到下方加分、扣分、補電與其他，用完回到 1</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5">
           <span class="text-sm font-extrabold text-emerald-700 mr-1">加分</span>
-          <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">☀️ 準時到校 +1</button>
-          <button data-batch-add="作業繳齊" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">📚 作業繳齊 +1</button>
-          <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🥢 擦餐具 +1</button>
-          <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🪥 刷牙 +1</button>
-          <button id="batchGoodCustomBtn" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-amber-300 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">🌟 好表現 +1</button>
+          <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">☀️ 準時到校 <span class="pt" data-sign="+">+1</span></button>
+          <button data-batch-add="作業繳齊" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">📚 作業繳齊 <span class="pt" data-sign="+">+1</span></button>
+          <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🥢 擦餐具 <span class="pt" data-sign="+">+1</span></button>
+          <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🪥 刷牙 <span class="pt" data-sign="+">+1</span></button>
+          <button id="batchGoodCustomBtn" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-amber-300 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">🌟 好表現 <span class="pt" data-sign="+">+1</span></button>
           <span class="ml-auto text-sm font-extrabold text-indigo-700">已選 <span id="batchSelectedCount">0</span> 人</span>
           <button id="batchSelectAllBtn" class="text-sm font-bold border border-indigo-200 bg-white text-indigo-700 px-3 py-1.5 rounded-lg">全選</button>
           <button id="batchClearAllBtn" class="text-sm font-bold border border-indigo-200 bg-white text-indigo-700 px-3 py-1.5 rounded-lg">清除</button>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
           <span class="text-sm font-extrabold text-rose-700 mr-1">扣分</span>
-          <button data-top-deduct="遲到" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">⏰ 遲到 -1</button>
-          <button data-top-deduct="上課不專心" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">💬 上課不專心 -1</button>
-          <button data-top-deduct="桌面沒整理" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🧹 桌面沒整理 -1</button>
-          <button data-top-deduct="學用品沒帶" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">✏️ 學用品沒帶 -1</button>
-          <button data-top-deduct="聯絡簿未簽" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">📓 聯絡簿未簽 -1</button>
+          <button data-top-deduct="遲到" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">⏰ 遲到 <span class="pt" data-sign="-">-1</span></button>
+          <button data-top-deduct="上課不專心" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">💬 上課不專心 <span class="pt" data-sign="-">-1</span></button>
+          <button data-top-deduct="桌面沒整理" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">🧹 桌面沒整理 <span class="pt" data-sign="-">-1</span></button>
+          <button data-top-deduct="學用品沒帶" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">✏️ 學用品沒帶 <span class="pt" data-sign="-">-1</span></button>
+          <button data-top-deduct="聯絡簿未簽" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1.5 rounded-lg text-sm font-bold border shadow-xs transition">📓 聯絡簿未簽 <span class="pt" data-sign="-">-1</span></button>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
           <span class="text-sm font-extrabold text-cyan-700 mr-1">🔋 補電任務</span>
-          <button data-charge="整理書櫃" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">📚 整理書櫃 +1</button>
-          <button data-charge="幫忙擦黑板" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">🧽 幫忙擦黑板 +1</button>
-          <button data-charge="補交作業" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">📝 補交作業 +1</button>
+          <button data-charge="整理書櫃" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">📚 整理書櫃 <span class="pt" data-sign="+">+1</span></button>
+          <button data-charge="幫忙擦黑板" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">🧽 幫忙擦黑板 <span class="pt" data-sign="+">+1</span></button>
+          <button data-charge="補交作業" class="px-3 py-1.5 rounded-lg text-sm font-bold border border-cyan-300 bg-cyan-50 text-cyan-900 hover:bg-cyan-100 shadow-xs">📝 補交作業 <span class="pt" data-sign="+">+1</span></button>
           <span class="text-xs font-bold text-slate-500">限充電站的同學</span>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
           <span class="text-sm font-extrabold text-indigo-700 mr-1">其他</span>
           <input id="customReason" type="text" maxlength="40" placeholder="自由輸入原因，例：幫忙發簿本" class="flex-1 min-w-[180px] max-w-md px-3 py-1.5 rounded-lg border border-indigo-200 bg-white text-sm" />
-          <label class="text-sm font-bold text-slate-600">分數 <input id="customPoints" type="number" min="1" max="20" step="1" value="1" class="w-16 px-2 py-1.5 rounded-lg border border-indigo-200 bg-white text-sm text-center" /></label>
           <button data-custom="add" class="px-3 py-1.5 rounded-lg text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white">＋ 加分</button>
           <button data-custom="deduct" class="px-3 py-1.5 rounded-lg text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white">－ 扣分</button>
         </div>
@@ -1277,10 +1282,31 @@
       openModal('studentLogModal');
     }
 
+    /** 讀取本次分數；不是 1～20 的整數則回傳 null */
+    function getPoints() {
+      const n = Number(document.getElementById('customPoints').value);
+      return Number.isInteger(n) && n >= 1 && n <= 20 ? n : null;
+    }
+
+    function renderPoints() {
+      const n = getPoints();
+      document.querySelectorAll('#batchToolbar .pt').forEach(el => {
+        el.textContent = el.dataset.sign + (n ?? '?');
+      });
+      document.querySelectorAll('[data-points]').forEach(btn => {
+        const on = Number(btn.dataset.points) === n;
+        btn.className = `w-10 py-1.5 rounded-lg text-sm font-black border ${on ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-700 border-slate-300'}`;
+      });
+    }
+
     /** 批次套用加減分 */
-    function applyBatchScore(type, item, note = '', points = 1) {
+    function applyBatchScore(type, item, note = '', points = getPoints()) {
       if (selectedStudentIds.size === 0) {
         showToast('請先勾選至少一位學生！', 'warning');
+        return;
+      }
+      if (points === null) {
+        showToast('分數請輸入 1～20 的整數', 'warning');
         return;
       }
       const ids = Array.from(selectedStudentIds)
@@ -1301,6 +1327,8 @@
       saveState();
       playSound(type === 'add' ? 'add' : 'deduct');
       selectedStudentIds.clear();
+      document.getElementById('customPoints').value = 1;
+      renderPoints();
       renderTopControls();
       renderBoard();
       showToast(`已為 ${ids.length} 位學生記錄「${item === '其他' && note.trim() ? note.trim() : item} ${type === 'add' ? '+' : '-'}${points}」` + (skipped ? `（${skipped} 人今天已加過）` : ''), type === 'add' ? 'success' : 'warning');
@@ -1619,18 +1647,25 @@
         btn.addEventListener('click', () => {
           requireTeacherMode(() => {
             const reasonEl = document.getElementById('customReason');
-            const pointsEl = document.getElementById('customPoints');
             const reason = reasonEl.value.trim();
-            const points = Number(pointsEl.value);
             if (selectedStudentIds.size === 0) return showToast('請先點選至少一位學生！', 'warning');
             if (!reason) return showToast('請輸入加扣分原因', 'warning');
-            if (!Number.isInteger(points) || points < 1 || points > 20) return showToast('分數請輸入 1～20 的整數', 'warning');
-            applyBatchScore(btn.dataset.custom, '其他', reason, points);
+            if (getPoints() === null) return showToast('分數請輸入 1～20 的整數', 'warning');
+            applyBatchScore(btn.dataset.custom, '其他', reason);
             reasonEl.value = '';
-            pointsEl.value = 1;
           });
         });
       });
+
+      const pointsInput = document.getElementById('customPoints');
+      pointsInput.addEventListener('input', renderPoints);
+      document.querySelectorAll('[data-points]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          pointsInput.value = btn.dataset.points;
+          renderPoints();
+        });
+      });
+      renderPoints();
 
       document.querySelectorAll('[data-charge]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1656,12 +1691,12 @@
           showToast('請先勾選至少一位學生！', 'warning');
           return;
         }
-        document.getElementById('batchDetailTitle').textContent = `🌟 批次好表現 +1（已選 ${selectedStudentIds.size} 人）`;
+        document.getElementById('batchDetailTitle').textContent = `🌟 批次好表現 +${getPoints() ?? '?'}（已選 ${selectedStudentIds.size} 人）`;
         document.getElementById('batchDetailBody').innerHTML = `
           <input id="batchGoodNoteInput" type="text" maxlength="40" placeholder="備註（選填，例：整潔表現優良、主動幫忙）" class="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" />
           <div class="flex justify-end gap-2 pt-2">
             <button type="button" onclick="closeModal('batchDetailModal')" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm">取消</button>
-            <button type="button" id="confirmBatchGoodBtn" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm">確認加分 +1</button>
+            <button type="button" id="confirmBatchGoodBtn" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm">確認加分 +${getPoints() ?? '?'}</button>
           </div>
         `;
         openModal('batchDetailModal');
