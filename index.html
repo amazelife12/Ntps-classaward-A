@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>班級加分板</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",sans-serif;background:#f4f7f6;color:#243230}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px;background:#24574a;color:#fff}
+header h1{font-size:20px;margin:0 8px 0 0}
+button,select,input,textarea{font:inherit;border-radius:8px;border:1px solid #b9c8c4;padding:6px 12px;background:#fff;color:#243230}
+button{cursor:pointer}
+button.primary{background:#e9a825;border-color:#e9a825;font-weight:bold}
+button.on{background:#24574a;color:#fff;border-color:#24574a}
+button:disabled{opacity:.4;cursor:default}
+.spacer{flex:1}
+main{padding:12px 16px 20px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.hint{font-size:13px;color:#5d706b}
+.wrap{overflow-x:auto;background:#fff;border-radius:10px;border:1px solid #cfdcd8}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{border:1px solid #fff;text-align:center;padding:0;height:27px;font-size:14px}
+th{background:#e8efed;height:30px}
+td.nm{white-space:nowrap;padding:0 8px;text-align:left;background:#f6f9f8;cursor:pointer;width:1%}
+tr.sel td.nm{background:#24574a;color:#fff}
+.z0{background:#eceeee}.z1{background:#d9ecfb}.z2{background:#dcf3d8}.z3{background:#fff0b8}.z4{background:#ffd9c2}.z5{background:#ecd9fa}
+th.z1{background:#aed5f4}th.z2{background:#b5e4ac}th.z3{background:#ffe170}th.z4{background:#ffb98d}th.z5{background:#d6b0f3}th.z0{background:#d3d8d8}
+thead th:nth-child(n+3):nth-child(-n+22){width:3.6%}
+td.fill{box-shadow:inset 0 -5px 0 rgba(0,0,0,.13)}
+.mag{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 3px;border-radius:12px;background:#d6336c;color:#fff;font-weight:bold;font-size:12px;box-shadow:0 1px 3px #0006}
+.mag.neg{background:#59636a}
+.stamp{font-weight:bold;white-space:nowrap;width:1%;padding:0 8px;background:#f6f9f8}
+#actions{position:sticky;bottom:0;background:#fff;border-top:3px solid #24574a;padding:10px 16px;max-height:46vh;overflow:auto}
+#actions .bar{margin-bottom:6px}
+.plus{background:#e2f5df;border-color:#79bd6d}.minus{background:#fde3e0;border-color:#e0877d}
+dialog{border:0;border-radius:14px;padding:20px;width:min(560px,94vw);max-height:90vh;box-shadow:0 10px 40px #0006}
+dialog::backdrop{background:#0008}
+dialog h2{margin:0 0 12px;font-size:19px}
+dialog label{display:block;margin:10px 0 4px;font-weight:bold;font-size:14px}
+dialog input:not([type=checkbox]):not([type=radio]),dialog textarea{width:100%}
+dialog textarea{min-height:150px}
+dialog .list{width:100%;min-width:0}
+dialog .list td,dialog .list th{border-bottom:1px solid #dde5e3;padding:4px}
+.right{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+.err{color:#b3261e;font-size:14px;min-height:20px}
+#toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#243230;color:#fff;padding:9px 18px;border-radius:20px;display:none;z-index:9}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.cards div{padding:8px;border-radius:10px}
+.empty{text-align:center;padding:50px 16px}
+[hidden]{display:none!important}
+@media print{header,#actions,.bar,#toast{display:none!important}body{background:#fff}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<header>
+  <h1>⭐ 班級加分板</h1>
+  <select id="classSel" aria-label="班級"></select>
+  <button id="prevW" aria-label="上一週">◀</button>
+  <select id="weekSel" aria-label="週次"></select>
+  <button id="nextW" aria-label="下一週">▶</button>
+  <span class="spacer"></span>
+  <button id="settleBtn">本週結算</button>
+  <button id="fullBtn">全螢幕</button>
+  <button id="setBtn" hidden>設定</button>
+  <button id="lockBtn" class="primary">🔒 教師模式</button>
+</header>
+<main id="main"></main>
+<div id="actions" hidden></div>
+<dialog id="dlg"></dialog>
+<div id="toast" role="status"></div>
+<script>
+"use strict";
+const KEY="classPointBoard.v1";
+const DEF_PLUS=["準時到校","作業繳齊","擦餐具","刷牙","好表現"];
+const DEF_MINUS=["上課不專心","桌面沒整理","學用品沒帶","聯絡簿未簽","遲到","其他"];
+const ONCE=["準時到校","作業繳齊","擦餐具","刷牙"];
+let db={classes:[],current:null,pw:null};
+let storageOK=true;
+try{const s=localStorage.getItem(KEY);if(s)db=JSON.parse(s);localStorage.setItem(KEY+".t","1");}catch(e){storageOK=false;}
+let teacher=false,week=null,day=null,selected=new Set(),idle=null;
+const $=s=>document.querySelector(s);
+const dlg=$("#dlg");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const cls=()=>db.classes.find(c=>c.id===db.current);
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db));storageOK=true;}catch(e){storageOK=false;toast("⚠️ 無法儲存！請立即下載備份");}}
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",2800);}
+/* 密碼：只存雜湊值，用途是防止學生誤操作 */
+function hash(str,salt){let a=0x811c9dc5,b=0x01000193;const s=salt+str;for(let r=0;r<2000;r++)for(let i=0;i<s.length;i++){a=Math.imul(a^s.charCodeAt(i),16777619);b=Math.imul(b^(a>>>13)^s.charCodeAt(i),2246822519);}return (a>>>0).toString(16)+"-"+(b>>>0).toString(16);}
+/* 日期 */
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);};
+const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return iso(d);};
+const monday=s=>addDays(s,-((parse(s).getDay()+6)%7));
+const weekStart=(c,w)=>addDays(c.startDate,(w-c.startWeek)*7);
+const md=s=>{const d=parse(s);return (d.getMonth()+1)+"/"+d.getDate();};
+function nowWeek(c){const diff=Math.round((parse(monday(iso(new Date())))-parse(c.startDate))/6048e5);return Math.max(c.startWeek,c.startWeek+diff);}
+const lastWeek=c=>Math.max(nowWeek(c)+1,c.startWeek+12,...c.log.map(e=>e.w));
+function defaultDay(c,w){const t=iso(new Date()),s=weekStart(c,w);if(t<s)return s;if(t>addDays(s,6))return addDays(s,4);return t;}
+/* 分數 */
+const rawScore=(c,no,w)=>c.log.reduce((a,e)=>a+(e.no===no&&e.w===w?e.d:0),0);
+function carryIn(c,no,w){if(!c.carry)return 0;let k=0;for(let i=c.startWeek;i<w;i++)k=Math.min(0,k+rawScore(c,no,i));return k;}
+const score=(c,no,w)=>carryIn(c,no,w)+rawScore(c,no,w);
+const stamps=(c,s)=>s<=0?0:Math.min(Math.ceil(s/5),c.five?5:4);
+const zone=n=>n<=0?0:Math.min(Math.ceil(n/5),5);
+/* 名單 */
+function parseRoster(text){
+  const out=[],seen=new Set();let auto=1;
+  for(let line of text.replace(/^\uFEFF/,"").split(/\r?\n/)){
+    const p=line.split(/[,\t，、]+|\s{1,}/).map(x=>x.replace(/^"|"$/g,"").trim()).filter(Boolean);
+    if(!p.length||/座號|姓名/.test(line))continue;
+    let no=null;
+    const m=p[0].match(/^(\d{1,3})[.．號]?(.*)$/);
+    if(m){no=Number(m[1]);if(m[2])p[0]=m[2];else p.shift();}
+    const name=p.join(" ");if(!name)continue;
+    if(no===null){while(seen.has(auto))auto++;no=auto;}
+    if(seen.has(no))throw new Error("座號 "+no+" 重複了，請檢查名單");
+    seen.add(no);out.push({no,name});
+  }
+  return out.sort((a,b)=>a.no-b.no);
+}
+async function readText(file){const buf=await file.arrayBuffer();try{return new TextDecoder("utf-8",{fatal:true}).decode(buf);}catch(e){return new TextDecoder("big5").decode(buf);}}
+/* 對話框 */
+function modal(html){dlg.innerHTML=html;if(!dlg.open)dlg.showModal();dlg.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>dlg.close());}
+const masked=s=>`type="password" autocomplete="new-password" id="${s}"`;
+function setPassword(done){
+  modal(`<h2>設定教師密碼</h2><p class="hint">至少 4 個字。畫面只顯示圓點。請避開學生猜得到的號碼。</p>
+  <label for="p1">新密碼</label><input ${masked("p1")}><label for="p2">再輸入一次</label><input ${masked("p2")}>
+  <div class="err" id="er"></div><div class="right"><button data-close>取消</button><button class="primary" id="ok">儲存密碼</button></div>`);
+  $("#ok").onclick=()=>{const a=$("#p1").value,b=$("#p2").value;
+    if(a.length<4)return $("#er").textContent="密碼至少 4 個字";
+    if(a!==b)return $("#er").textContent="兩次輸入不一樣";
+    const salt=uid();db.pw={salt,h:hash(a,salt)};save();dlg.close();done();};
+}
+function enterTeacher(){teacher=true;bump();render();if(!cls())classDialog();}
+function lock(){teacher=false;editOld=false;week=null;selected.clear();clearTimeout(idle);if(dlg.open)dlg.close();render();}
+function bump(){clearTimeout(idle);if(teacher)idle=setTimeout(()=>{lock();toast("閒置 3 分鐘，已自動鎖定");},180000);}
+["click","keydown","touchstart","input"].forEach(ev=>document.addEventListener(ev,bump,true));
+function login(){
+  if(!db.pw)return setPassword(enterTeacher);
+  modal(`<h2>進入教師模式</h2><form id="f"><label for="p">密碼</label><input type="password" id="p" autocomplete="off">
+  <div class="err" id="er"></div><div class="right"><button type="button" id="forgot">忘記密碼</button><button type="button" data-close>取消</button><button class="primary">進入</button></div></form>`);
+  $("#f").onsubmit=e=>{e.preventDefault();if(hash($("#p").value,db.pw.salt)===db.pw.h){dlg.close();enterTeacher();}else{$("#er").textContent="密碼錯誤";$("#p").value="";}};
+  $("#forgot").onclick=()=>{
+    modal(`<h2>忘記密碼</h2><p>請選擇您之前下載的<b>備份檔</b>。系統會還原該備份的資料，再讓您設定新密碼（備份之後的紀錄會消失）。</p>
+    <input type="file" id="rf" accept=".json"><div class="err" id="er"></div><div class="right"><button data-close>取消</button></div>`);
+    $("#rf").onchange=async e=>{try{const d=await readBackup(e.target.files[0]);
+      if(!d.classes.some(c=>db.classes.some(x=>x.id===c.id)))throw new Error("這份備份不屬於目前的班級");
+      setPassword(()=>{db={...d,pw:db.pw};save();week=null;enterTeacher();});}catch(x){$("#er").textContent=x.message;}};
+  };
+}
+function classDialog(edit){
+  const c=edit?cls():null;
+  modal(`<h2>${c?"更新學生名單":"新增班級"}</h2>
+  <label for="cn">班級名稱</label><input id="cn" value="${c?esc(c.name):""}" placeholder="例如：三年甲班">
+  <label for="rf">匯入名單檔（CSV 或 TXT）</label><input type="file" id="rf" accept=".csv,.txt,.tsv">
+  <label for="rt">或從 Excel 複製「座號、姓名」兩欄後貼上</label><textarea id="rt" placeholder="1　王小明&#10;2　陳小華">${c?esc(c.students.map(s=>s.no+" "+s.name).join("\n")):""}</textarea>
+  ${c?'<p class="hint">加分紀錄依「座號」對應，轉出學生刪掉該行即可，其他人座號請勿更動。</p>':`<label for="sw">起始週次</label><input type="number" id="sw" min="1" value="10"><label for="sd">起始週的星期一日期</label><input type="date" id="sd" value="2026-11-30">`}
+  <div class="err" id="er"></div><div class="right"><button data-close>取消</button><button class="primary" id="ok">匯入並儲存</button></div>`);
+  $("#rf").onchange=async e=>{if(e.target.files[0])$("#rt").value=await readText(e.target.files[0]);};
+  $("#ok").onclick=()=>{try{
+    const name=$("#cn").value.trim(),st=parseRoster($("#rt").value);
+    if(!name)throw new Error("請輸入班級名稱");if(!st.length)throw new Error("請匯入或貼上學生名單");
+    if(c){c.name=name;c.students=st;}else{
+      const sw=Number($("#sw").value),sd=$("#sd").value;if(!(sw>=1)||!sd)throw new Error("請填寫起始週次與日期");
+      const n={id:uid(),name,students:st,startWeek:sw,startDate:monday(sd),plus:[...DEF_PLUS],minus:[...DEF_MINUS],five:true,carry:false,log:[],stamped:{}};
+      db.classes.push(n);db.current=n.id;week=null;}
+    selected.clear();save();dlg.close();render();toast("已匯入 "+st.length+" 位學生");
+  }catch(x){$("#er").textContent=x.message;}};
+}
+const ICON={"準時到校":"⏰","作業繳齊":"📚","擦餐具":"🍽️","刷牙":"🪥"};
+let task=null,looking=false,editOld=false,audio=null;
+const selfOn=c=>c.self&&!teacher&&week===nowWeek(c)&&iso(new Date())>=weekStart(c,week)&&iso(new Date())<=addDays(weekStart(c,week),4);
+const readonly=c=>week<nowWeek(c)&&!editOld;
+function beep(up){const c=cls();if(!c||c.mute)return;try{audio=audio||new AudioContext();audio.resume();(up?[660,880]:[300,220]).forEach((f,i)=>{const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime+i*.12;o.frequency.value=f;g.gain.setValueAtTime(.15,t);g.gain.exponentialRampToValueAtTime(.001,t+.12);o.connect(g).connect(audio.destination);o.start(t);o.stop(t+.12);});}catch(e){}}
+function checkin(no){const c=cls(),today=iso(new Date()),s=c.students.find(x=>x.no===no);
+  if(!selfOn(c)||!c.plus.includes(task))return;
+  if(c.log.some(e=>e.no===no&&e.date===today&&e.r===task))return toast(`${s.name} 今天已完成「${task}」`);
+  c.log.push({id:uid(),batch:uid(),no,w:week,date:today,d:1,r:task,note:"學生打卡",t:Date.now()});save();render();beep(true);toast(`${s.name}「${task}」+1`);}
+function addPoints(delta,reason){
+  const c=cls();if(!teacher||!selected.size)return toast("請先點選學生姓名");
+  if(readonly(c))return toast("舊週次為唯讀");
+  let note="";
+  if(reason==="其他"||reason==="好表現"){const n=$("#note");note=n?n.value.trim():"";}
+  const batch=uid();let n=0,skip=0;
+  for(const no of selected){
+    if(delta>0&&ONCE.includes(reason)&&c.log.some(e=>e.no===no&&e.date===day&&e.r===reason)){skip++;continue;}
+    c.log.push({id:uid(),batch,no,w:week,date:day,d:delta,r:reason,note,t:Date.now()});n++;
+  }
+  selected.clear();save();render();if(n)beep(delta>0);
+  toast(`${reason} ${delta>0?"+1":"−1"}：${n} 人`+(skip?`（${skip} 人當天已加過，略過）`:""));
+}
+function undo(){const c=cls();if(readonly(c))return toast("舊週次為唯讀");const l=c.log.filter(e=>e.w===week);if(!l.length)return;const e=l[l.length-1];
+  const n=l.filter(x=>x.batch===e.batch).length;c.log=c.log.filter(x=>x.batch!==e.batch);save();render();toast(`已復原：${e.r}（${n} 人）`);}
+function detail(no){
+  const c=cls(),s=c.students.find(x=>x.no===no),l=c.log.filter(e=>e.no===no&&e.w===week).sort((a,b)=>a.date.localeCompare(b.date)||a.t-b.t),k=carryIn(c,no,week);
+  modal(`<h2>${no} 號 ${esc(s.name)}｜第${week}週：${score(c,no,week)} 分</h2>${k?`<p>上週帶入：${k} 分</p>`:""}
+  <table class="list"><tr><th>日期</th><th>項目</th><th>分數</th>${teacher?"<th></th>":""}</tr>
+  ${l.map(e=>`<tr><td>${md(e.date)}</td><td>${esc(e.r)}${e.note?"："+esc(e.note):""}</td><td>${e.d>0?"+1":"−1"}</td>${teacher?`<td><button data-del="${e.id}">刪除</button></td>`:""}</tr>`).join("")||'<tr><td colspan="4">本週還沒有紀錄</td></tr>'}
+  </table><div class="right"><button data-close class="primary">關閉</button></div>`);
+  dlg.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(!teacher)return;if(readonly(c))return toast("舊週次為唯讀，請先勾選「修改舊紀錄」");c.log=c.log.filter(e=>e.id!==b.dataset.del);save();render();detail(no);});
+}
+function download(name,text,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+const cell=v=>{let s=String(v);if(typeof v==="string"&&/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};
+function exportCSV(){
+  const c=cls(),items=[...new Set([...c.plus,...c.minus,...c.log.filter(e=>e.w===week).map(e=>e.r)])];
+  const rows=[["座號","姓名",...items,"上週帶入","總分","榮譽章"]];
+  for(const s of c.students){const sc=score(c,s.no,week);
+    rows.push([s.no,s.name,...items.map(r=>c.log.reduce((a,e)=>a+(e.no===s.no&&e.w===week&&e.r===r?e.d:0),0)),carryIn(c,s.no,week),sc,stamps(c,sc)]);}
+  download(`${c.name}_第${week}週.csv`,"\uFEFF"+rows.map(r=>r.map(cell).join(",")).join("\r\n"),"text/csv");
+}
+function settle(){
+  const c=cls();if(!c)return;const done=c.stamped[week]||(c.stamped[week]=[]);
+  const names=["0分以下","1–5分","6–10分","11–15分","16–20分","21分以上"],cnt=[0,0,0,0,0,0];
+  c.students.forEach(s=>cnt[zone(score(c,s.no,week))]++);
+  const sum={};c.log.filter(e=>e.w===week).forEach(e=>sum[e.r]=(sum[e.r]||0)+1);
+  modal(`<h2>第${week}週結算</h2><div class="cards">${names.map((n,i)=>`<div class="z${i}">${n}<br><b>${cnt[i]} 人</b></div>`).join("")}</div>
+  <p class="hint">本週各項次數：${Object.entries(sum).map(([r,n])=>esc(r)+" "+n).join("｜")||"尚無紀錄"}</p><table class="list"><tr><th>座號</th><th>姓名</th><th>分數</th><th>榮譽章</th><th>已蓋章</th></tr>
+  ${c.students.map(s=>{const v=score(c,s.no,week),n=stamps(c,v);return `<tr><td>${s.no}</td><td>${esc(s.name)}</td><td>${v}</td><td>${n} 個</td><td><input type="checkbox" data-st="${s.no}" aria-label="${s.no}號已蓋章" ${done.includes(s.no)?"checked":""} ${teacher&&n?"":"disabled"}></td></tr>`}).join("")}</table>
+  <div class="right">${teacher?'<button id="csv">匯出本週 CSV</button>':""}<button data-close class="primary">關閉</button></div>`);
+  dlg.querySelectorAll("[data-st]").forEach(b=>b.onchange=()=>{if(!teacher)return;const no=Number(b.dataset.st),i=done.indexOf(no);if(b.checked&&i<0)done.push(no);if(!b.checked&&i>=0)done.splice(i,1);save();});
+  if(teacher)$("#csv").onclick=exportCSV;
+}
+async function readBackup(file){let d;try{d=JSON.parse(await file.text());}catch(e){throw new Error("無法讀取這個檔案");}
+  const ok=d&&Array.isArray(d.classes)&&d.classes.every(c=>typeof c.id==="string"&&Array.isArray(c.students)&&Array.isArray(c.log)&&c.startDate);
+  if(!ok)throw new Error("這不是加分板的備份檔");
+  d.classes.forEach(c=>{c.students.forEach(s=>s.no=Number(s.no));c.log.forEach(e=>{e.no=Number(e.no);e.w=Number(e.w);e.d=Number(e.d)>0?1:-1;});c.startWeek=Number(c.startWeek);c.stamped=c.stamped||{};});return d;}
+function settings(){
+  const c=cls();
+  modal(`<h2>設定</h2>${c?`
+  <label for="pl">加分項目（一行一個）</label><textarea id="pl" style="min-height:110px">${esc(c.plus.join("\n"))}</textarea>
+  <label for="mi">扣分項目（一行一個）</label><textarea id="mi" style="min-height:120px">${esc(c.minus.join("\n"))}</textarea>
+  <label><input type="checkbox" id="five" ${c.five?"checked":""}> 21 分以上蓋 5 個章（不勾選則最多 4 個）</label>
+  <label><input type="checkbox" id="carry" ${c.carry?"checked":""}> 負分帶到下一週（不勾選則每週從 0 開始）</label>
+  <label><input type="checkbox" id="self" ${c.self?"checked":""}> 開放學生打卡（鎖定狀態下，可為當天固定項目 +1）</label>
+  <label><input type="checkbox" id="snd" ${c.mute?"":"checked"}> 加扣分音效</label>
+  <label for="sw">起始週次</label><input type="number" id="sw" min="1" value="${c.startWeek}" ${c.log.length?"disabled":""}>
+  <label for="sd">起始週的星期一日期</label><input type="date" id="sd" value="${c.startDate}" ${c.log.length?"disabled":""}>
+  <div class="right"><button class="primary" id="ok">儲存設定</button></div><hr>`:""}
+  <div class="right" style="justify-content:flex-start"><button id="nc">＋新增班級</button>${c?'<button id="er2">更新名單</button><button id="dc">刪除此班級</button>':""}<button id="pw">更改密碼</button><button id="bk">下載備份</button></div>
+  <label for="rs">還原備份（會取代目前所有資料）</label><input type="file" id="rs" accept=".json"><div class="err" id="er"></div>
+  <div class="right"><button data-close>關閉</button></div>`);
+  if(c){$("#ok").onclick=()=>{const L=id=>[...new Set($(id).value.split("\n").map(x=>x.trim()).filter(Boolean))];
+      c.plus=L("#pl");c.minus=L("#mi");c.five=$("#five").checked;c.carry=$("#carry").checked;c.self=$("#self").checked;c.mute=!$("#snd").checked;
+      if(!c.log.length&&$("#sd").value&&Number($("#sw").value)>=1){c.startWeek=Number($("#sw").value);c.startDate=monday($("#sd").value);week=null;}
+      save();dlg.close();render();toast("設定已儲存");};
+    $("#er2").onclick=()=>classDialog(true);
+    $("#dc").onclick=()=>{if(confirm(`確定刪除「${c.name}」和全部紀錄？此動作無法復原。`)){db.classes=db.classes.filter(x=>x!==c);db.current=db.classes[0]?.id||null;week=null;selected.clear();save();dlg.close();render();}};}
+  $("#nc").onclick=()=>classDialog(false);
+  $("#pw").onclick=()=>setPassword(()=>toast("密碼已更新"));
+  $("#bk").onclick=()=>{download(`加分板備份_${iso(new Date())}.json`,JSON.stringify({classes:db.classes,current:db.current}),"application/json");toast("備份已下載");};
+  $("#rs").onchange=async e=>{try{const d=await readBackup(e.target.files[0]);if(!confirm("確定用備份取代目前資料？"))return;db={classes:d.classes,current:d.current,pw:db.pw};week=null;selected.clear();save();dlg.close();render();toast("已還原");}catch(x){$("#er").textContent=x.message;}};
+}
+function render(){
+  const c=cls(),main=$("#main"),act=$("#actions");
+  $("#lockBtn").textContent=teacher?"🔓 鎖定畫面":"🔒 教師模式";
+  $("#setBtn").hidden=!teacher;
+  $("#classSel").innerHTML=db.classes.map(x=>`<option value="${esc(x.id)}" ${x===c?"selected":""}>${esc(x.name)}</option>`).join("")||"<option>尚無班級</option>";
+  if(!c){act.hidden=true;$("#weekSel").innerHTML="";main.innerHTML=`<div class="empty"><h2>歡迎使用！</h2><p>先設定教師密碼，再匯入班級名單。</p><button class="primary" id="start">開始設定</button>${storageOK?"":"<p class='err'>⚠️ 此瀏覽器無法儲存資料，請改用電腦版 Chrome 或 Edge 開啟。</p>"}</div>`;
+    $("#start").onclick=()=>teacher?classDialog():login();return;}
+  if(week===null||week<c.startWeek){week=nowWeek(c);day=defaultDay(c,week);}
+  const ws=weekStart(c,week);if(!day||day<ws||day>addDays(ws,6))day=defaultDay(c,week);
+  let o="";for(let w=c.startWeek;w<=lastWeek(c);w++){const s=weekStart(c,w);o+=`<option value="${w}" ${w===week?"selected":""}>第${w}週（${md(s)}–${md(addDays(s,4))}）</option>`;}
+  $("#weekSel").innerHTML=o;$("#prevW").disabled=week<=c.startWeek;$("#nextW").disabled=week>=lastWeek(c);
+  const today=iso(new Date()),self=selfOn(c),tasks=c.plus.filter(r=>ONCE.includes(r));
+  if(!tasks.includes(task))task=tasks[0];
+  const icons=no=>tasks.filter(r=>c.log.some(e=>e.no===no&&e.date===today&&e.r===r)).map(r=>ICON[r]).join("");
+  const taskBar=self&&tasks.length?`<div class="bar">${tasks.map(r=>`<button data-task="${esc(r)}" class="${r===task?"on":""}">${ICON[r]} ${esc(r)}</button>`).join("")}<button data-task="">🔍 看紀錄</button></div>`:"";
+  if(self&&looking)task=null;
+  const cols=[...Array(20)].map((_,i)=>i+1);
+  let h=`<div class="wrap"><table><thead><tr><th>座號 姓名</th><th class="z0">加油區<br><small>0以下</small></th>${cols.map(n=>`<th class="z${zone(n)}">${n}</th>`).join("")}<th class="z5">21+</th><th>榮譽章</th></tr></thead><tbody>`;
+  for(const s of c.students){const v=score(c,s.no,week),n=stamps(c,v),m=`<span class="mag ${v<0?"neg":""}">${v<=0||v>20?v:s.no}</span>`;
+    h+=`<tr class="${selected.has(s.no)?"sel":""}"><td class="nm" tabindex="0" role="button" data-no="${s.no}">${s.no}　${esc(s.name)} <small>${icons(s.no)}</small></td><td class="z0">${v<=0?m:""}</td>`+
+    cols.map(i=>`<td class="z${zone(i)} ${i<v?"fill":""}">${i===v?m:""}</td>`).join("")+`<td class="z5">${v>20?m:""}</td><td class="stamp">${n?"🏅×"+n:"－"}</td></tr>`;}
+  main.innerHTML=`<div class="bar"><b>${esc(c.name)}　第${week}週</b><span class="hint">1–5分：1章｜6–10分：2章｜11–15分：3章｜16–20分：4章${c.five?"｜21分以上：5章":""}</span><span class="spacer"></span><span class="hint">${teacher?"點姓名可多選學生":self&&!looking?"先選項目，再點自己的姓名 +1（每天一次）":"點姓名看自己的紀錄"}</span></div>`+taskBar.replace('data-task="" class="','data-task="" class="')+h+"</tbody></table></div>";
+  main.querySelectorAll("[data-no]").forEach(td=>{const f=()=>{const no=Number(td.dataset.no);if(!teacher)return selfOn(c)&&!looking&&task?checkin(no):detail(no);selected.has(no)?selected.delete(no):selected.add(no);const note=$("#note")?.value||"";render();$("#note").value=note;};
+    td.onclick=f;td.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f();}};});
+  main.querySelectorAll("[data-task]").forEach(b=>{if(!b.dataset.task&&looking)b.className="on";else if(looking)b.className="";b.onclick=()=>{looking=!b.dataset.task;if(!looking)task=b.dataset.task;render();};});
+  act.hidden=!teacher;if(!teacher)return;
+  const days=[0,1,2,3,4,5,6].map(i=>addDays(ws,i)).filter((d,i)=>i<5||d===day||d===iso(new Date()));
+  const btn=(list,d)=>list.map(r=>`<button class="${d>0?"plus":"minus"}" data-d="${d}" data-r="${esc(r)}">${d>0?"＋":"－"} ${esc(r)}</button>`).join("");
+  const old=week<nowWeek(c);
+  act.innerHTML=`${old?`<div class="bar">📂 正在調閱舊週次 <label><input type="checkbox" id="eo" ${editOld?"checked":""}> 修改舊紀錄</label></div>`:""}<div class="bar"><label>記錄日期 <select id="daySel">${days.map(d=>`<option value="${d}" ${d===day?"selected":""}>${md(d)}（${"日一二三四五六"[parse(d).getDay()]}）</option>`).join("")}</select></label>
+  <b>已選 ${selected.size} 人</b><button id="all">全選</button><button id="none">清除</button><button id="one" ${selected.size===1?"":"disabled"}>查看／刪除紀錄</button><button id="un">↩ 復原上一步</button></div>
+  <div class="bar">${btn(c.plus,1)}</div><div class="bar">${btn(c.minus,-1)}</div>
+  <input id="note" placeholder="「好表現／其他」的說明（可不填）" style="width:min(420px,100%)">`;
+  if(old)$("#eo").onchange=e=>{editOld=e.target.checked;render();};
+  if(readonly(c))act.querySelectorAll("[data-r],#un").forEach(b=>b.disabled=true);
+  $("#daySel").onchange=e=>day=e.target.value;
+  $("#all").onclick=()=>{c.students.forEach(s=>selected.add(s.no));render();};
+  $("#none").onclick=()=>{selected.clear();render();};
+  $("#one").onclick=()=>detail([...selected][0]);
+  $("#un").onclick=undo;
+  act.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>addPoints(Number(b.dataset.d),b.dataset.r));
+}
+$("#classSel").onchange=e=>{db.current=e.target.value;week=null;selected.clear();save();render();};
+function goWeek(w){editOld=false;week=w;day=defaultDay(cls(),w);selected.clear();render();}
+$("#weekSel").onchange=e=>goWeek(Number(e.target.value));
+$("#prevW").onclick=()=>cls()&&goWeek(week-1);
+$("#nextW").onclick=()=>cls()&&goWeek(week+1);
+$("#lockBtn").onclick=()=>teacher?lock():login();
+$("#setBtn").onclick=()=>teacher&&settings();
+$("#settleBtn").onclick=settle;
+$("#fullBtn").onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();
+render();
+</script>
+</body>
+</html>
