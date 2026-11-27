@@ -243,6 +243,39 @@
       animation: modalPop 0.2s ease-out forwards;
     }
 
+
+    /* 頂部自由排版控制區 */
+    .layout-block {
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, outline 0.2s ease;
+    }
+    body.layout-editing .layout-block {
+      outline: 2.5px dashed #f59e0b;
+      outline-offset: 2px;
+      border-radius: 1rem;
+      background-color: rgba(255, 251, 235, 0.65);
+    }
+    .layout-move-controls {
+      display: none;
+    }
+    body.layout-editing .layout-move-controls {
+      display: inline-flex;
+    }
+    .compact-toolbar #batchToolbar {
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+    .compact-toolbar #batchToolbar > div {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      gap: 4px;
+    }
+    .compact-toolbar #batchToolbar button {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      font-size: 0.8rem;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       #batchToolbar button, #stampBoard > div, .week-tile, .squirrel-mascot, .over20-track-cell {
         transition: none;
@@ -337,44 +370,42 @@
           <span>⚙️</span><span class="hidden sm:inline">名單與設定</span>
         </button>
 
+        <button id="layoutEditToggleBtn" title="自由調整上方區塊順序與顯示" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-purple-300 bg-purple-100 text-purple-900 hover:bg-purple-200 flex items-center gap-1.5 shadow-xs">
+          <span>🎛️</span><span>調整版面</span>
+        </button>
+
         <button id="soundToggleBtn" title="切換森林提示音效" class="w-9 h-9 border-2 border-emerald-200 bg-white hover:bg-emerald-50 flex items-center justify-center text-base shadow-xs">
           🔊
         </button>
       </div>
     </div>
 
-    <!-- ==================== 固定加扣分列 ==================== -->
-    <div id="batchToolbar">
-      <div class="max-w-[1600px] mx-auto px-3 sm:px-5 py-2 space-y-1.5">
-        <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-sm font-black text-emerald-800 mr-1 bg-emerald-100 px-2.5 py-0.5 rounded-full">🌰 集松果加分</span>
-          <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">☀️ 準時到校 +1</button>
-          <button data-batch-add="作業繳齊" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📚 作業繳齊 +1</button>
-          <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🥢 擦餐具 +1</button>
-          <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🪥 刷牙 +1</button>
-          <button id="batchGoodCustomBtn" class="px-3.5 py-1 text-sm font-black border-2 border-amber-400 bg-amber-200 text-amber-950 hover:bg-amber-300 shadow-xs">🌟 好表現</button>
+    <!-- ==================== 版面自由調整控制列 ==================== -->
+    <div id="layoutEditorBar" class="hidden border-t-2 border-purple-300 bg-purple-50/95 px-3 sm:px-5 py-2">
+      <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-black text-purple-950">
+          <span>🎛️ 版面自由安排模式：</span>
+          <span class="font-bold text-purple-800">可點擊各區塊右上角的「⬆️ 上移 / ⬇️ 下移」調換順序，或勾選顯示項目：</span>
         </div>
-        <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-sm font-black text-rose-800 mr-1 bg-rose-100 px-2.5 py-0.5 rounded-full">🍂 小提醒扣分</span>
-          <button data-top-deduct="遲到" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">⏰ 遲到</button>
-          <button data-top-deduct="上課不專心" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">💬 上課不專心</button>
-          <button data-top-deduct="桌面沒整理" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🧹 桌面沒整理</button>
-          <button data-top-deduct="學用品沒帶" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">✏️ 學用品沒帶</button>
-          <button data-top-deduct="聯絡簿未簽" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📓 聯絡簿未簽</button>
-        </div>
-        <div class="flex flex-wrap items-center gap-1.5">
-          <span class="text-sm font-black text-amber-900 mr-1 bg-amber-100 px-2.5 py-0.5 rounded-full">🌳 樹洞補電任務</span>
-          <button data-charge="整理書櫃" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📚 整理書櫃</button>
-          <button data-charge="幫忙擦黑板" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">🧽 幫忙擦黑板</button>
-          <button data-charge="補交作業" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📝 補交作業</button>
-          <button data-charge="其他" class="px-3 py-1 text-sm font-extrabold border-2 border-amber-400 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">✨ 其他補電</button>
-          <span class="text-xs font-bold text-amber-800/80">（限在樹洞充電站的同學）</span>
-          <span class="mx-1 text-slate-300 hidden sm:inline">|</span>
-          <button data-custom="add" class="px-3.5 py-1 text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">＋ 其他加分</button>
-          <button data-custom="deduct" class="px-3.5 py-1 text-sm font-black bg-rose-600 hover:bg-rose-700 text-white shadow-xs">－ 其他扣分</button>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
+            <input type="checkbox" data-toggle-block="clock" checked class="accent-purple-600" /> 📅 日期時間看板
+          </label>
+          <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
+            <input type="checkbox" data-toggle-block="toolbar" checked class="accent-purple-600" /> 🌰 加扣分按鈕列
+          </label>
+          <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
+            <input type="checkbox" data-toggle-block="stamps" checked class="accent-purple-600" /> 🐿️ 動物榮譽章看板
+          </label>
+          <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
+            <input type="checkbox" id="compactToolbarCheck" class="accent-purple-600" /> 📏 精簡高度模式
+          </label>
+          <button type="button" id="resetLayoutBtn" class="px-3 py-1 rounded-full bg-white border border-purple-300 hover:bg-purple-100 text-xs font-black text-purple-900">🔄 恢復預設</button>
+          <button type="button" id="finishLayoutBtn" class="px-3.5 py-1 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-black shadow-xs">✅ 完成調整</button>
         </div>
       </div>
     </div>
+
   </header>
 
   <!-- ==================== 主版面：森林實體磁鐵加分板 ==================== -->
@@ -382,8 +413,63 @@
     
     <button type="button" id="setupBanner" class="hidden w-full mb-2.5 rounded-2xl border-4 border-orange-400 bg-amber-100 hover:bg-amber-200 px-4 py-3 text-lg font-black text-amber-950 text-center animate-pulse shadow-sm"></button>
 
-    <!-- 森林動物榮譽章看板 -->
-    <div id="stampBoard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-2.5"></div>
+    <!-- 可自由排列順序的上方功能區塊容器 -->
+    <div id="topCustomizableZone" class="space-y-2.5 mb-2.5">
+      <!-- 區塊 A：固定加扣分列 -->
+      <div id="block-toolbar" data-block-key="toolbar" class="layout-block rounded-2xl border-2 border-emerald-200 bg-gradient-to-b from-emerald-50/95 to-amber-50/95 shadow-xs">
+        <div class="layout-move-controls items-center justify-between w-full px-3 pt-1.5 pb-0.5 border-b border-amber-200 text-xs font-black text-amber-900">
+          <span>📦 區塊：集松果加分 / 扣分 / 補電任務列</span>
+          <div class="flex items-center gap-1">
+            <button type="button" data-move-block="up" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
+            <button type="button" data-move-block="down" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
+          </div>
+        </div>
+        <div id="batchToolbar" class="!border-0 !bg-transparent">
+          <div class="px-3 sm:px-4 py-2 space-y-1.5">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-sm font-black text-emerald-800 mr-1 bg-emerald-100 px-2.5 py-0.5 rounded-full">🌰 集松果加分</span>
+              <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">☀️ 準時到校 +1</button>
+              <button data-batch-add="作業繳齊" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📚 作業繳齊 +1</button>
+              <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🥢 擦餐具 +1</button>
+              <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🪥 刷牙 +1</button>
+              <button id="batchGoodCustomBtn" class="px-3.5 py-1 text-sm font-black border-2 border-amber-400 bg-amber-200 text-amber-950 hover:bg-amber-300 shadow-xs">🌟 好表現</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-sm font-black text-rose-800 mr-1 bg-rose-100 px-2.5 py-0.5 rounded-full">🍂 小提醒扣分</span>
+              <button data-top-deduct="遲到" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">⏰ 遲到</button>
+              <button data-top-deduct="上課不專心" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">💬 上課不專心</button>
+              <button data-top-deduct="桌面沒整理" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🧹 桌面沒整理</button>
+              <button data-top-deduct="學用品沒帶" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">✏️ 學用品沒帶</button>
+              <button data-top-deduct="聯絡簿未簽" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📓 聯絡簿未簽</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-sm font-black text-amber-900 mr-1 bg-amber-100 px-2.5 py-0.5 rounded-full">🌳 樹洞補電任務</span>
+              <button data-charge="整理書櫃" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📚 整理書櫃</button>
+              <button data-charge="幫忙擦黑板" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">🧽 幫忙擦黑板</button>
+              <button data-charge="補交作業" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📝 補交作業</button>
+              <button data-charge="其他" class="px-3 py-1 text-sm font-extrabold border-2 border-amber-400 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">✨ 其他補電</button>
+              <span class="text-xs font-bold text-amber-800/80">（限在樹洞充電站的同學）</span>
+              <span class="mx-1 text-slate-300 hidden sm:inline">|</span>
+              <button data-custom="add" class="px-3.5 py-1 text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">＋ 其他加分</button>
+              <button data-custom="deduct" class="px-3.5 py-1 text-sm font-black bg-rose-600 hover:bg-rose-700 text-white shadow-xs">－ 其他扣分</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 區塊 B：森林動物榮譽章看板 -->
+      <div id="block-stamps" data-block-key="stamps" class="layout-block">
+        <div class="layout-move-controls items-center justify-between w-full px-3 py-1 mb-1 rounded-xl bg-amber-100/80 border border-amber-300 text-xs font-black text-amber-900">
+          <span>📦 區塊：森林動物榮譽章階梯看板</span>
+          <div class="flex items-center gap-1">
+            <button type="button" data-move-block="up" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
+            <button type="button" data-move-block="down" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
+          </div>
+        </div>
+        <div id="stampBoard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"></div>
+      </div>
+    </div>
+
     <div id="chargeStrip" class="hidden mb-2.5 flex-wrap items-center gap-1.5 rounded-2xl border-2 border-amber-400 bg-amber-50 px-3.5 py-2 text-sm font-extrabold text-amber-950 shadow-xs"></div>
     <div id="weekQuickStats" class="mb-2.5 text-sm font-extrabold text-emerald-900 bg-white/80 inline-block px-3.5 py-1 rounded-full border border-emerald-200"></div>
 
@@ -2498,6 +2584,123 @@
       });
     }
 
+
+    // ==================== 老師自由調整上方版面順序與顯示 ====================
+    const DEFAULT_LAYOUT_PREFS = {
+      order: ['toolbar', 'stamps'],
+      visible: { clock: true, toolbar: true, stamps: true },
+      compact: false
+    };
+
+    function getLayoutPrefs() {
+      if (!appState.settings.layoutPrefs) {
+        appState.settings.layoutPrefs = JSON.parse(JSON.stringify(DEFAULT_LAYOUT_PREFS));
+      }
+      return appState.settings.layoutPrefs;
+    }
+
+    function applyLayoutPrefs() {
+      const prefs = getLayoutPrefs();
+      const zone = document.getElementById('topCustomizableZone');
+      if (zone && Array.isArray(prefs.order)) {
+        prefs.order.forEach(key => {
+          const el = document.getElementById(`block-${key}`);
+          if (el) zone.appendChild(el);
+        });
+      }
+
+      // 顯示 / 隱藏控制
+      const clockEl = document.getElementById('kidClockWidget');
+      if (clockEl) clockEl.classList.toggle('hidden', prefs.visible.clock === false);
+
+      const toolbarBlock = document.getElementById('block-toolbar');
+      if (toolbarBlock) toolbarBlock.classList.toggle('hidden', prefs.visible.toolbar === false);
+
+      const stampsBlock = document.getElementById('block-stamps');
+      if (stampsBlock) stampsBlock.classList.toggle('hidden', prefs.visible.stamps === false);
+
+      // 精簡高度模式
+      document.body.classList.toggle('compact-toolbar', !!prefs.compact);
+
+      // 同步控制列勾選狀態
+      document.querySelectorAll('[data-toggle-block]').forEach(cb => {
+        const k = cb.dataset.toggleBlock;
+        cb.checked = prefs.visible[k] !== false;
+      });
+      const compactCb = document.getElementById('compactToolbarCheck');
+      if (compactCb) compactCb.checked = !!prefs.compact;
+    }
+
+    function bindLayoutEditorEvents() {
+      const toggleBtn = document.getElementById('layoutEditToggleBtn');
+      const editorBar = document.getElementById('layoutEditorBar');
+      const finishBtn = document.getElementById('finishLayoutBtn');
+      const resetBtn = document.getElementById('resetLayoutBtn');
+
+      const setEditing = (editing) => {
+        document.body.classList.toggle('layout-editing', editing);
+        editorBar.classList.toggle('hidden', !editing);
+        toggleBtn.classList.toggle('ring-2', editing);
+        toggleBtn.classList.toggle('ring-purple-500', editing);
+      };
+
+      toggleBtn.addEventListener('click', () => {
+        const isEditing = document.body.classList.contains('layout-editing');
+        setEditing(!isEditing);
+      });
+
+      finishBtn.addEventListener('click', () => {
+        setEditing(false);
+        showToast('已儲存您的版面排列設定！', 'success');
+      });
+
+      resetBtn.addEventListener('click', () => {
+        appState.settings.layoutPrefs = JSON.parse(JSON.stringify(DEFAULT_LAYOUT_PREFS));
+        saveState();
+        applyLayoutPrefs();
+        showToast('已恢復預設版面排列', 'info');
+      });
+
+      // 上移 / 下移區塊
+      document.getElementById('topCustomizableZone').addEventListener('click', (e) => {
+        const moveBtn = e.target.closest('[data-move-block]');
+        if (!moveBtn) return;
+        const block = moveBtn.closest('.layout-block');
+        if (!block) return;
+        const dir = moveBtn.dataset.moveBlock;
+        const prefs = getLayoutPrefs();
+        const key = block.dataset.blockKey;
+        const idx = prefs.order.indexOf(key);
+        if (idx === -1) return;
+
+        if (dir === 'up' && idx > 0) {
+          [prefs.order[idx - 1], prefs.order[idx]] = [prefs.order[idx], prefs.order[idx - 1]];
+        } else if (dir === 'down' && idx < prefs.order.length - 1) {
+          [prefs.order[idx + 1], prefs.order[idx]] = [prefs.order[idx], prefs.order[idx + 1]];
+        }
+        saveState();
+        applyLayoutPrefs();
+      });
+
+      // 勾選顯示或隱藏區塊
+      document.querySelectorAll('[data-toggle-block]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const prefs = getLayoutPrefs();
+          prefs.visible[cb.dataset.toggleBlock] = cb.checked;
+          saveState();
+          applyLayoutPrefs();
+        });
+      });
+
+      // 精簡高度模式
+      document.getElementById('compactToolbarCheck').addEventListener('change', (e) => {
+        const prefs = getLayoutPrefs();
+        prefs.compact = e.target.checked;
+        saveState();
+        applyLayoutPrefs();
+      });
+    }
+
     // ==================== 啟動應用程式 ====================
     window.addEventListener('DOMContentLoaded', () => {
       updateKidClock();
@@ -2510,6 +2713,8 @@
       renderBoard();
       bindEvents();
       bindTermEvents();
+      applyLayoutPrefs();
+      bindLayoutEditorEvents();
       if (isPlaceholderRoster(getCurrentClass())) openWizard();
     });
   </script>
