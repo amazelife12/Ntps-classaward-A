@@ -9,12 +9,12 @@
   <!-- 載入思源黑體與 Inter 字型，確保教室大屏字體清晰大器 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Inter:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
 
   <style>
     /* 基礎字型與版面設定 */
     body {
-      font-family: 'Noto Sans TC', 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Huninn', 'jf-openhuninn-2.0', 'Noto Sans TC', 'Inter', system-ui, -apple-system, sans-serif;
       background-color: #f8fafc;
       color: #1e293b;
       -webkit-tap-highlight-color: transparent;
@@ -150,6 +150,26 @@
     .animate-modal {
       animation: modalPop 0.2s ease-out forwards;
     }
+
+    /* ===== 童趣風格 ===== */
+    body {
+      background-color: #e0f2fe !important;
+      background-image:
+        radial-gradient(circle at 12px 12px, rgba(255,255,255,0.8) 4px, transparent 5px),
+        linear-gradient(180deg, #e0f2fe 0%, #fef9c3 55%, #fce7f3 100%);
+      background-size: 44px 44px, 100% 100%;
+    }
+    header { border-bottom: 5px dashed #f9a8d4; }
+    #pageTitle { color: #be185d; }
+    #batchToolbar button, header button { border-radius: 999px; }
+    #batchToolbar button, #stampBoard > div { transition: transform 0.15s; }
+    #batchToolbar button:hover, #stampBoard > div:hover { transform: translateY(-2px) scale(1.03); }
+    #stampBoard > div { border-width: 3px; border-radius: 1.5rem; box-shadow: 0 4px 0 rgba(15, 23, 42, 0.08); }
+    .animal { font-size: 2rem; line-height: 1.2; display: block; }
+    .kid-footer { text-align: center; font-size: 1.6rem; letter-spacing: 0.35em; padding: 14px 0 10px; }
+    .week-tile { border-width: 3px; border-radius: 1.25rem; padding: 8px 4px; text-align: center; background: #fff; }
+    .week-tile:hover { transform: translateY(-2px); background: #fef9c3; }
+    @media (prefers-reduced-motion: reduce) { #batchToolbar button, #stampBoard > div, .week-tile { transition: none; } }
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-50">
@@ -162,10 +182,10 @@
       <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <div class="flex items-center gap-2">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xl shadow-sm">
-            🏆
+            🌈
           </div>
           <div>
-            <h1 class="text-base sm:text-lg font-extrabold text-slate-800 leading-tight tracking-tight">班級榮譽加分板</h1>
+            <h1 id="pageTitle" class="text-base sm:text-lg font-extrabold text-slate-800 leading-tight tracking-tight">班級榮譽加分板</h1>
             <p id="termSubtitle" class="text-[11px] font-bold text-indigo-600"></p>
           </div>
         </div>
@@ -186,6 +206,8 @@
           </select>
           <button id="nextWeekBtn" title="下一週" class="px-2.5 py-1.5 text-amber-800 hover:bg-amber-100 active:bg-amber-200 font-bold transition">▶</button>
         </div>
+        <button id="weekPickerBtn" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold border-2 border-violet-300 bg-violet-100 text-violet-800 hover:bg-violet-200">🗓️ 週次查詢</button>
+        <button id="thisWeekBtn" class="hidden px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold bg-pink-500 hover:bg-pink-600 text-white">🏠 回到本週</button>
       </div>
 
       <!-- 右側：功能操作按鈕 -->
@@ -272,16 +294,16 @@
               <div class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
                 <div class="col-span-1 bg-slate-200/80 text-slate-600 flex items-center justify-center py-1.5 zone-divider-right text-[11px]">🔋起點</div>
                 <div class="col-span-5 bg-yellow-300 text-yellow-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
-                  <span>⭐ 1 個榮譽章</span><span class="text-[11px] opacity-75">(1–5)</span>
+                  <span>🐣 1 個榮譽章</span><span class="text-[11px] opacity-75">(1–5)</span>
                 </div>
                 <div class="col-span-5 bg-emerald-300 text-emerald-900 flex items-center justify-center gap-1 py-1.5 zone-divider-right">
-                  <span>⭐⭐ 2 個榮譽章</span><span class="text-[11px] opacity-75">(6–10)</span>
+                  <span>🐰 2 個榮譽章</span><span class="text-[11px] opacity-75">(6–10)</span>
                 </div>
                 <div class="col-span-5 bg-sky-300 text-sky-900 flex items-center justify-center gap-1 py-1.5 zone-divider-gold">
-                  <span>⭐⭐⭐ 3 個榮譽章</span><span class="text-[11px] opacity-75">(11–15)</span>
+                  <span>🐻 3 個榮譽章</span><span class="text-[11px] opacity-75">(11–15)</span>
                 </div>
                 <div class="col-span-5 bg-orange-300 text-orange-900 flex items-center justify-center gap-1 py-1.5">
-                  <span>⭐⭐⭐⭐ 4 個榮譽章</span><span class="text-[11px] opacity-75">(16–20)</span>
+                  <span>🦊 4 個榮譽章</span><span class="text-[11px] opacity-75">(16–20)</span>
                 </div>
               </div>
             </div>
@@ -478,6 +500,30 @@
       <div class="p-5 overflow-y-auto flex-1 space-y-5">
         <!-- 分頁 1：班級與名單管理 -->
         <div id="tab-roster" class="space-y-5">
+          <!-- 本班專屬網址 -->
+          <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 space-y-2">
+            <h3 class="text-sm font-extrabold text-amber-900">🔗 本班專屬網址</h3>
+            <div class="flex gap-2">
+              <input id="classUrlInput" readonly class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+              <button type="button" id="copyUrlBtn" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-extrabold whitespace-nowrap">複製網址</button>
+            </div>
+            <p class="text-xs text-slate-600">請在本班電腦把此網址加入書籤。名單與分數只存在這台電腦的瀏覽器，網址本身不含名單。</p>
+          </div>
+
+          <!-- 編輯目前班級名單 -->
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-3">
+            <h3 class="text-sm font-extrabold text-emerald-900">✏️ 編輯目前班級名單</h3>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">班級名稱</label>
+              <input id="editClassName" type="text" maxlength="30" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">學生名單（每行「座號 姓名」；可改字、新增或刪除整行）</label>
+              <textarea id="editRoster" rows="8" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white text-sm"></textarea>
+            </div>
+            <button type="button" id="saveRosterBtn" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-extrabold">儲存名單修改</button>
+          </div>
+
           <!-- 現有班級列表 -->
           <div>
             <h3 class="text-sm font-extrabold text-slate-700 mb-2">已建立的班級</h3>
@@ -569,6 +615,20 @@
           <button id="confirmOkBtn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-sm transition">確定執行</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="kid-footer" aria-hidden="true">🌷🌼🐝🌻🦋🌷🐞🌼🌈</div>
+
+  <!-- ==================== 週次查詢 ==================== -->
+  <div id="weekPickerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/55 p-3">
+    <div class="bg-white rounded-3xl shadow-2xl border-4 border-violet-300 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
+      <div class="px-5 py-3 bg-violet-100 flex items-center justify-between gap-2">
+        <h2 id="weekPickerTitle" class="text-xl font-black text-violet-900">🗓️ 週次查詢</h2>
+        <button data-close-modal="weekPickerModal" class="w-9 h-9 rounded-full bg-white text-slate-700 font-bold" aria-label="關閉">✕</button>
+      </div>
+      <p class="px-5 pt-3 text-sm font-bold text-slate-600">點一下週次就能查看。🌟 代表這週有紀錄。</p>
+      <div id="weekGrid" class="p-5 overflow-y-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
     </div>
   </div>
 
@@ -887,6 +947,135 @@
       onSuccess();
     }
 
+    // ==================== 週次查詢 ====================
+
+    function goToWeek(no) {
+      appState.currentWeek = no;
+      selectedStudentIds.clear();
+      saveState();
+      renderTopControls();
+      renderBoard();
+    }
+
+    function openWeekPicker() {
+      const cls = getCurrentClass();
+      const today = getTodayWeek();
+      document.getElementById('weekPickerTitle').textContent = cls.term
+        ? `🗓️ ${cls.term.year} 學年度${cls.term.sem}學期`
+        : '🗓️ 週次查詢';
+      document.getElementById('weekGrid').innerHTML = getWeekList().map(w => {
+        const hasLog = Object.values((cls.weeklyLogs || {})[String(w.no)] || {}).some(l => l.length);
+        const border = w.no === appState.currentWeek ? 'border-violet-600' : (w.no === today ? 'border-pink-400' : 'border-slate-200');
+        return `
+          <button type="button" data-week="${w.no}" class="week-tile ${border}">
+            <div class="text-base font-black text-slate-800">第 ${w.no} 週</div>
+            <div class="text-xs font-bold text-slate-500">${w.range || '&nbsp;'}</div>
+            <div class="text-xs font-black h-5 text-pink-600">${w.no === today ? '📍本週 ' : ''}${hasLog ? '🌟' : ''}</div>
+          </button>`;
+      }).join('');
+      openModal('weekPickerModal');
+    }
+
+    // ==================== 專屬網址與名單編輯 ====================
+
+    const classUrl = cls => `${location.href.split(/[?#]/)[0]}?class=${encodeURIComponent(cls.name)}`;
+    const hasClassParam = () => new URLSearchParams(location.search).has('class');
+
+    /** 依網址 ?class=班級名稱 開啟班級；此電腦沒有就建立空白班級 */
+    function openClassFromUrl() {
+      const name = (new URLSearchParams(location.search).get('class') || '').trim().slice(0, 30);
+      if (!name) return;
+      let cls = appState.classes.find(c => c.name === name)
+        || appState.classes.find(c => (c.oldNames || []).includes(name));
+      if (!cls) {
+        const only = appState.classes[0];
+        if (appState.classes.length === 1 && only.name === '我的班級' && isPlaceholderRoster(only) && Object.values(only.weeklyLogs || {}).every(w => Object.values(w).every(l => !l.length))) {
+          cls = only;
+          cls.name = name;
+        } else {
+          cls = {
+            id: genId('class'),
+            name,
+            students: Array.from({ length: 29 }, (_, i) => ({ id: genId('stu'), seat: i + 1, name: `學生${i + 1}`, colorIndex: i % 8 })),
+            weeklyLogs: {}
+          };
+          appState.classes.push(cls);
+        }
+      }
+      appState.currentClassId = cls.id;
+      saveState();
+    }
+
+    /** 專屬網址模式：網址與標題跟著目前班級 */
+    function syncClassPage() {
+      if (!hasClassParam()) return;
+      const cls = getCurrentClass();
+      history.replaceState(null, '', classUrl(cls));
+      document.title = `${cls.name} 榮譽加分板`;
+      document.getElementById('pageTitle').textContent = document.title;
+      document.getElementById('classSelect').parentElement.classList.add('hidden');
+    }
+
+    /** 更新名單：先比對姓名、再比對座號，保留原有加扣分紀錄 */
+    function mergeRoster(cls, parsed) {
+      const used = new Set();
+      const matched = parsed.map(p => {
+        const old = cls.students.find(s => s.name === p.name && !used.has(s.id));
+        if (old) used.add(old.id);
+        return old;
+      });
+      const newNames = new Set(parsed.map(p => p.name));
+      return parsed.map((p, i) => {
+        let old = matched[i];
+        if (!old) {
+          old = cls.students.find(s => s.seat === p.seat && !used.has(s.id) && !newNames.has(s.name));
+          if (old) used.add(old.id);
+        }
+        return { id: old ? old.id : genId('stu'), seat: p.seat, name: p.name, colorIndex: old ? old.colorIndex : i % 8 };
+      }).sort((a, b) => a.seat - b.seat);
+    }
+
+    function renameClass(cls, name) {
+      if (cls.name !== name) {
+        cls.oldNames = [...(cls.oldNames || []), cls.name];
+        cls.name = name;
+      }
+    }
+
+    function fillRosterEditor() {
+      const cls = getCurrentClass();
+      document.getElementById('classUrlInput').value = classUrl(cls);
+      document.getElementById('editClassName').value = cls.name;
+      document.getElementById('editRoster').value = cls.students.map(s => `${s.seat} ${s.name}`).join('\n');
+    }
+
+    function saveRoster() {
+      const cls = getCurrentClass();
+      const name = document.getElementById('editClassName').value.trim();
+      const parsed = parseRosterText(document.getElementById('editRoster').value);
+      if (!name) return showToast('請輸入班級名稱', 'warning');
+      if (appState.classes.some(c => c !== cls && c.name === name)) return showToast('已有同名的班級', 'warning');
+      if (!parsed.length) return showToast('名單不能是空的', 'warning');
+      if (new Set(parsed.map(p => p.seat)).size !== parsed.length) return showToast('座號有重複，請檢查名單', 'warning');
+      const students = mergeRoster(cls, parsed);
+      const removed = cls.students.filter(o => !students.some(n => n.id === o.id));
+      const apply = () => {
+        renameClass(cls, name);
+        cls.students = students;
+        selectedStudentIds.clear();
+        saveState();
+        renderTopControls();
+        renderBoard();
+        renderSettingsModal();
+        showToast('名單已更新', 'success');
+      };
+      if (removed.length) {
+        showConfirm('確認移除學生', `將移除：${removed.map(s => s.name).join('、')}。他們的紀錄將不再顯示。`, apply);
+      } else {
+        apply();
+      }
+    }
+
     // ==================== 學期與週次 ====================
 
     const toDate = str => { const [y, m, d] = str.split('-').map(Number); return new Date(y, m - 1, d); };
@@ -965,6 +1154,9 @@
         cls.weeklyLogs = cls.termLogs[key(term)] || {};
         delete cls.termLogs[key(term)];
       }
+      if (!cls.termDates) cls.termDates = {};
+      if (cls.term) cls.termDates[key(cls.term)] = cls.term;
+      cls.termDates[key(term)] = term;
       cls.term = term;
       jumpToTodayWeek();
     }
@@ -984,7 +1176,7 @@
     function openWizard() {
       const cls = getCurrentClass();
       const placeholder = isPlaceholderRoster(cls);
-      document.getElementById('wizName').value = placeholder ? '' : cls.name;
+      document.getElementById('wizName').value = cls.name === '我的班級' ? '' : cls.name;
       document.getElementById('wizRoster').value = placeholder ? '' : cls.students.map(s => `${s.seat} ${s.name}`).join('\n');
       document.getElementById('wizCount').textContent = placeholder ? '尚未輸入名單' : `目前 ${cls.students.length} 位學生`;
       fillTermForm('wiz');
@@ -1000,22 +1192,58 @@
       if (new Set(parsed.map(p => p.seat)).size !== parsed.length) return showToast('座號有重複，請檢查名單', 'warning');
       const { term, error } = readTermForm('wiz');
       if (error) return showToast(error, 'warning');
-      cls.name = name;
-      // 依座號沿用原本的學生代號，保留既有紀錄
-      cls.students = parsed.map((p, i) => {
-        const old = cls.students.find(s => s.seat === p.seat);
-        return { id: old ? old.id : genId('stu'), seat: p.seat, name: p.name, colorIndex: i % 8 };
-      });
+      if (appState.classes.some(c => c !== cls && c.name === name)) return showToast('已有同名的班級', 'warning');
+      renameClass(cls, name);
+      cls.students = mergeRoster(cls, parsed);
       applyTerm(cls, term);
       selectedStudentIds.clear();
       saveState();
       closeModal('wizardModal');
       renderTopControls();
       renderBoard();
-      showToast(`設定完成！共 ${parsed.length} 位學生`, 'success');
+      history.replaceState(null, '', classUrl(cls));
+      syncClassPage();
+      showToast(`設定完成！共 ${parsed.length} 位學生。已產生本班專屬網址，請加入書籤`, 'success');
     }
 
     function bindTermEvents() {
+      document.getElementById('weekPickerBtn').addEventListener('click', openWeekPicker);
+      document.getElementById('thisWeekBtn').addEventListener('click', () => goToWeek(getTodayWeek()));
+      document.getElementById('weekGrid').addEventListener('click', e => {
+        const tile = e.target.closest('[data-week]');
+        if (!tile) return;
+        closeModal('weekPickerModal');
+        goToWeek(Number(tile.dataset.week));
+      });
+      ['setYear', 'setSem'].forEach(id => document.getElementById(id).addEventListener('change', () => {
+        const k = `${document.getElementById('setYear').value}-${document.getElementById('setSem').value}`;
+        const saved = (getCurrentClass().termDates || {})[k];
+        document.getElementById('setStart').value = saved ? saved.start : '';
+        document.getElementById('setEnd').value = saved ? saved.end : '';
+        document.getElementById('setFirst').value = saved ? saved.first : 1;
+        updateTermPreview('set');
+      }));
+      document.getElementById('saveRosterBtn').addEventListener('click', saveRoster);
+      document.getElementById('copyUrlBtn').addEventListener('click', () => {
+        const input = document.getElementById('classUrlInput');
+        input.select();
+        const done = () => showToast('已複製本班網址', 'success');
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(input.value).then(done, () => showToast('請按 Ctrl+C 複製', 'info'));
+        } else if (document.execCommand('copy')) {
+          done();
+        }
+      });
+      // 同一瀏覽器開多個班級分頁時，避免互相覆蓋
+      window.addEventListener('storage', e => {
+        if (e.key !== STORAGE_KEY || !e.newValue) return;
+        const { currentClassId, currentWeek } = appState;
+        appState = JSON.parse(e.newValue);
+        appState.currentClassId = currentClassId;
+        appState.currentWeek = currentWeek;
+        renderTopControls();
+        renderBoard();
+      });
       ['wiz', 'set'].forEach(p => ['Year', 'Sem', 'Start', 'End', 'First'].forEach(id => {
         document.getElementById(p + id).addEventListener('input', () => updateTermPreview(p));
       }));
@@ -1081,6 +1309,8 @@
         ? `${term.year} 學年度${term.sem}學期`
         : '尚未設定學期';
       renderSetupBanner();
+      syncClassPage();
+      document.getElementById('thisWeekBtn').classList.toggle('hidden', !term || appState.currentWeek === getTodayWeek());
 
       // 點學生列即為勾選
       isBatchMode = true;
@@ -1174,11 +1404,12 @@
       const strip = document.getElementById('chargeStrip');
       strip.classList.toggle('hidden', low.length === 0);
       strip.classList.toggle('flex', low.length > 0);
-      strip.innerHTML = '<span>🔋 充電站</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2 rounded-full bg-white border border-cyan-300 text-slate-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1 rounded bg-slate-800 text-yellow-300">${-getStudentScore(s.id)}</span> 分</span>`).join('');
+      strip.innerHTML = '<span>🐢 充電站 🔋</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2 rounded-full bg-white border border-cyan-300 text-slate-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1 rounded bg-slate-800 text-yellow-300">${-getStudentScore(s.id)}</span> 分</span>`).join('');
       document.getElementById('stampBoard').innerHTML = ranges.map((range, n) => {
         const list = students.filter(s => { const v = getStudentScore(s.id); return v >= 0 && calcStamps(v) === n; });
         return `
           <div class="rounded-2xl border-2 p-2 text-center ${cardStyle[n]}">
+            <span class="animal" aria-hidden="true">${['🌱', '🐣', '🐰', '🐻', '🦊', '🦄'][n]}</span>
             <div class="text-2xl font-black text-slate-800">${n === 5 ? '👑' : '🏅'} ${n} 個章</div>
             <div class="text-xs font-bold text-slate-600">${range}｜${list.length} 人</div>
             <div class="flex flex-wrap justify-center gap-1 mt-1">${list.map(s => `<span title="${escapeHtml(s.name)}" class="min-w-[26px] px-1 rounded-full bg-white border border-slate-300 text-sm font-black text-slate-800">${s.seat}</span>`).join('')}</div>
@@ -1514,6 +1745,7 @@
     }
 
     function renderSettingsModal() {
+      fillRosterEditor();
       // 1. 現有班級清單
       const container = document.getElementById('classListContainer');
       container.innerHTML = appState.classes.map(cls => {
@@ -1548,7 +1780,7 @@
       });
 
       // 點擊遮罩關閉 Modal
-      ['studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal'].forEach(id => {
+      ['studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal', 'weekPickerModal'].forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('click', (e) => {
           if (e.target === el) closeModal(id);
@@ -2003,6 +2235,7 @@
     // ==================== 啟動應用程式 ====================
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
+      openClassFromUrl();
       jumpToTodayWeek();
       renderScaleHeader();
       renderTopControls();
