@@ -366,6 +366,10 @@
           <span>📊</span><span>本週結算</span>
         </button>
 
+        <button id="openNewClassWizardBtn" title="在同一台電腦快速新增並設定另一個班級" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-sky-300 bg-sky-100 text-sky-950 hover:bg-sky-200 flex items-center gap-1.5 shadow-xs">
+          <span>➕</span><span>新增/設定新班級</span>
+        </button>
+
         <button id="settingsBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 flex items-center gap-1.5 shadow-xs">
           <span>⚙️</span><span class="hidden sm:inline">名單與設定</span>
         </button>
@@ -1282,7 +1286,7 @@
       history.replaceState(null, '', classUrl(cls));
       document.title = `楠梓國小．森林榮譽加分板 (${cls.name})`;
       document.getElementById('pageTitle').textContent = `${cls.name} 榮譽加分板`;
-      document.getElementById('classSelect').parentElement.classList.add('hidden');
+      document.getElementById('classSelect').parentElement.classList.toggle('hidden', appState.classes.length <= 1);
     }
 
     function mergeRoster(cls, parsed) {
@@ -1492,18 +1496,28 @@
       el.classList.toggle('hidden', !msg);
     }
 
-    function openWizard() {
+    let wizardCreateNewMode = false;
+
+    function openWizard(forceNewClass = false) {
       const cls = getCurrentClass();
       const placeholder = isPlaceholderRoster(cls);
-      document.getElementById('wizName').value = cls.name === '我的班級' ? '' : cls.name;
-      document.getElementById('wizRoster').value = placeholder ? '' : cls.students.map(s => `${s.seat} ${s.name}`).join('\n');
-      document.getElementById('wizCount').textContent = placeholder ? '尚未輸入名單' : `目前 ${cls.students.length} 位學生`;
+      wizardCreateNewMode = forceNewClass || !placeholder;
+
+      if (wizardCreateNewMode && !placeholder) {
+        document.getElementById('wizName').value = '';
+        document.getElementById('wizRoster').value = '';
+        document.getElementById('wizCount').textContent = '尚未輸入名單（將建立全新的獨立班級）';
+      } else {
+        wizardCreateNewMode = false;
+        document.getElementById('wizName').value = cls.name === '我的班級' ? '' : cls.name;
+        document.getElementById('wizRoster').value = placeholder ? '' : cls.students.map(s => `${s.seat} ${s.name}`).join('\n');
+        document.getElementById('wizCount').textContent = placeholder ? '尚未輸入名單' : `目前 ${cls.students.length} 位學生`;
+      }
       fillTermForm('wiz');
       openModal('wizardModal');
     }
 
     function saveWizard() {
-      const cls = getCurrentClass();
       const name = document.getElementById('wizName').value.trim();
       const parsed = parseRosterText(document.getElementById('wizRoster').value);
       if (!name) return showToast('請輸入班級名稱', 'warning');
@@ -1511,19 +1525,40 @@
       if (new Set(parsed.map(p => p.seat)).size !== parsed.length) return showToast('座號有重複，請檢查名單', 'warning');
       const { term, error } = readTermForm('wiz');
       if (error) return showToast(error, 'warning');
-      if (appState.classes.some(c => c !== cls && c.name === name)) return showToast('已有同名的班級', 'warning');
-      renameClass(cls, name);
-      cls.students = mergeRoster(cls, parsed);
-      applyTerm(cls, term);
+
+      let targetCls;
+      if (wizardCreateNewMode) {
+        if (appState.classes.some(c => c.name === name)) return showToast('已有同名的班級，請換一個班級名稱', 'warning');
+        targetCls = {
+          id: genId('cls'),
+          name,
+          students: parsed.map((p, idx) => ({
+            id: genId('stu'),
+            seat: p.seat,
+            name: p.name,
+            colorIndex: idx % 8
+          })),
+          weeklyLogs: {}
+        };
+        appState.classes.push(targetCls);
+        appState.currentClassId = targetCls.id;
+      } else {
+        targetCls = getCurrentClass();
+        if (appState.classes.some(c => c !== targetCls && c.name === name)) return showToast('已有同名的班級', 'warning');
+        renameClass(targetCls, name);
+        targetCls.students = mergeRoster(targetCls, parsed);
+      }
+
+      applyTerm(targetCls, term);
       selectedStudentIds.clear();
       saveState();
       closeModal('wizardModal');
       renderTopControls();
       renderBoard();
-      history.replaceState(null, '', classUrl(cls));
+      history.replaceState(null, '', classUrl(targetCls));
       syncClassPage();
       launchForestConfetti(50);
-      showToast(`設定完成！共 ${parsed.length} 位學生。已產生本班專屬網址，請加入書籤`, 'success');
+      showToast(`設定完成！已切換至「${name}」（共 ${parsed.length} 位學生），請將此專屬網址加入書籤`, 'success');
     }
 
     function bindTermEvents() {
@@ -1616,7 +1651,8 @@
         document.getElementById('wizCount').textContent = n ? `已辨識 ${n} 位學生` : '尚未輸入名單';
       });
       document.getElementById('wizSaveBtn').addEventListener('click', saveWizard);
-      document.getElementById('setupBanner').addEventListener('click', openWizard);
+      document.getElementById('setupBanner').addEventListener('click', () => openWizard(false));
+      document.getElementById('openNewClassWizardBtn').addEventListener('click', () => openWizard(true));
       document.getElementById('saveTermBtn').addEventListener('click', () => {
         const { term, error } = readTermForm('set');
         if (error) return showToast(error, 'warning');
