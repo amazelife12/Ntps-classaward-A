@@ -4,15 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>楠梓國小．森林榮譽加分板</title>
-  <!-- 載入 Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- 載入粉圓體、思源黑體與圓角數字字型 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Inter:wght@600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
 
   <style>
-    /* 基礎字型與版面設定 */
     body {
       font-family: 'Huninn', 'jf-openhuninn-2.0', 'Nunito', 'Noto Sans TC', 'Inter', system-ui, -apple-system, sans-serif;
       color: #292524;
@@ -25,9 +22,8 @@
       background-size: 72px 72px, 72px 72px, 100% 100%;
     }
 
-    /* 森林頂部工具列 */
     header {
-      background: rgba(255, 253, 247, 0.95) !important;
+      background: rgba(255, 253, 247, 0.96) !important;
       border-bottom: 4px dashed #86efac !important;
       box-shadow: 0 4px 14px rgba(20, 83, 45, 0.08);
     }
@@ -97,7 +93,7 @@
       z-index: 25;
     }
 
-    /* 超越 20 分的松鼠王金色光環動畫 */
+    /* 超越 20 分：松鼠王專屬金色光環與整列變色特效 */
     @keyframes crownPulse {
       0%, 100% {
         box-shadow:
@@ -108,9 +104,15 @@
       50% {
         box-shadow:
           0 0 0 6px rgba(253, 224, 71, 0.6),
-          0 0 22px 8px rgba(217, 119, 6, 0.9),
+          0 0 22px 8px rgba(217, 119, 6, 0.95),
           inset 0 2px 4px rgba(255, 255, 255, 0.9);
       }
+    }
+
+    @keyframes goldenShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .magnet-over20 {
@@ -118,28 +120,19 @@
       border: 2px solid #fef08a;
     }
 
-    /* 超越 20 分整列尊榮變色（流金彩虹漸層光澤） */
-    @keyframes superRowGlow {
-      0%, 100% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
+    /* 超過 20 分整列加分軌變色：閃耀皇家金漸層 */
+    .over20-track-cell {
+      background: linear-gradient(120deg, #fef08a 0%, #fde047 35%, #fed7aa 70%, #fef08a 100%) !important;
+      background-size: 200% 200% !important;
+      animation: goldenShimmer 3.5s ease infinite;
     }
 
-    .super-zone-cell {
-      background: linear-gradient(120deg, #fef08a 0%, #fde68a 25%, #fed7aa 50%, #fbcfe8 75%, #fef08a 100%) !important;
-      background-size: 220% 220% !important;
-      animation: superRowGlow 4.5s ease infinite;
+    .over20-row-highlight {
+      background: linear-gradient(90deg, #fef3c7 0%, #fffbeb 100%) !important;
+      box-shadow: inset 4px 0 0 #f59e0b;
     }
 
-    .super-row-left {
-      background: linear-gradient(90deg, #fef3c7 0%, #fde68a 100%) !important;
-      border-left: 5px solid #f59e0b !important;
-    }
-
-    /* 充電站磁鐵：樹洞充電站樣式 */
+    /* 樹洞充電站磁鐵 */
     .magnet-token.magnet-charge {
       width: 38px;
       height: 27px;
@@ -152,7 +145,7 @@
     }
     .magnet-token.magnet-charge::after { display: none; }
 
-    /* 磁鐵配色組（森林果實與陽光色系） */
+    /* 磁鐵配色組 */
     .mag-c0 { background: radial-gradient(circle at 32% 28%, #4ade80, #16a34a 72%, #15803d); }
     .mag-c1 { background: radial-gradient(circle at 32% 28%, #fb923c, #ea580c 72%, #c2410c); }
     .mag-c2 { background: radial-gradient(circle at 32% 28%, #38bdf8, #0284c7 72%, #0369a1); }
@@ -164,12 +157,11 @@
 
     /* 森林分區格線與柔和底色 */
     .zone-0 { background-color: #f5f5f4; }
-    .zone-1 { background-color: #fef9c3; } /* 1-5 陽光淺黃 */
-    .zone-2 { background-color: #dcfce7; } /* 6-10 嫩葉淺綠 */
-    .zone-3 { background-color: #e0f2fe; } /* 11-15 溪流淺藍 */
-    .zone-4 { background-color: #ffedd5; } /* 16-20 松果暖橘 */
+    .zone-1 { background-color: #fef9c3; }
+    .zone-2 { background-color: #dcfce7; }
+    .zone-3 { background-color: #e0f2fe; }
+    .zone-4 { background-color: #ffedd5; }
 
-    /* 區間粗分隔線（0|1, 5|6, 10|11, 15|16） */
     .zone-divider-right {
       border-right: 2.5px solid #a8a29e !important;
     }
@@ -207,7 +199,6 @@
       transform: rotate(-8deg) scale(1.15);
     }
 
-    /* 楠梓小松鼠輕微搖尾巴動畫 */
     @keyframes squirrelBounce {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-3px) rotate(3deg); }
@@ -216,7 +207,6 @@
       animation: squirrelBounce 2.8s ease-in-out infinite;
     }
 
-    /* 森林草地頁尾 */
     .forest-footer {
       text-align: center;
       font-size: 1.45rem;
@@ -240,13 +230,11 @@
       background: #fef9c3;
     }
 
-    /* 美化捲軸 */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #f0fdf4; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb { background: #86efac; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #4ade80; }
 
-    /* 彈出視窗動畫 */
     @keyframes modalPop {
       from { opacity: 0; transform: scale(0.95) translateY(8px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
@@ -256,7 +244,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      #batchToolbar button, #stampBoard > div, .week-tile, .squirrel-mascot, .super-zone-cell {
+      #batchToolbar button, #stampBoard > div, .week-tile, .squirrel-mascot, .over20-track-cell {
         transition: none;
         animation: none;
       }
@@ -276,8 +264,8 @@
       <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <div class="flex items-center gap-2.5">
           <!-- 楠梓國小可愛松鼠吉祥物徽章 -->
-          <div class="squirrel-mascot w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-amber-600 flex items-center justify-center shadow-md border-2 border-amber-100 shrink-0" title="楠梓國小吉祥物：可愛小松鼠">
-            <svg viewBox="0 0 64 64" class="w-9 h-9" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div class="squirrel-mascot w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-amber-600 flex items-center justify-center shadow-md border-2 border-amber-100 shrink-0" title="楠梓國小吉祥物：可愛小松鼠">
+            <svg viewBox="0 0 64 64" class="w-10 h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M44 46C55 44 60 33 56 22C53 14 44 12 40 19C37 24 41 30 45 30C42 34 39 40 44 46Z" fill="#B45309"/>
               <path d="M45 43C53 41 56 32 53 24C51 18 45 17 42 22" stroke="#FDE68A" stroke-width="2.5" stroke-linecap="round"/>
               <ellipse cx="30" cy="42" rx="12" ry="13" fill="#D97706"/>
@@ -324,33 +312,31 @@
         <button id="thisWeekBtn" class="hidden px-3.5 py-1.5 text-xs sm:text-sm font-black bg-orange-500 hover:bg-orange-600 text-white shadow-xs">🐿️ 回到本週</button>
       </div>
 
-      <!-- 中間／右側：兒童友善「日期、星期幾、時間」大時鐘看板 -->
+      <!-- 中央 / 右側：兒童友善即時日期、星期與時間看板 + 功能按鈕 -->
       <div class="flex flex-wrap items-center gap-2">
-        <div id="kidsClockBox" class="flex items-center gap-2 bg-gradient-to-r from-amber-100 via-yellow-50 to-emerald-100 border-2 border-amber-300 rounded-2xl px-3.5 py-1.5 shadow-xs select-none" title="現在日期與時間">
-          <span class="text-xl leading-none">🕒</span>
-          <div class="flex items-baseline gap-2">
-            <span id="kidsDateDisplay" class="text-sm sm:text-base font-black text-amber-950 tracking-wide">11月27日</span>
-            <span id="kidsWeekdayDisplay" class="px-2 py-0.5 rounded-full bg-amber-400 text-amber-950 text-xs sm:text-sm font-black shadow-2xs">星期五</span>
-            <span id="kidsTimeDisplay" class="text-base sm:text-lg font-black text-emerald-800 tabular-nums tracking-tight">22:51</span>
+        <!-- 兒童友善超大字日期與時鐘（高對比醒目底色） -->
+        <div id="kidClockWidget" class="flex items-center gap-3 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 border-2 border-amber-300 rounded-2xl px-4 py-2 shadow-md select-none" title="現在日期與時間">
+          <div class="flex items-center gap-2">
+            <span class="text-xl sm:text-2xl">📅</span>
+            <span id="kidDateText" class="text-lg sm:text-2xl font-black text-white tracking-wide drop-shadow-xs">--月--日</span>
+            <span id="kidWeekdayBadge" class="px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-950 text-sm sm:text-base font-black shadow-xs">星期--</span>
+          </div>
+          <div class="h-6 w-0.5 bg-emerald-400/60"></div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl sm:text-2xl">⏰</span>
+            <span id="kidPeriodBadge" class="text-xs sm:text-sm font-black text-emerald-950 bg-amber-200 px-2 py-0.5 rounded-lg">上午</span>
+            <span id="kidTimeText" class="text-xl sm:text-3xl font-black text-yellow-300 tabular-nums tracking-tight drop-shadow-xs">00:00</span>
           </div>
         </div>
 
-        <!-- 快捷編修名單按鈕 -->
-        <button id="quickRosterBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-sky-300 bg-sky-100 text-sky-900 hover:bg-sky-200 flex items-center gap-1.5 shadow-xs">
-          <span>✏️</span><span>編修名單</span>
-        </button>
-
-        <!-- 本週結算 -->
         <button id="summaryBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-emerald-300 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 flex items-center gap-1.5 shadow-xs">
           <span>📊</span><span>本週結算</span>
         </button>
 
-        <!-- 名單與設定 -->
         <button id="settingsBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 flex items-center gap-1.5 shadow-xs">
-          <span>⚙️</span><span class="hidden sm:inline">設定</span>
+          <span>⚙️</span><span class="hidden sm:inline">名單與設定</span>
         </button>
 
-        <!-- 音效開關 -->
         <button id="soundToggleBtn" title="切換森林提示音效" class="w-9 h-9 border-2 border-emerald-200 bg-white hover:bg-emerald-50 flex items-center justify-center text-base shadow-xs">
           🔊
         </button>
@@ -381,6 +367,7 @@
           <button data-charge="整理書櫃" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📚 整理書櫃</button>
           <button data-charge="幫忙擦黑板" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">🧽 幫忙擦黑板</button>
           <button data-charge="補交作業" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📝 補交作業</button>
+          <button data-charge="其他" class="px-3 py-1 text-sm font-extrabold border-2 border-amber-400 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">✨ 其他補電</button>
           <span class="text-xs font-bold text-amber-800/80">（限在樹洞充電站的同學）</span>
           <span class="mx-1 text-slate-300 hidden sm:inline">|</span>
           <button data-custom="add" class="px-3.5 py-1 text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">＋ 其他加分</button>
@@ -409,13 +396,11 @@
           <div class="sticky top-0 z-20 bg-amber-50 border-b-2 border-amber-300 select-none">
             <!-- 第一層：大區間標題 -->
             <div class="flex items-stretch text-xs font-black border-b border-amber-200">
-              <!-- 左側固定欄寬：座號 + 姓名 + 分數/章 -->
               <div class="w-[248px] shrink-0 flex items-center bg-amber-100/80 border-r-2 border-amber-300 px-2 py-2 text-amber-950">
                 <span class="w-10 text-center">座號</span>
                 <span class="w-24 pl-1">姓名</span>
                 <span class="flex-1 text-right pr-1">松果 / 榮譽章</span>
               </div>
-              <!-- 右側 21 格對應的大區間（1格起點 + 5 + 5 + 5 + 5） -->
               <div class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
                 <div class="col-span-1 bg-stone-200 text-stone-700 flex items-center justify-center py-2 zone-divider-right text-[11px]">🌱起點</div>
                 <div class="col-span-5 bg-yellow-200 text-yellow-950 flex items-center justify-center gap-1 py-2 zone-divider-right">
@@ -443,14 +428,12 @@
                 </div>
               </div>
               <div id="scaleNumbersRow" class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
-                <!-- 由 JS 產生 0 ~ 20 刻度 -->
               </div>
             </div>
           </div>
 
           <!-- 學生資料列容器 -->
           <div id="boardBody" class="divide-y divide-amber-200/70">
-            <!-- 由 JS 動態渲染學生列 -->
           </div>
         </div>
       </div>
@@ -599,76 +582,80 @@
     </div>
   </div>
 
-  <!-- ==================== 彈出視窗 5：班級名單管理與系統設定（含直覺編修現有名單） ==================== -->
+  <!-- ==================== 彈出視窗 5：班級名單管理與系統設定 ==================== -->
   <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/55 backdrop-blur-xs p-3">
     <div class="bg-white rounded-3xl shadow-2xl border-4 border-amber-300 w-full max-w-2xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
       <div class="px-5 py-4 bg-amber-50 border-b border-amber-200 flex items-center justify-between">
-        <h2 class="text-lg font-black text-amber-950">⚙️ 楠梓國小班級名單管理與設定</h2>
+        <h2 class="text-lg font-black text-amber-950">⚙️ 楠梓國小班級名單與系統設定</h2>
         <button data-close-modal="settingsModal" class="w-8 h-8 rounded-full bg-amber-200/70 hover:bg-amber-300 text-amber-900 font-black flex items-center justify-center transition">✕</button>
       </div>
 
       <div class="flex border-b border-stone-200 bg-stone-50/60 px-4 pt-2 gap-1">
         <button data-tab="roster" class="settings-tab px-4 py-2 text-sm font-black rounded-t-xl border-b-2 border-emerald-600 text-emerald-800 bg-white">✏️ 編修目前名單</button>
-        <button data-tab="newclass" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">🏫 新增／切換班級</button>
+        <button data-tab="newclass" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">🏫 班級管理 / 新增班級</button>
         <button data-tab="prefs" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">📅 學期與週次</button>
         <button data-tab="backup" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">💾 備份還原</button>
       </div>
 
       <div class="p-5 overflow-y-auto flex-1 space-y-5">
-        <!-- 分頁 1：直接編修目前班級名單（轉入、轉出、改名、改座號） -->
+        <!-- 分頁 1：編修目前班級名單（轉入、轉出、單筆新增刪除） -->
         <div id="tab-roster" class="space-y-4">
           <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="text-base font-black text-emerald-950">✏️ 編修目前班級學生（轉入／轉出／改名）</h3>
-              <span id="currentRosterCountBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-xs font-black">共 29 人</span>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-base font-black text-emerald-950">✏️ 編修目前班級名單（轉入 / 轉出 / 改名）</h3>
+                <p class="text-xs font-bold text-emerald-800 mt-0.5">直接修改姓名、點「🗑️ 轉出」移除學生，或按下方「➕ 新增轉入學生」，既有同學的分數與紀錄都會完整保留！</p>
+              </div>
+              <button type="button" id="addTransferStudentBtn" class="px-3.5 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-black shadow-xs shrink-0">
+                ➕ 新增轉入學生
+              </button>
             </div>
-            <p class="text-xs font-bold text-emerald-800">💡 原有學生的加扣分紀錄會完整保留！可直接在下方表格修改，或點「轉入新生」新增座號。</p>
 
             <div>
               <label class="block text-xs font-bold text-stone-600 mb-1">班級名稱</label>
               <input id="editClassName" type="text" maxlength="30" class="w-full px-3 py-2 rounded-xl border border-emerald-300 bg-white text-sm font-bold" />
             </div>
 
-            <!-- 互動式學生表格編修器 -->
+            <!-- 視覺化逐列名單編修器 -->
             <div class="bg-white rounded-2xl border border-emerald-200 overflow-hidden">
-              <div class="px-3 py-2 bg-emerald-100/80 flex items-center justify-between border-b border-emerald-200">
-                <span class="text-xs font-black text-emerald-950">座號與姓名列表</span>
-                <div class="flex gap-1.5">
-                  <button type="button" id="addTransferInBtn" class="px-3 py-1 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-black shadow-2xs">➕ 轉入新生</button>
-                  <button type="button" id="toggleBulkTextBtn" class="px-3 py-1 rounded-full bg-white border border-emerald-300 hover:bg-emerald-50 text-emerald-800 text-xs font-bold">📝 切換文字批次貼上</button>
-                </div>
+              <div class="grid grid-cols-12 gap-2 px-3 py-2 bg-emerald-100/80 text-xs font-black text-emerald-950">
+                <div class="col-span-3 text-center">座號</div>
+                <div class="col-span-6">學生姓名</div>
+                <div class="col-span-3 text-center">操作</div>
               </div>
-
-              <!-- 表格逐列編輯區 -->
-              <div id="visualRosterWrap" class="max-h-64 overflow-y-auto divide-y divide-stone-100 p-2 space-y-1">
-                <!-- 由 JS 產生每一列學生輸入框 -->
-              </div>
-
-              <!-- 文字批次貼上區（預設隱藏，可切換） -->
-              <div id="bulkTextRosterWrap" class="hidden p-3 space-y-2 bg-stone-50">
-                <label class="block text-xs font-bold text-stone-600">每行「座號 姓名」（可直接從 Excel 複製貼上覆蓋）：</label>
-                <textarea id="editRoster" rows="8" class="w-full px-3 py-2 rounded-xl border border-emerald-300 bg-white text-sm"></textarea>
+              <div id="rosterEditorRows" class="divide-y divide-stone-100 max-h-[280px] overflow-y-auto p-1.5 space-y-1">
               </div>
             </div>
 
+            <!-- 進階批次文字貼上（可摺疊） -->
+            <details class="bg-white/80 rounded-xl border border-emerald-200 px-3 py-2">
+              <summary class="text-xs font-extrabold text-emerald-800 cursor-pointer select-none">📋 改用批次文字整批貼上修改（選用）</summary>
+              <div class="mt-2 space-y-2">
+                <p class="text-[11px] text-stone-500">每行「座號 姓名」，編輯後點下方「套用文字到上方列表」再儲存即可。</p>
+                <textarea id="editRoster" rows="6" class="w-full px-3 py-2 rounded-xl border border-emerald-300 bg-white text-sm"></textarea>
+                <button type="button" id="syncTextToRowsBtn" class="px-3 py-1.5 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-black">套用文字到上方列表</button>
+              </div>
+            </details>
+
             <div class="flex items-center justify-between pt-1">
-              <span class="text-xs text-stone-500">修改完成後請記得按右側綠色按鈕儲存</span>
-              <button type="button" id="saveRosterBtn" class="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-black shadow-sm">✅ 儲存名單修改</button>
+              <span id="editRosterCountHint" class="text-xs font-extrabold text-emerald-800"></span>
+              <button type="button" id="saveRosterBtn" class="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-black shadow-sm">
+                ✅ 儲存名單修改
+              </button>
             </div>
           </div>
 
-          <!-- 本班專屬網址 -->
           <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 space-y-2">
             <h3 class="text-sm font-black text-amber-900">🔗 本班專屬網址</h3>
             <div class="flex gap-2">
               <input id="classUrlInput" readonly class="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white text-sm" />
               <button type="button" id="copyUrlBtn" class="px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-sm font-black whitespace-nowrap">複製網址</button>
             </div>
-            <p class="text-xs text-stone-600">請在本班電腦把此網址加入書籤。名單與分數只存在這台電腦的瀏覽器，網址本身不含名單。</p>
+            <p class="text-xs text-stone-600">請在本班電腦把此網址加入書籤。名單與分數只存在這台電腦的瀏覽器。</p>
           </div>
         </div>
 
-        <!-- 分頁 2：新增／切換班級 -->
+        <!-- 分頁 2：班級管理 / 新增班級 -->
         <div id="tab-newclass" class="hidden space-y-5">
           <div>
             <h3 class="text-sm font-black text-stone-700 mb-2">已建立的班級</h3>
@@ -696,7 +683,7 @@
             <div class="flex items-center justify-between">
               <span id="rosterPreviewCount" class="text-xs font-bold text-teal-800">尚未輸入名單</span>
               <button id="createClassBtn" class="px-4 py-2 rounded-full bg-teal-600 hover:bg-teal-700 text-white font-black text-sm shadow-sm transition">
-                自動建立新班級
+                自動建立班級
               </button>
             </div>
           </div>
@@ -716,7 +703,7 @@
           <p class="text-xs text-stone-500">換到另一個學年度或學期時，原學期紀錄會保存；把學年度與學期改回來就能調閱。</p>
         </div>
 
-        <!-- 分頁 4：備份與還原 -->
+        <!-- 分頁 4：備份還原 -->
         <div id="tab-backup" class="hidden space-y-4">
           <div class="p-4 rounded-2xl border border-stone-200 bg-stone-50 space-y-2.5">
             <h3 class="text-sm font-black text-stone-800">📤 匯出完整資料備份（JSON）</h3>
@@ -829,25 +816,34 @@
     let selectedStudentIds = new Set();
     let activeStudentId = null;
     let audioCtx = null;
-    let isBulkTextMode = false;
 
-    // ==================== 兒童友善即時時鐘（日期、星期幾、時間） ====================
-    function updateKidsClock() {
+    // ==================== 兒童友善即時日期、星期與時間 ====================
+    function updateKidClock() {
       const now = new Date();
       const month = now.getMonth() + 1;
-      const day = now.getDate();
-      const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-      const weekdayStr = weekdays[now.getDay()];
-      const hh = String(now.getHours()).padStart(2, '0');
-      const mm = String(now.getMinutes()).padStart(2, '0');
+      const date = now.getDate();
+      const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+      const weekday = weekdays[now.getDay()];
 
-      const dateEl = document.getElementById('kidsDateDisplay');
-      const weekEl = document.getElementById('kidsWeekdayDisplay');
-      const timeEl = document.getElementById('kidsTimeDisplay');
+      const hours24 = now.getHours();
+      const period = hours24 < 12 ? '上午' : '下午';
+      const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
+      const mins = String(now.getMinutes()).padStart(2, '0');
 
-      if (dateEl) dateEl.textContent = `${month}月${day}日`;
-      if (weekEl) weekEl.textContent = weekdayStr;
-      if (timeEl) timeEl.textContent = `${hh}:${mm}`;
+      const dateEl = document.getElementById('kidDateText');
+      const weekEl = document.getElementById('kidWeekdayBadge');
+      const periodEl = document.getElementById('kidPeriodBadge');
+      const timeEl = document.getElementById('kidTimeText');
+
+      if (dateEl) dateEl.textContent = `${month}月${date}日`;
+      if (weekEl) {
+        weekEl.textContent = `星期${weekday}`;
+        weekEl.className = (now.getDay() === 0 || now.getDay() === 6)
+          ? 'px-2.5 py-0.5 rounded-full bg-rose-400 text-white text-sm sm:text-base font-black shadow-xs'
+          : 'px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-950 text-sm sm:text-base font-black shadow-xs';
+      }
+      if (periodEl) periodEl.textContent = period;
+      if (timeEl) timeEl.textContent = `${hours12}:${mins}`;
     }
 
     // ==================== 森林彩葉紙花特效 ====================
@@ -1165,7 +1161,7 @@
       openModal('weekPickerModal');
     }
 
-    // ==================== 專屬網址與互動式名單編修（轉入／轉出／改名） ====================
+    // ==================== 專屬網址與名單編修（轉入 / 轉出 / 改名） ====================
 
     const classUrl = cls => `${location.href.split(/[?#]/)[0]}?class=${encodeURIComponent(cls.name)}`;
     const hasClassParam = () => new URLSearchParams(location.search).has('class');
@@ -1206,21 +1202,16 @@
     function mergeRoster(cls, parsed) {
       const used = new Set();
       const matched = parsed.map(p => {
-        if (p.id) {
-          const byId = cls.students.find(s => s.id === p.id && !used.has(s.id));
-          if (byId) {
-            used.add(byId.id);
-            return byId;
-          }
-        }
-        const old = cls.students.find(s => s.name === p.name && !used.has(s.id));
+        const old = p.id
+          ? cls.students.find(s => s.id === p.id && !used.has(s.id))
+          : cls.students.find(s => s.name === p.name && !used.has(s.id));
         if (old) used.add(old.id);
         return old;
       });
       const newNames = new Set(parsed.map(p => p.name));
       return parsed.map((p, i) => {
         let old = matched[i];
-        if (!old) {
+        if (!old && !p.id) {
           old = cls.students.find(s => s.seat === p.seat && !used.has(s.id) && !newNames.has(s.name));
           if (old) used.add(old.id);
         }
@@ -1235,55 +1226,72 @@
       }
     }
 
-    function renderVisualRosterRows(items) {
-      const wrap = document.getElementById('visualRosterWrap');
-      document.getElementById('currentRosterCountBadge').textContent = `共 ${items.length} 人`;
-      wrap.innerHTML = items.map((item, idx) => `
-        <div class="roster-edit-row flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-emerald-50/70" data-stu-id="${item.id || ''}">
-          <span class="text-xs font-bold text-stone-400 w-6 text-right">${idx + 1}.</span>
-          <input type="number" min="1" max="99" value="${item.seat}" class="roster-seat-input w-16 px-2 py-1 rounded-lg border border-stone-300 text-center text-sm font-black text-stone-800 focus:border-emerald-500 focus:outline-none" title="座號" />
-          <input type="text" maxlength="20" value="${escapeHtml(item.name)}" placeholder="輸入學生姓名" class="roster-name-input flex-1 px-2.5 py-1 rounded-lg border border-stone-300 text-sm font-bold text-stone-800 focus:border-emerald-500 focus:outline-none" />
-          <button type="button" class="roster-del-row-btn px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-extrabold border border-rose-200 transition" title="轉出／移除此學生">
-            轉出刪除
-          </button>
+    /** 產生單列學生編修 HTML */
+    function buildRosterEditorRowHtml(seat, name, stuId = '') {
+      return `
+        <div class="roster-edit-row grid grid-cols-12 gap-2 items-center px-2 py-1 rounded-xl hover:bg-emerald-50/70" data-stu-id="${escapeHtml(stuId)}">
+          <div class="col-span-3">
+            <input type="number" min="1" max="99" value="${seat}" class="edit-seat-input w-full px-2 py-1.5 rounded-lg border border-stone-300 text-center text-sm font-black text-stone-700 focus:outline-none focus:border-emerald-500" />
+          </div>
+          <div class="col-span-6">
+            <input type="text" maxlength="20" value="${escapeHtml(name)}" placeholder="輸入學生姓名" class="edit-name-input w-full px-2.5 py-1.5 rounded-lg border border-stone-300 text-sm font-extrabold text-stone-800 focus:outline-none focus:border-emerald-500" />
+          </div>
+          <div class="col-span-3 text-center">
+            <button type="button" class="remove-student-row-btn px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-black transition" title="移除此學生（轉出）">
+              🗑️ 轉出
+            </button>
+          </div>
         </div>
-      `).join('');
+      `;
     }
 
-    function collectVisualRosterItems() {
-      const rows = Array.from(document.querySelectorAll('#visualRosterWrap .roster-edit-row'));
-      return rows.map(row => ({
-        id: row.dataset.stuId || null,
-        seat: parseInt(row.querySelector('.roster-seat-input').value, 10),
-        name: row.querySelector('.roster-name-input').value.trim()
-      })).filter(item => item.name);
+    function updateEditRosterCountHint() {
+      const rows = document.querySelectorAll('#rosterEditorRows .roster-edit-row');
+      const hint = document.getElementById('editRosterCountHint');
+      if (hint) hint.textContent = `目前名單共 ${rows.length} 位學生`;
+      // 同步更新摺疊文字框
+      const lines = Array.from(rows).map(r => {
+        const s = r.querySelector('.edit-seat-input').value.trim();
+        const n = r.querySelector('.edit-name-input').value.trim();
+        return `${s} ${n}`;
+      });
+      const ta = document.getElementById('editRoster');
+      if (ta) ta.value = lines.join('\n');
     }
 
     function fillRosterEditor() {
       const cls = getCurrentClass();
-      isBulkTextMode = false;
-      document.getElementById('visualRosterWrap').classList.remove('hidden');
-      document.getElementById('bulkTextRosterWrap').classList.add('hidden');
-      document.getElementById('toggleBulkTextBtn').textContent = '📝 切換文字批次貼上';
-
       document.getElementById('classUrlInput').value = classUrl(cls);
       document.getElementById('editClassName').value = cls.name;
-      document.getElementById('editRoster').value = cls.students.map(s => `${s.seat} ${s.name}`).join('\n');
-      renderVisualRosterRows(cls.students.map(s => ({ id: s.id, seat: s.seat, name: s.name })));
+      const rowsWrap = document.getElementById('rosterEditorRows');
+      rowsWrap.innerHTML = cls.students
+        .map(s => buildRosterEditorRowHtml(s.seat, s.name, s.id))
+        .join('');
+      updateEditRosterCountHint();
+    }
+
+    function readRosterEditorRows() {
+      const rows = Array.from(document.querySelectorAll('#rosterEditorRows .roster-edit-row'));
+      const parsed = [];
+      for (const r of rows) {
+        const seat = parseInt(r.querySelector('.edit-seat-input').value, 10);
+        const name = r.querySelector('.edit-name-input').value.trim();
+        const id = r.dataset.stuId || '';
+        if (!name) continue;
+        parsed.push({ seat: Number.isInteger(seat) && seat > 0 ? seat : 0, name, id });
+      }
+      return parsed;
     }
 
     function saveRoster() {
       const cls = getCurrentClass();
       const name = document.getElementById('editClassName').value.trim();
-      const parsed = isBulkTextMode
-        ? parseRosterText(document.getElementById('editRoster').value)
-        : collectVisualRosterItems();
-
+      const parsed = readRosterEditorRows();
       if (!name) return showToast('請輸入班級名稱', 'warning');
       if (appState.classes.some(c => c !== cls && c.name === name)) return showToast('已有同名的班級', 'warning');
       if (!parsed.length) return showToast('名單不能是空的', 'warning');
-      if (parsed.some(p => !Number.isInteger(p.seat) || p.seat < 1)) return showToast('座號必須是正整數', 'warning');
-      if (new Set(parsed.map(p => p.seat)).size !== parsed.length) return showToast('座號有重複，請檢查座號欄位', 'warning');
+      if (parsed.some(p => p.seat <= 0)) return showToast('請確認每位學生的座號皆為正整數', 'warning');
+      if (new Set(parsed.map(p => p.seat)).size !== parsed.length) return showToast('座號有重複，請檢查名單', 'warning');
 
       const students = mergeRoster(cls, parsed);
       const removed = cls.students.filter(o => !students.some(n => n.id === o.id));
@@ -1295,10 +1303,10 @@
         renderTopControls();
         renderBoard();
         renderSettingsModal();
-        showToast(`名單已儲存！（目前共 ${students.length} 位學生）`, 'success');
+        showToast('班級名單已成功更新！', 'success');
       };
       if (removed.length) {
-        showConfirm('確認轉出／移除學生', `將移除：${removed.map(s => `${s.seat}號 ${s.name}`).join('、')}。他們的加扣分紀錄將不再顯示。`, apply);
+        showConfirm('確認學生轉出 / 移除', `將移除：${removed.map(s => `${s.seat}號 ${s.name}`).join('、')}。確定儲存名單修改嗎？`, apply);
       } else {
         apply();
       }
@@ -1451,54 +1459,48 @@
       }));
       document.getElementById('saveRosterBtn').addEventListener('click', saveRoster);
 
-      // 轉入新生按鈕
-      document.getElementById('addTransferInBtn').addEventListener('click', () => {
-        if (isBulkTextMode) {
-          document.getElementById('toggleBulkTextBtn').click();
-        }
-        const currentItems = collectVisualRosterItems();
-        const maxSeat = currentItems.reduce((m, item) => Math.max(m, item.seat || 0), 0);
-        currentItems.push({ id: null, seat: maxSeat + 1, name: '' });
-        renderVisualRosterRows(currentItems);
-        const wrap = document.getElementById('visualRosterWrap');
-        wrap.scrollTop = wrap.scrollHeight;
-        const lastInput = wrap.querySelector('.roster-edit-row:last-child .roster-name-input');
+      // 新增轉入學生按鈕
+      document.getElementById('addTransferStudentBtn').addEventListener('click', () => {
+        const rows = Array.from(document.querySelectorAll('#rosterEditorRows .roster-edit-row'));
+        const maxSeat = rows.reduce((max, r) => {
+          const v = parseInt(r.querySelector('.edit-seat-input').value, 10);
+          return Number.isInteger(v) ? Math.max(max, v) : max;
+        }, 0);
+        const rowsWrap = document.getElementById('rosterEditorRows');
+        rowsWrap.insertAdjacentHTML('beforeend', buildRosterEditorRowHtml(maxSeat + 1, '', ''));
+        rowsWrap.scrollTop = rowsWrap.scrollHeight;
+        const lastInput = rowsWrap.lastElementChild?.querySelector('.edit-name-input');
         if (lastInput) lastInput.focus();
+        updateEditRosterCountHint();
       });
 
-      // 刪除單列（轉出）
-      document.getElementById('visualRosterWrap').addEventListener('click', (e) => {
-        const delBtn = e.target.closest('.roster-del-row-btn');
+      // 刪除單筆學生列（轉出）
+      document.getElementById('rosterEditorRows').addEventListener('click', (e) => {
+        const delBtn = e.target.closest('.remove-student-row-btn');
         if (!delBtn) return;
         const row = delBtn.closest('.roster-edit-row');
         if (row) {
           row.remove();
-          const remain = document.querySelectorAll('#visualRosterWrap .roster-edit-row').length;
-          document.getElementById('currentRosterCountBadge').textContent = `共 ${remain} 人`;
+          updateEditRosterCountHint();
         }
       });
 
-      // 切換表格編輯 / 文字批次貼上
-      document.getElementById('toggleBulkTextBtn').addEventListener('click', () => {
-        isBulkTextMode = !isBulkTextMode;
-        const visualWrap = document.getElementById('visualRosterWrap');
-        const bulkWrap = document.getElementById('bulkTextRosterWrap');
-        const btn = document.getElementById('toggleBulkTextBtn');
-        if (isBulkTextMode) {
-          const items = collectVisualRosterItems();
-          if (items.length) {
-            document.getElementById('editRoster').value = items.map(i => `${i.seat} ${i.name}`).join('\n');
-          }
-          visualWrap.classList.add('hidden');
-          bulkWrap.classList.remove('hidden');
-          btn.textContent = '📋 切回逐列名單編輯';
-        } else {
-          const parsed = parseRosterText(document.getElementById('editRoster').value);
-          renderVisualRosterRows(parsed.map(p => ({ id: null, seat: p.seat, name: p.name })));
-          bulkWrap.classList.add('hidden');
-          visualWrap.classList.remove('hidden');
-          btn.textContent = '📝 切換文字批次貼上';
-        }
+      document.getElementById('rosterEditorRows').addEventListener('input', () => {
+        updateEditRosterCountHint();
+      });
+
+      // 文字框同步回列表
+      document.getElementById('syncTextToRowsBtn').addEventListener('click', () => {
+        const parsed = parseRosterText(document.getElementById('editRoster').value);
+        if (!parsed.length) return showToast('文字框內沒有可辨識的名單', 'warning');
+        const cls = getCurrentClass();
+        const rowsWrap = document.getElementById('rosterEditorRows');
+        rowsWrap.innerHTML = parsed.map(p => {
+          const old = cls.students.find(s => s.name === p.name) || cls.students.find(s => s.seat === p.seat);
+          return buildRosterEditorRowHtml(p.seat, p.name, old ? old.id : '');
+        }).join('');
+        updateEditRosterCountHint();
+        showToast(`已套用 ${parsed.length} 筆名單，請記得按「儲存名單修改」`, 'info');
       });
 
       document.getElementById('copyUrlBtn').addEventListener('click', () => {
@@ -1589,6 +1591,30 @@
       document.getElementById('batchSelectedCount').textContent = selectedStudentIds.size;
     }
 
+    function buildGridCellsHtml(isOver20 = false) {
+      let html = '';
+      for (let i = 0; i <= 20; i++) {
+        let zoneClass = 'zone-0';
+        if (i >= 1 && i <= 5) zoneClass = 'zone-1';
+        else if (i >= 6 && i <= 10) zoneClass = 'zone-2';
+        else if (i >= 11 && i <= 15) zoneClass = 'zone-3';
+        else if (i >= 16) zoneClass = 'zone-4';
+
+        // 超過 20 分：整條加分區域變色為皇家閃耀金漸層！
+        if (isOver20 && i >= 1) {
+          zoneClass = 'over20-track-cell';
+        }
+
+        let divider = isOver20 ? 'border-r border-amber-300/70' : 'border-r border-white';
+        if (i === 0 || i === 5 || i === 10) divider = 'zone-divider-right';
+        else if (i === 15) divider = 'zone-divider-gold';
+        else if (i === 20) divider = '';
+
+        html += `<div class="${zoneClass} ${divider} h-full"></div>`;
+      }
+      return html;
+    }
+
     function renderBoard() {
       const cls = getCurrentClass();
       const body = document.getElementById('boardBody');
@@ -1597,26 +1623,8 @@
       let totalStamps = 0;
       let over20Count = 0;
 
-      // 一般學生的 0~20 格背景
-      let normalGridCellsHtml = '';
-      // 超過 20 分學生的專屬變色 0~20 格背景
-      let superGridCellsHtml = '';
-
-      for (let i = 0; i <= 20; i++) {
-        let zoneClass = 'zone-0';
-        if (i >= 1 && i <= 5) zoneClass = 'zone-1';
-        else if (i >= 6 && i <= 10) zoneClass = 'zone-2';
-        else if (i >= 11 && i <= 15) zoneClass = 'zone-3';
-        else if (i >= 16) zoneClass = 'zone-4';
-
-        let divider = 'border-r border-white';
-        if (i === 0 || i === 5 || i === 10) divider = 'zone-divider-right';
-        else if (i === 15) divider = 'zone-divider-gold';
-        else if (i === 20) divider = '';
-
-        normalGridCellsHtml += `<div class="${zoneClass} ${divider} h-full"></div>`;
-        superGridCellsHtml += `<div class="super-zone-cell ${divider} h-full"></div>`;
-      }
+      const normalGridCellsHtml = buildGridCellsHtml(false);
+      const over20GridCellsHtml = buildGridCellsHtml(true);
 
       const rowsHtml = students.map(stu => {
         const score = getStudentScore(stu.id);
@@ -1630,28 +1638,33 @@
         const isSelected = selectedStudentIds.has(stu.id);
 
         const scoreBadgeHtml = `
-            <span class="text-xs font-extrabold whitespace-nowrap ${score < 0 ? 'text-amber-900' : (isOver20 ? 'text-amber-800 font-black' : 'text-stone-600')}">${score}🌰</span>
-            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-sm font-black border whitespace-nowrap ${isOver20 ? 'bg-gradient-to-r from-amber-300 to-orange-300 text-amber-950 border-amber-500 shadow-2xs' : (stamps ? 'bg-amber-100 text-amber-950 border-amber-300' : 'bg-stone-100 text-stone-400 border-stone-200')}">${isOver20 ? '🐿️' : '🏅'}${stamps}</span>
+            <span class="text-xs font-extrabold whitespace-nowrap ${score < 0 ? 'text-amber-900' : (isOver20 ? 'text-amber-700 font-black' : 'text-stone-600')}">${score}🌰</span>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-sm font-black border whitespace-nowrap ${stamps >= 5 ? 'bg-gradient-to-r from-amber-300 to-yellow-200 text-amber-950 border-amber-500 shadow-2xs' : (stamps ? 'bg-amber-100 text-amber-950 border-amber-300' : 'bg-stone-100 text-stone-400 border-stone-200')}">${stamps >= 5 ? '🐿️' : '🏅'}${stamps}</span>
         `;
 
         const over20FloatingHtml = isOver20
-          ? `<div class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 z-20 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 text-white text-[11px] font-black shadow-md border-2 border-yellow-100 whitespace-nowrap">👑 松鼠王 +${score - 20} (5章)</div>`
+          ? `<div class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 z-20 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-[11px] font-black shadow-md border-2 border-yellow-200 whitespace-nowrap">👑 松鼠王 +${score - 20} (5章)</div>`
           : '';
 
         const magnetExtraClass = isOver20 ? 'magnet-over20' : (score < 0 ? 'magnet-charge' : '');
-        const leftBoxClass = isOver20 ? 'super-row-left' : 'bg-white/95 group-hover:bg-emerald-50/70';
+        const rowHighlightClass = isSelected
+          ? 'bg-emerald-100/85'
+          : (isOver20 ? 'over20-row-highlight' : '');
+        const leftPanelBg = isOver20
+          ? 'bg-amber-50/95 group-hover:bg-amber-100/80'
+          : 'bg-white/95 group-hover:bg-emerald-50/70';
 
         return `
-          <div class="student-row group flex items-stretch h-[42px] hover:bg-emerald-50/50 transition-colors ${isSelected ? 'bg-emerald-100/80' : ''}" data-student-id="${stu.id}">
-            <div class="w-[248px] shrink-0 flex items-center px-2 border-r-2 border-amber-300 ${leftBoxClass} cursor-pointer select-none" data-action="open-student" data-student-id="${stu.id}">
+          <div class="student-row group flex items-stretch h-[42px] hover:bg-emerald-50/50 transition-colors ${rowHighlightClass}" data-student-id="${stu.id}">
+            <div class="w-[248px] shrink-0 flex items-center px-2 border-r-2 border-amber-300 ${leftPanelBg} cursor-pointer select-none" data-action="open-student" data-student-id="${stu.id}">
               ${isBatchMode ? `
                 <input type="checkbox" class="batch-checkbox w-4 h-4 mr-1.5 accent-emerald-600 cursor-pointer rounded" data-student-id="${stu.id}" ${isSelected ? 'checked' : ''} />
               ` : ''}
-              <span class="w-8 text-center font-black text-sm ${isOver20 ? 'text-amber-900' : 'text-stone-500'}">${stu.seat}</span>
-              <span class="w-[78px] font-black text-[15px] ${isOver20 ? 'text-amber-950' : 'text-stone-800'} truncate pl-0.5">${escapeHtml(stu.name)}</span>
+              <span class="w-8 text-center font-black text-sm ${isOver20 ? 'text-amber-700' : 'text-stone-500'}">${stu.seat}</span>
+              <span class="w-[78px] font-black text-[15px] ${isOver20 ? 'text-amber-950' : 'text-stone-800'} truncate pl-0.5">${isOver20 ? '👑' : ''}${escapeHtml(stu.name)}</span>
               <div class="flex-1 flex items-center justify-end gap-1">
                 ${scoreBadgeHtml}
-                <button type="button" data-action="open-log" data-student-id="${stu.id}" title="查看本週加減分明細" class="w-6 h-6 rounded-lg hover:bg-amber-200/80 flex items-center justify-center text-xs text-stone-600 hover:text-stone-900 transition">
+                <button type="button" data-action="open-log" data-student-id="${stu.id}" title="查看本週加減分明細" class="w-6 h-6 rounded-lg hover:bg-amber-100 flex items-center justify-center text-xs text-stone-500 hover:text-stone-800 transition">
                   📋
                 </button>
               </div>
@@ -1659,7 +1672,7 @@
 
             <div class="flex-1 relative cursor-pointer" data-action="open-student" data-student-id="${stu.id}">
               <div class="grid h-full w-full" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
-                ${isOver20 ? superGridCellsHtml : normalGridCellsHtml}
+                ${isOver20 ? over20GridCellsHtml : normalGridCellsHtml}
               </div>
               <div class="magnet-token mag-c${stu.colorIndex % 8} ${magnetExtraClass}" style="left: ${leftPercent}%;" title="${escapeHtml(stu.name)}：目前 ${score} 分（${stamps} 個榮譽章）">
                 ${score < 0 ? score : stu.seat}
@@ -1680,7 +1693,7 @@
         'bg-orange-100 border-orange-400',
         'bg-gradient-to-br from-amber-100 via-yellow-200 to-orange-200 border-amber-500'
       ];
-      const animalNames = ['橡果種子', '森林小雞', '跳跳白兔', '暖暖棕熊', '聰明小狐', '楠梓小松鼠王'];
+      const animalNames = ['橡果種子', '森林小雞', '跳跳白兔', '暖暖棕熊', '聰明小狐', '楠梓松鼠王'];
       const animalIcons = ['🌱', '🐣', '🐰', '🐻', '🦊', '🐿️'];
       const ranges = ['0分', '1–5分', '6–10分', '11–15分', '16–20分', '21分以上'];
 
@@ -1704,7 +1717,7 @@
 
       document.getElementById('weekQuickStats').textContent =
         `🐿️ 第 ${appState.currentWeek} 週 ｜ 全班 ${students.length} 人 ｜ 本週累計 ${totalStamps} 個榮譽章 ｜ 圓圈內是座號` +
-        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位晉升楠梓小松鼠王` : '') +
+        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位晉升楠梓松鼠王（整列金光閃耀！）` : '') +
         (cls.term && appState.currentWeek !== getTodayWeek() ? ' ｜ ⚠️ 目前不是本週，加扣分會記在這一週' : '');
     }
 
@@ -1780,7 +1793,7 @@
       document.getElementById('actionModalName').textContent = `${stu.seat}號 ${stu.name}`;
       document.getElementById('actionModalStats').textContent =
         `第 ${appState.currentWeek} 週 ｜ 目前 ${score} 顆松果 ｜ 應蓋 ${stamps} 個榮譽章` +
-        (score > 20 ? `（🐿️ 楠梓小松鼠王 +${score - 20}）` : '');
+        (score > 20 ? `（🐿️ 楠梓松鼠王 +${score - 20}）` : '');
 
       document.getElementById('goodBehaviorNote').value = '';
       document.getElementById('deductOtherNote').value = '';
@@ -1949,7 +1962,7 @@
           <div class="text-xl font-black text-emerald-700 mt-0.5">${totalStamps} 個</div>
         </div>
         <div class="bg-white rounded-2xl p-3 border-2 border-amber-200">
-          <div class="text-xs font-bold text-stone-500">楠梓小松鼠王（5章）</div>
+          <div class="text-xs font-bold text-stone-500">楠梓松鼠王（5章）</div>
           <div class="text-xl font-black text-amber-600 mt-0.5">${over20} 人</div>
         </div>
         <div class="bg-white rounded-2xl p-3 border-2 border-sky-200">
@@ -2043,20 +2056,6 @@
       }).join('');
 
       fillTermForm('set');
-    }
-
-    function openSettingsTab(tabName) {
-      renderSettingsModal();
-      document.querySelectorAll('.settings-tab').forEach(t => {
-        const active = t.dataset.tab === tabName;
-        t.className = active
-          ? 'settings-tab px-4 py-2 text-sm font-black rounded-t-xl border-b-2 border-emerald-600 text-emerald-800 bg-white'
-          : 'settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800';
-      });
-      ['roster', 'newclass', 'prefs', 'backup'].forEach(name => {
-        document.getElementById(`tab-${name}`).classList.toggle('hidden', name !== tabName);
-      });
-      openModal('settingsModal');
     }
 
     // ==================== 事件綁定 ====================
@@ -2180,8 +2179,11 @@
         const sign = type === 'add' ? '+' : '-';
         const needReason = item === '其他';
         const askNote = needReason || item === '好表現';
+        const itemLabel = item === '其他'
+          ? (fixedNote === '補電任務' ? '其他補電任務' : (type === 'add' ? '其他加分' : '其他扣分'))
+          : item;
         document.getElementById('batchDetailTitle').textContent =
-          `${item === '其他' ? (type === 'add' ? '其他加分' : '其他扣分') : item}（已選 ${selectedStudentIds.size} 人）`;
+          `${itemLabel}（已選 ${selectedStudentIds.size} 人）`;
         document.getElementById('batchDetailBody').innerHTML = `
           <form id="scoreForm" class="space-y-3">
             ${askNote ? `<input id="scoreNote" type="text" maxlength="40" placeholder="${needReason ? '請輸入原因' : '備註（選填）'}" class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-sm" />` : ''}
@@ -2211,7 +2213,10 @@
         document.getElementById('scoreForm').onsubmit = (e) => {
           e.preventDefault();
           const points = Number(input.value);
-          const note = document.getElementById('scoreNote')?.value.trim() || fixedNote;
+          const rawNote = document.getElementById('scoreNote')?.value.trim() || '';
+          const note = (fixedNote === '補電任務' && item === '其他' && rawNote)
+            ? `補電任務：${rawNote}`
+            : (rawNote || fixedNote);
           if (needReason && !note) return showToast('請輸入原因', 'warning');
           if (!Number.isInteger(points) || points < 1 || points > 20) return showToast('分數請輸入 1～20 的整數', 'warning');
           closeModal('batchDetailModal');
@@ -2228,7 +2233,7 @@
           if (checkbox.checked) selectedStudentIds.add(id);
           else selectedStudentIds.delete(id);
           renderTopControls();
-          e.target.closest('.student-row').classList.toggle('bg-emerald-100/80', checkbox.checked);
+          e.target.closest('.student-row').classList.toggle('bg-emerald-100/85', checkbox.checked);
           return;
         }
 
@@ -2331,19 +2336,23 @@
       document.getElementById('summaryBtn').addEventListener('click', openSummaryModal);
       document.getElementById('exportCsvBtn').addEventListener('click', exportWeeklyCsv);
 
-      // 頂部「編修名單」快捷按鈕：直接開啟目前名單編輯分頁
-      document.getElementById('quickRosterBtn').addEventListener('click', () => {
-        requireTeacherMode(() => openSettingsTab('roster'));
-      });
-
-      // 「設定」按鈕
       document.getElementById('settingsBtn').addEventListener('click', () => {
-        requireTeacherMode(() => openSettingsTab('roster'));
+        requireTeacherMode(() => {
+          renderSettingsModal();
+          openModal('settingsModal');
+        });
       });
 
       document.querySelectorAll('.settings-tab').forEach(tab => {
         tab.addEventListener('click', () => {
-          openSettingsTab(tab.dataset.tab);
+          const target = tab.dataset.tab;
+          document.querySelectorAll('.settings-tab').forEach(t => {
+            t.className = 'settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800';
+          });
+          tab.className = 'settings-tab px-4 py-2 text-sm font-black rounded-t-xl border-b-2 border-emerald-600 text-emerald-800 bg-white';
+          ['roster', 'newclass', 'prefs', 'backup'].forEach(name => {
+            document.getElementById(`tab-${name}`).classList.toggle('hidden', name !== target);
+          });
         });
       });
 
@@ -2491,8 +2500,8 @@
 
     // ==================== 啟動應用程式 ====================
     window.addEventListener('DOMContentLoaded', () => {
-      updateKidsClock();
-      setInterval(updateKidsClock, 1000);
+      updateKidClock();
+      setInterval(updateKidClock, 1000);
       loadState();
       openClassFromUrl();
       jumpToTodayWeek();
