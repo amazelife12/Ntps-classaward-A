@@ -85,7 +85,12 @@
     }
 
     /* 充電站磁鐵：停在起點，顯示負分 */
-    .magnet-charge { box-shadow: 0 0 0 3px #06b6d4, 0 2px 5px rgba(15, 23, 42, 0.25); }
+    .magnet-token.magnet-charge {
+      width: 36px; height: 26px; border-radius: 4px;
+      background: #1f2937; color: #fde047; border: 2px dashed #fde047;
+      text-shadow: none; box-shadow: 0 2px 5px rgba(15, 23, 42, 0.3);
+    }
+    .magnet-token.magnet-charge::after { display: none; }
 
     /* 負分磁鐵微警示樣式 */
     .magnet-negative {
@@ -97,12 +102,12 @@
 
     /* 磁鐵配色組（呼應教室彩色磁鐵） */
     .mag-c0 { background: radial-gradient(circle at 32% 28%, #60a5fa, #2563eb 72%, #1d4ed8); }
-    .mag-c1 { background: radial-gradient(circle at 32% 28%, #fb7185, #e11d48 72%, #be123c); }
+    .mag-c1 { background: radial-gradient(circle at 32% 28%, #a3e635, #65a30d 72%, #4d7c0f); }
     .mag-c2 { background: radial-gradient(circle at 32% 28%, #34d399, #059669 72%, #047857); }
     .mag-c3 { background: radial-gradient(circle at 32% 28%, #c084fc, #9333ea 72%, #7e22ce); }
     .mag-c4 { background: radial-gradient(circle at 32% 28%, #fb923c, #ea580c 72%, #c2410c); }
     .mag-c5 { background: radial-gradient(circle at 32% 28%, #22d3ee, #0891b2 72%, #0e7490); }
-    .mag-c6 { background: radial-gradient(circle at 32% 28%, #f472b6, #db2777 72%, #be185d); }
+    .mag-c6 { background: radial-gradient(circle at 32% 28%, #d6a35c, #a16207 72%, #854d0e); }
     .mag-c7 { background: radial-gradient(circle at 32% 28%, #818cf8, #4f46e5 72%, #4338ca); }
 
     /* 分區格線與柔和底色 */
@@ -1038,7 +1043,7 @@
 
         // 分數與榮譽章膠囊樣式
         const scoreBadgeHtml = `
-            <span class="text-xs font-bold whitespace-nowrap ${score < 0 ? 'text-rose-600' : 'text-slate-500'}">${score}分</span>
+            <span class="text-xs font-bold whitespace-nowrap ${score < 0 ? 'text-slate-900' : 'text-slate-500'}">${score}分</span>
             <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-sm font-black border whitespace-nowrap ${stamps ? 'bg-amber-100 text-amber-900 border-amber-300' : 'bg-slate-100 text-slate-400 border-slate-200'}">🏅${stamps}</span>
         `;
 
@@ -1088,7 +1093,7 @@
       const strip = document.getElementById('chargeStrip');
       strip.classList.toggle('hidden', low.length === 0);
       strip.classList.toggle('flex', low.length > 0);
-      strip.innerHTML = '<span>🔋 充電站</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2 rounded-full bg-white border border-cyan-300 text-slate-800 whitespace-nowrap">${s.seat}號 還差 <span class="text-rose-600">${-getStudentScore(s.id)}</span> 分</span>`).join('');
+      strip.innerHTML = '<span>🔋 充電站</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2 rounded-full bg-white border border-cyan-300 text-slate-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1 rounded bg-slate-800 text-yellow-300">${-getStudentScore(s.id)}</span> 分</span>`).join('');
       document.getElementById('stampBoard').innerHTML = ranges.map((range, n) => {
         const list = students.filter(s => { const v = getStudentScore(s.id); return v >= 0 && calcStamps(v) === n; });
         return `
