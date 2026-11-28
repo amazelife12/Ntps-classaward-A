@@ -1025,15 +1025,15 @@
       </div>
 
       <!-- 打卡視窗內獨立「打卡項目與時間設定」面板（可隨時展開/收合） -->
-      <div id="kioskConfigPanel" class="hidden border-b-2 border-amber-300 bg-amber-50/95 px-4 sm:px-5 py-3.5 space-y-3 max-h-[52vh] overflow-y-auto">
+      <div id="kioskConfigPanel" class="hidden border-b-2 border-amber-300 bg-amber-50/95 px-4 sm:px-5 py-3.5 space-y-3 max-h-[58vh] overflow-y-auto">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 class="text-base font-black text-amber-950">⚙️ 專屬打卡項目與時間設定</h3>
-            <p class="text-xs font-bold text-stone-600">設定各項打卡任務的開放時間；超過截止時間會顯示「時間已過無法打卡」並鎖定按鈕。</p>
+            <p class="text-xs font-bold text-stone-600">可設定日常打卡項目，或為「運動會／活動日」新增限定特定日期的打卡項目（隔天自動隱藏）。</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <label class="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border-2 border-teal-300 text-xs font-black text-teal-950 cursor-pointer">
-              <input id="kioskAutoPopupCheck" type="checkbox" checked class="accent-teal-600" /> 平日到達時間自動跳出打卡視窗
+              <input id="kioskAutoPopupCheck" type="checkbox" checked class="accent-teal-600" /> 上課日到達時間自動跳出
             </label>
             <button type="button" id="addKioskTaskRowBtn" class="px-3 py-1.5 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-black shadow-2xs">
               ➕ 新增打卡項目
@@ -1043,6 +1043,27 @@
 
         <!-- 打卡項目與時段列表 -->
         <div id="kioskConfigRows" class="space-y-2">
+        </div>
+
+        <!-- 特殊日行事曆設定（補課日 / 放假日） -->
+        <div class="p-3 rounded-2xl bg-white border-2 border-teal-200 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h4 class="text-xs sm:text-sm font-black text-teal-950">📅 特殊日設定（補課日／補假日）</h4>
+              <p class="text-[11px] font-bold text-stone-500">預設週一～週五為上課日；加入「補課日」則週末也會自動跳出，加入「放假日」則當天暫停跳出。</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <input id="specialDateInput" type="date" class="px-2.5 py-1 rounded-xl border border-teal-300 text-xs font-black text-stone-800" />
+              <select id="specialDateType" class="px-2.5 py-1 rounded-xl border border-teal-300 bg-teal-50 text-xs font-black text-teal-950">
+                <option value="workday">🏫 補課/活動日（要跳出）</option>
+                <option value="holiday">🏖️ 補假/放假日（不跳出）</option>
+              </select>
+              <input id="specialDateNote" type="text" maxlength="14" placeholder="備註（例：運動會）" class="w-28 sm:w-32 px-2.5 py-1 rounded-xl border border-stone-300 text-xs font-bold" />
+              <button type="button" id="addSpecialDateBtn" class="px-3 py-1 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-black">＋ 加入日期</button>
+            </div>
+          </div>
+          <div id="specialDatesList" class="flex flex-wrap gap-1.5 pt-1">
+          </div>
         </div>
 
         <div class="flex items-center justify-between pt-1">
@@ -3116,33 +3137,67 @@
       });
     }
 
-    // ==================== 學生自助打卡站（獨立項目與時間設定 + 逾時鎖定） ====================
+    // ==================== 學生自助打卡站（獨立項目與時間設定 + 特殊日 + 逾時鎖定） ====================
     const DEFAULT_KIOSK_CONFIG = {
       autoPopup: true,
       tasks: [
-        { id: 'kt_1', icon: '☀️', name: '準時到校', start: '07:15', end: '07:40' },
-        { id: 'kt_2', icon: '🪥', name: '刷牙', start: '12:00', end: '12:30' },
-        { id: 'kt_3', icon: '🥢', name: '擦餐具', start: '12:00', end: '12:30' }
+        { id: 'kt_1', icon: '☀️', name: '準時到校', start: '07:15', end: '07:40', onlyDate: '' },
+        { id: 'kt_2', icon: '🪥', name: '刷牙', start: '12:00', end: '12:30', onlyDate: '' },
+        { id: 'kt_3', icon: '🥢', name: '擦餐具', start: '12:00', end: '12:30', onlyDate: '' }
+      ],
+      specialDates: [
+        { date: '2026-12-05', type: 'workday', note: '運動會' },
+        { date: '2026-12-31', type: 'holiday', note: '補假日' }
       ]
     };
 
     let activeKioskTaskId = null;
     let kioskDismissedSlots = {}; // 記錄老師手動關閉過的「日期_時段key」
+    let tempSpecialDates = []; // 設定面板暫存的特殊日列表
 
     function getKioskConfig() {
       if (!appState.settings.kioskConfig || !Array.isArray(appState.settings.kioskConfig.tasks)) {
-        // 相容舊版資料結構
         const old = appState.settings.kioskSchedule;
         appState.settings.kioskConfig = {
           autoPopup: old ? old.enabled !== false : true,
           tasks: [
-            { id: 'kt_1', icon: '☀️', name: '準時到校', start: old?.morningStart || '07:15', end: old?.morningEnd || '07:40' },
-            { id: 'kt_2', icon: '🪥', name: '刷牙', start: old?.noonStart || '12:00', end: old?.noonEnd || '12:30' },
-            { id: 'kt_3', icon: '🥢', name: '擦餐具', start: old?.noonStart || '12:00', end: old?.noonEnd || '12:30' }
-          ]
+            { id: 'kt_1', icon: '☀️', name: '準時到校', start: old?.morningStart || '07:15', end: old?.morningEnd || '07:40', onlyDate: '' },
+            { id: 'kt_2', icon: '🪥', name: '刷牙', start: old?.noonStart || '12:00', end: old?.noonEnd || '12:30', onlyDate: '' },
+            { id: 'kt_3', icon: '🥢', name: '擦餐具', start: old?.noonStart || '12:00', end: old?.noonEnd || '12:30', onlyDate: '' }
+          ],
+          specialDates: JSON.parse(JSON.stringify(DEFAULT_KIOSK_CONFIG.specialDates))
         };
       }
+      if (!Array.isArray(appState.settings.kioskConfig.specialDates)) {
+        appState.settings.kioskConfig.specialDates = JSON.parse(JSON.stringify(DEFAULT_KIOSK_CONFIG.specialDates));
+      }
       return appState.settings.kioskConfig;
+    }
+
+    function formatDateObjStr(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    /** 判斷指定日期是否為「上課日」（優先比對特殊日設定，其次為週一～週五） */
+    function isSchoolDay(now = new Date()) {
+      const cfg = getKioskConfig();
+      const dateStr = formatDateObjStr(now);
+      const found = (cfg.specialDates || []).find(s => s.date === dateStr);
+      if (found) {
+        return found.type === 'workday';
+      }
+      const day = now.getDay();
+      return day >= 1 && day <= 5;
+    }
+
+    /** 取得今天適用的打卡項目（每天項目 + 指定為今天的限定項目） */
+    function getTodayApplicableKioskTasks(now = new Date()) {
+      const cfg = getKioskConfig();
+      const todayStr = formatDateObjStr(now);
+      return cfg.tasks.filter(t => !t.onlyDate || t.onlyDate === todayStr);
     }
 
     function timeToMinutes(hhmm) {
@@ -3161,13 +3216,12 @@
       return 'open';
     }
 
-    /** 找出目前時間正在開放中的所有打卡項目（平日週一～週五） */
+    /** 找出目前時間正在開放中的所有打卡項目（僅限上課日） */
     function getCurrentlyOpenKioskTasks(now = new Date()) {
       const cfg = getKioskConfig();
       if (!cfg.autoPopup) return [];
-      const day = now.getDay();
-      if (day === 0 || day === 6) return [];
-      return cfg.tasks.filter(t => getKioskTaskTimeState(t, now) === 'open');
+      if (!isSchoolDay(now)) return [];
+      return getTodayApplicableKioskTasks(now).filter(t => getKioskTaskTimeState(t, now) === 'open');
     }
 
     function checkAutoKioskSchedule() {
@@ -3185,7 +3239,7 @@
         liveClockEl.textContent = `現在時間 ${hh}:${mm}:${ss}`;
       }
 
-      // 若視窗正開著，每秒同步檢查當前分頁是否剛好跨越截止時間（一過截止時間立刻變成「時間已過無法打卡」）
+      // 若視窗正開著，同步檢查當前分頁是否剛好跨越截止時間（一過截止時間立刻變成「時間已過無法打卡」）
       if (isModalOpen && document.getElementById('kioskConfigPanel').classList.contains('hidden')) {
         renderKioskContent();
       }
@@ -3203,17 +3257,16 @@
     }
 
     function openStudentKiosk(isAuto = false) {
-      const cfg = getKioskConfig();
       const openTasks = getCurrentlyOpenKioskTasks();
+      const todayTasks = getTodayApplicableKioskTasks();
       const modal = document.getElementById('studentKioskModal');
       modal.dataset.autoOpened = isAuto ? 'true' : 'false';
       modal.dataset.slotKey = openTasks.length > 0 ? `${getTodayStr()}_${openTasks.map(t => t.id).join('_')}` : '';
 
-      // 優先切換到目前正在開放的任務
       if (openTasks.length > 0 && !openTasks.some(t => t.id === activeKioskTaskId)) {
         activeKioskTaskId = openTasks[0].id;
-      } else if (!cfg.tasks.some(t => t.id === activeKioskTaskId) && cfg.tasks.length > 0) {
-        activeKioskTaskId = cfg.tasks[0].id;
+      } else if (!todayTasks.some(t => t.id === activeKioskTaskId) && todayTasks.length > 0) {
+        activeKioskTaskId = todayTasks[0].id;
       }
 
       document.getElementById('kioskConfigPanel').classList.add('hidden');
@@ -3222,12 +3275,11 @@
     }
 
     function renderKioskContent() {
-      const cfg = getKioskConfig();
-      const tasks = cfg.tasks;
       const now = new Date();
+      const tasks = getTodayApplicableKioskTasks(now);
 
       if (tasks.length === 0) {
-        document.getElementById('kioskTaskTabs').innerHTML = `<span class="text-sm font-bold text-stone-500">尚未設定打卡項目，請點右上角「⚙️ 打卡項目與時間設定」新增</span>`;
+        document.getElementById('kioskTaskTabs').innerHTML = `<span class="text-sm font-bold text-stone-500">今天沒有適用的打卡項目，請點右上角「⚙️ 打卡項目與時間設定」新增</span>`;
         document.getElementById('kioskStudentGrid').innerHTML = '';
         return;
       }
@@ -3238,7 +3290,7 @@
       const currentTask = tasks.find(t => t.id === activeKioskTaskId) || tasks[0];
       const timeState = getKioskTaskTimeState(currentTask, now); // 'open' | 'before' | 'expired'
 
-      // 1. 渲染所有打卡任務分頁按鈕（標示開放中 / 時間已過）
+      // 1. 渲染今天適用的打卡任務分頁按鈕
       const tabsWrap = document.getElementById('kioskTaskTabs');
       tabsWrap.innerHTML = tasks.map(t => {
         const isActive = t.id === currentTask.id;
@@ -3248,6 +3300,7 @@
           : (tState === 'expired'
             ? '<span class="text-[11px] px-1.5 py-0.5 rounded-full bg-rose-200 text-rose-900">時間已過</span>'
             : '<span class="text-[11px] px-1.5 py-0.5 rounded-full bg-stone-200 text-stone-700">未開始</span>');
+        const dateBadge = t.onlyDate ? '<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-300 text-amber-950">今日限定</span>' : '';
 
         return `
           <button type="button" data-kiosk-task-id="${t.id}" class="px-4 py-2 rounded-full text-sm sm:text-base font-black border-2 transition flex items-center gap-1.5 ${
@@ -3259,6 +3312,7 @@
           }">
             <span>${escapeHtml(t.icon || '🌟')}</span>
             <span>${escapeHtml(t.name)}</span>
+            ${dateBadge}
             ${!isActive ? stateTag : ''}
           </button>
         `;
@@ -3327,31 +3381,59 @@
         `「${currentTask.name}」已完成：${doneCount} / ${students.length} 人`;
     }
 
+    function renderSpecialDatesTags() {
+      const wrap = document.getElementById('specialDatesList');
+      if (!wrap) return;
+      if (tempSpecialDates.length === 0) {
+        wrap.innerHTML = '<span class="text-xs text-stone-400 font-bold">目前無特殊日設定（完全依週一～週五運作）</span>';
+        return;
+      }
+      wrap.innerHTML = tempSpecialDates.map((sd, idx) => {
+        const isWork = sd.type === 'workday';
+        return `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black border ${
+            isWork ? 'bg-amber-100 border-amber-400 text-amber-950' : 'bg-sky-100 border-sky-400 text-sky-950'
+          }">
+            <span>${isWork ? '🏫 補課/活動' : '🏖️ 補假/放假'}</span>
+            <span>${escapeHtml(sd.date)}</span>
+            ${sd.note ? `<span>(${escapeHtml(sd.note)})</span>` : ''}
+            <button type="button" data-del-special-idx="${idx}" class="ml-0.5 text-rose-600 hover:text-rose-800 font-black" title="移除此日期">✕</button>
+          </span>
+        `;
+      }).join('');
+    }
+
     /** 渲染打卡視窗內的「專屬打卡項目與時間設定」列表 */
     function renderKioskConfigEditor() {
       const cfg = getKioskConfig();
       document.getElementById('kioskAutoPopupCheck').checked = cfg.autoPopup !== false;
       const rowsWrap = document.getElementById('kioskConfigRows');
       rowsWrap.innerHTML = cfg.tasks.map(t => buildKioskConfigRowHtml(t)).join('');
+      tempSpecialDates = JSON.parse(JSON.stringify(cfg.specialDates || []));
+      renderSpecialDatesTags();
     }
 
-    function buildKioskConfigRowHtml(t = { id: genId('kt'), icon: '🌟', name: '', start: '07:15', end: '07:40' }) {
+    function buildKioskConfigRowHtml(t = { id: genId('kt'), icon: '🏃', name: '', start: '09:10', end: '09:25', onlyDate: getTodayStr() }) {
       return `
-        <div class="kiosk-cfg-row grid grid-cols-12 gap-2 items-center bg-white p-2.5 rounded-2xl border border-amber-300" data-task-id="${escapeHtml(t.id)}">
+        <div class="kiosk-cfg-row grid grid-cols-12 gap-1.5 items-center bg-white p-2.5 rounded-2xl border border-amber-300" data-task-id="${escapeHtml(t.id)}">
           <div class="col-span-2 sm:col-span-1">
-            <input type="text" maxlength="4" value="${escapeHtml(t.icon || '🌟')}" class="kcfg-icon w-full px-1.5 py-1.5 rounded-xl border border-stone-300 text-center text-base" title="圖示" />
+            <input type="text" maxlength="4" value="${escapeHtml(t.icon || '🌟')}" class="kcfg-icon w-full px-1 py-1.5 rounded-xl border border-stone-300 text-center text-base" title="圖示" />
           </div>
-          <div class="col-span-10 sm:col-span-4">
-            <input type="text" maxlength="16" value="${escapeHtml(t.name)}" placeholder="任務名稱（例：準時到校）" class="kcfg-name w-full px-2.5 py-1.5 rounded-xl border border-stone-300 text-sm font-black text-stone-800" />
+          <div class="col-span-10 sm:col-span-3">
+            <input type="text" maxlength="16" value="${escapeHtml(t.name)}" placeholder="項目（例：運動會回教室）" class="kcfg-name w-full px-2.5 py-1.5 rounded-xl border border-stone-300 text-xs sm:text-sm font-black text-stone-800" />
           </div>
-          <div class="col-span-10 sm:col-span-5 flex items-center gap-1.5 text-xs font-bold text-stone-700">
+          <div class="col-span-12 sm:col-span-4 flex items-center gap-1 text-xs font-bold text-stone-700">
             <span>開放</span>
-            <input type="time" value="${t.start || '07:15'}" class="kcfg-start px-2 py-1.5 rounded-xl border border-amber-300 bg-amber-50/50 font-black text-stone-800" />
-            <span>～ 截止</span>
-            <input type="time" value="${t.end || '07:40'}" class="kcfg-end px-2 py-1.5 rounded-xl border border-rose-300 bg-rose-50/50 font-black text-stone-800" />
+            <input type="time" value="${t.start || '07:15'}" class="kcfg-start px-1.5 py-1.5 rounded-xl border border-amber-300 bg-amber-50/50 font-black text-stone-800" />
+            <span>～截止</span>
+            <input type="time" value="${t.end || '07:40'}" class="kcfg-end px-1.5 py-1.5 rounded-xl border border-rose-300 bg-rose-50/50 font-black text-stone-800" />
           </div>
-          <div class="col-span-2 sm:col-span-2 text-right">
-            <button type="button" class="kcfg-del-btn px-2.5 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-black">🗑️ 刪除</button>
+          <div class="col-span-9 sm:col-span-3 flex items-center gap-1 text-xs font-bold text-stone-600" title="留空表示每個上課日都適用；選擇日期則僅限該日出現">
+            <span class="shrink-0">📅</span>
+            <input type="date" value="${escapeHtml(t.onlyDate || '')}" class="kcfg-only-date w-full px-1.5 py-1.5 rounded-xl border border-sky-300 bg-sky-50/40 text-xs font-bold text-stone-700" />
+          </div>
+          <div class="col-span-3 sm:col-span-1 text-right">
+            <button type="button" class="kcfg-del-btn px-2 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-black" title="刪除">🗑️</button>
           </div>
         </div>
       `;
@@ -3380,10 +3462,17 @@
         configPanel.classList.add('hidden');
       });
 
-      // 新增一列打卡項目
+      // 新增一列打卡項目（預設帶入今天日期，方便老師當天新增活動打卡，若要每天適用把日期按清除即可）
       document.getElementById('addKioskTaskRowBtn').addEventListener('click', () => {
         const rowsWrap = document.getElementById('kioskConfigRows');
-        rowsWrap.insertAdjacentHTML('beforeend', buildKioskConfigRowHtml());
+        rowsWrap.insertAdjacentHTML('beforeend', buildKioskConfigRowHtml({
+          id: genId('kt'),
+          icon: '🏃',
+          name: '',
+          start: '09:10',
+          end: '09:25',
+          onlyDate: getTodayStr()
+        }));
         const lastInput = rowsWrap.lastElementChild?.querySelector('.kcfg-name');
         if (lastInput) lastInput.focus();
       });
@@ -3397,11 +3486,34 @@
         delBtn.closest('.kiosk-cfg-row')?.remove();
       });
 
+      // 加入特殊日（補課日 / 放假日）
+      document.getElementById('addSpecialDateBtn').addEventListener('click', () => {
+        const dateVal = document.getElementById('specialDateInput').value;
+        const typeVal = document.getElementById('specialDateType').value;
+        const noteVal = document.getElementById('specialDateNote').value.trim();
+        if (!dateVal) return showToast('請先選擇日期', 'warning');
+        tempSpecialDates = tempSpecialDates.filter(d => d.date !== dateVal);
+        tempSpecialDates.push({ date: dateVal, type: typeVal, note: noteVal });
+        tempSpecialDates.sort((a, b) => a.date.localeCompare(b.date));
+        document.getElementById('specialDateInput').value = '';
+        document.getElementById('specialDateNote').value = '';
+        renderSpecialDatesTags();
+      });
+
+      // 移除特殊日標籤
+      document.getElementById('specialDatesList').addEventListener('click', (e) => {
+        const delBtn = e.target.closest('[data-del-special-idx]');
+        if (!delBtn) return;
+        const idx = Number(delBtn.dataset.delSpecialIdx);
+        tempSpecialDates.splice(idx, 1);
+        renderSpecialDatesTags();
+      });
+
       // 恢復預設打卡項目與時間
       document.getElementById('resetKioskDefaultBtn').addEventListener('click', () => {
         appState.settings.kioskConfig = JSON.parse(JSON.stringify(DEFAULT_KIOSK_CONFIG));
         renderKioskConfigEditor();
-        showToast('已恢復預設打卡項目與時間（請按儲存生效）', 'info');
+        showToast('已恢復預設打卡項目與特殊日（請按儲存生效）', 'info');
       });
 
       // 儲存專屬打卡項目與時間設定
@@ -3413,25 +3525,27 @@
           const name = r.querySelector('.kcfg-name').value.trim();
           const start = r.querySelector('.kcfg-start').value;
           const end = r.querySelector('.kcfg-end').value;
+          const onlyDate = r.querySelector('.kcfg-only-date').value || '';
           const id = r.dataset.taskId || genId('kt');
           if (!name) return showToast('請輸入每個打卡項目的名稱', 'warning');
           if (!start || !end) return showToast(`請設定「${name}」的開放與截止時間`, 'warning');
           if (timeToMinutes(end) <= timeToMinutes(start)) {
             return showToast(`「${name}」的截止時間必須晚於開放時間`, 'warning');
           }
-          newTasks.push({ id, icon, name, start, end });
+          newTasks.push({ id, icon, name, start, end, onlyDate });
         }
         if (newTasks.length === 0) return showToast('至少需要一個打卡項目', 'warning');
 
         appState.settings.kioskConfig = {
           autoPopup: document.getElementById('kioskAutoPopupCheck').checked,
-          tasks: newTasks
+          tasks: newTasks,
+          specialDates: tempSpecialDates
         };
         kioskDismissedSlots = {};
         saveState();
         configPanel.classList.add('hidden');
         renderKioskContent();
-        showToast('已儲存專屬打卡項目與時間設定！', 'success');
+        showToast('已儲存專屬打卡項目與特殊日設定！', 'success');
       });
 
       // 切換打卡任務分頁
@@ -3446,8 +3560,8 @@
       document.getElementById('kioskStudentGrid').addEventListener('click', (e) => {
         const btn = e.target.closest('[data-kiosk-stu]');
         if (!btn || btn.disabled) return;
-        const cfg = getKioskConfig();
-        const currentTask = cfg.tasks.find(t => t.id === activeKioskTaskId);
+        const todayTasks = getTodayApplicableKioskTasks();
+        const currentTask = todayTasks.find(t => t.id === activeKioskTaskId);
         if (!currentTask) return;
 
         const tState = getKioskTaskTimeState(currentTask, new Date());
