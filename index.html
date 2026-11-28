@@ -425,7 +425,7 @@
           <span>🎛️ 版面自由安排模式：</span>
           <span class="font-bold text-purple-800">可點擊各區塊右上角的「⬆️ 上移 / ⬇️ 下移」調換順序，或勾選顯示項目：</span>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
           <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
             <input type="checkbox" data-toggle-block="clock" checked class="accent-purple-600" /> 📅 日期時間看板
           </label>
@@ -434,6 +434,12 @@
           </label>
           <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
             <input type="checkbox" data-toggle-block="stamps" checked class="accent-purple-600" /> 🐿️ 動物榮譽章看板
+          </label>
+          <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
+            <input type="checkbox" data-toggle-block="stats" checked class="accent-purple-600" /> 📊 本週統計列
+          </label>
+          <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
+            <input type="checkbox" data-toggle-block="kioskBtn" checked class="accent-purple-600" /> 🖐️ 自助打卡按鈕
           </label>
           <label class="inline-flex items-center gap-1 bg-white px-2.5 py-1 rounded-full border border-purple-300 text-xs font-extrabold text-stone-700 cursor-pointer">
             <input type="checkbox" id="compactToolbarCheck" class="accent-purple-600" /> 📏 精簡高度模式
@@ -460,6 +466,7 @@
           <div class="flex items-center gap-1">
             <button type="button" data-move-block="up" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
             <button type="button" data-move-block="down" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
+            <button type="button" data-hide-this-block="toolbar" class="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-300 text-rose-700 hover:bg-rose-100">🙈 隱藏</button>
           </div>
         </div>
         <div id="batchToolbar" class="!border-0 !bg-transparent">
@@ -502,6 +509,7 @@
           <div class="flex items-center gap-1">
             <button type="button" data-move-block="up" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
             <button type="button" data-move-block="down" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
+            <button type="button" data-hide-this-block="stamps" class="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-300 text-rose-700 hover:bg-rose-100">🙈 隱藏</button>
           </div>
         </div>
         <div id="stampBoard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"></div>
@@ -960,20 +968,36 @@
   <!-- ==================== 彈出視窗 8：學生自助打卡大畫面（定時自動跳出） ==================== -->
   <div id="studentKioskModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/65 backdrop-blur-xs p-2 sm:p-4">
     <div class="bg-white rounded-3xl shadow-2xl border-4 border-teal-400 w-full max-w-5xl overflow-hidden animate-modal flex flex-col max-h-[94vh]">
-      <!-- 頂部標題與倒數截止時間 -->
-      <div class="px-5 py-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white flex flex-wrap items-center justify-between gap-2">
+      <!-- 頂部標題、醒目大時鐘看板與倒數截止時間 -->
+      <div class="px-4 sm:px-5 py-3 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-3">
-          <span class="text-3xl">🐿️</span>
+          <span class="text-3xl sm:text-4xl">🐿️</span>
           <div>
             <h2 id="kioskModalTitle" class="text-xl sm:text-2xl font-black tracking-tight">楠梓國小．小朋友自助打卡站</h2>
             <p id="kioskModalSubtitle" class="text-xs sm:text-sm font-bold text-emerald-100 mt-0.5">請先選擇任務，再點選自己的座號就完成加分囉！</p>
           </div>
         </div>
-        <div class="flex items-center gap-2.5">
-          <div id="kioskCountdownPill" class="px-3.5 py-1.5 rounded-full bg-amber-300 text-stone-950 text-xs sm:text-sm font-black shadow-xs">
+
+        <!-- 打卡畫面專屬：超大字高對比即時時間與日期區塊 -->
+        <div id="kioskBigClockBox" class="flex items-center gap-3 bg-stone-950/85 border-2 border-amber-300 rounded-2xl px-4 py-2 shadow-lg select-none">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl sm:text-2xl">📅</span>
+            <span id="kioskBigDateText" class="text-base sm:text-xl font-black text-white">--月--日</span>
+            <span id="kioskBigWeekdayBadge" class="px-2 py-0.5 rounded-full bg-amber-400 text-stone-950 text-xs sm:text-sm font-black">星期--</span>
+          </div>
+          <div class="h-6 w-0.5 bg-amber-300/50"></div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl sm:text-2xl">⏰</span>
+            <span id="kioskBigPeriodBadge" class="text-xs sm:text-sm font-black text-stone-950 bg-emerald-300 px-2 py-0.5 rounded-lg">上午</span>
+            <span id="kioskBigTimeText" class="text-2xl sm:text-4xl font-black text-yellow-300 tabular-nums tracking-tight">00:00:00</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div id="kioskCountdownPill" class="px-3.5 py-2 rounded-full bg-amber-300 text-stone-950 text-xs sm:text-sm font-black shadow-sm border-2 border-amber-100">
             ⏰ 截止時間：--:--
           </div>
-          <button type="button" id="kioskCloseBtn" class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs sm:text-sm font-black transition">
+          <button type="button" id="kioskCloseBtn" class="px-3.5 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs sm:text-sm font-black transition">
             ✕ 返回加分板
           </button>
         </div>
@@ -1046,6 +1070,22 @@
       }
       if (periodEl) periodEl.textContent = period;
       if (timeEl) timeEl.textContent = `${hours12}:${mins}`;
+
+      // 同步更新打卡視窗內的超大即時時鐘
+      const secs = String(now.getSeconds()).padStart(2, '0');
+      const kDateEl = document.getElementById('kioskBigDateText');
+      const kWeekEl = document.getElementById('kioskBigWeekdayBadge');
+      const kPeriodEl = document.getElementById('kioskBigPeriodBadge');
+      const kTimeEl = document.getElementById('kioskBigTimeText');
+      if (kDateEl) kDateEl.textContent = `${month}月${date}日`;
+      if (kWeekEl) {
+        kWeekEl.textContent = `星期${weekday}`;
+        kWeekEl.className = (now.getDay() === 0 || now.getDay() === 6)
+          ? 'px-2 py-0.5 rounded-full bg-rose-400 text-white text-xs sm:text-sm font-black'
+          : 'px-2 py-0.5 rounded-full bg-amber-400 text-stone-950 text-xs sm:text-sm font-black';
+      }
+      if (kPeriodEl) kPeriodEl.textContent = period;
+      if (kTimeEl) kTimeEl.textContent = `${hours12}:${mins}:${secs}`;
     }
 
     // ==================== 森林彩葉紙花特效 ====================
@@ -2761,7 +2801,7 @@
     // ==================== 老師自由調整上方版面順序與顯示 ====================
     const DEFAULT_LAYOUT_PREFS = {
       order: ['toolbar', 'stamps'],
-      visible: { clock: true, toolbar: true, stamps: true },
+      visible: { clock: true, toolbar: true, stamps: true, stats: true, kioskBtn: true },
       compact: false
     };
 
@@ -2791,6 +2831,12 @@
 
       const stampsBlock = document.getElementById('block-stamps');
       if (stampsBlock) stampsBlock.classList.toggle('hidden', prefs.visible.stamps === false);
+
+      const statsEl = document.getElementById('weekQuickStats');
+      if (statsEl) statsEl.classList.toggle('hidden', prefs.visible.stats === false);
+
+      const kioskBtnEl = document.getElementById('openKioskBtn');
+      if (kioskBtnEl) kioskBtnEl.classList.toggle('hidden', prefs.visible.kioskBtn === false);
 
       // 精簡高度模式
       document.body.classList.toggle('compact-toolbar', !!prefs.compact);
@@ -2834,8 +2880,17 @@
         showToast('已恢復預設版面排列', 'info');
       });
 
-      // 上移 / 下移區塊
+      // 上移 / 下移 / 隱藏區塊
       document.getElementById('topCustomizableZone').addEventListener('click', (e) => {
+        const hideBtn = e.target.closest('[data-hide-this-block]');
+        if (hideBtn) {
+          const prefs = getLayoutPrefs();
+          prefs.visible[hideBtn.dataset.hideThisBlock] = false;
+          saveState();
+          applyLayoutPrefs();
+          showToast('已隱藏該區塊，可隨時在上方紫色列重新勾選顯示', 'info');
+          return;
+        }
         const moveBtn = e.target.closest('[data-move-block]');
         if (!moveBtn) return;
         const block = moveBtn.closest('.layout-block');
