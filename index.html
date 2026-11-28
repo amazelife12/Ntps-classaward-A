@@ -58,7 +58,7 @@
       height: 31px;
       border-radius: 9999px;
       transform: translate(-50%, -50%);
-      transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.2s ease, box-shadow 0.2s ease;
+      transition: left 0.9s cubic-bezier(0.34, 1.35, 0.64, 1), transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -89,15 +89,6 @@
     }
 
 
-    /* 磁鐵滑動過場：浮起放大並帶動態陰影，模擬在黑板上推磁鐵的手感 */
-    .magnet-token.magnet-sliding {
-      z-index: 35 !important;
-      transform: translate(-50%, -50%) scale(1.26) !important;
-      box-shadow:
-        0 10px 18px rgba(20, 83, 45, 0.38),
-        0 0 0 3px rgba(255, 255, 255, 0.75),
-        inset 0 2px 4px rgba(255, 255, 255, 0.85);
-    }
 
     .magnet-token:hover {
       transform: translate(-50%, -50%) scale(1.18);
@@ -143,6 +134,17 @@
       box-shadow: inset 4px 0 0 #f59e0b;
     }
 
+    /* 磁鐵移動：拿起、滑行、啪一聲貼回板子 */
+    @keyframes magnetLift {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      20% { transform: translate(-50%, -85%) scale(1.45) rotate(-10deg); filter: drop-shadow(0 10px 6px rgba(0,0,0,0.3)); }
+      70% { transform: translate(-50%, -80%) scale(1.4) rotate(8deg); filter: drop-shadow(0 10px 6px rgba(0,0,0,0.3)); }
+      86% { transform: translate(-50%, -50%) scale(0.82); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+    .magnet-token.magnet-moving { animation: magnetLift 1.1s ease-in-out; z-index: 30; }
+    .magnet-token.magnet-over20.magnet-moving { animation: magnetLift 1.1s ease-in-out, crownPulse 1.8s 1.1s infinite ease-in-out; }
+
     /* 樹洞充電站磁鐵 */
     .magnet-token.magnet-charge {
       width: 38px;
@@ -166,12 +168,59 @@
     .mag-c6 { background: radial-gradient(circle at 32% 28%, #d97706, #92400e 72%, #78350f); }
     .mag-c7 { background: radial-gradient(circle at 32% 28%, #c084fc, #9333ea 72%, #7e22ce); }
 
+
+    /* ===== 風格配色 ===== */
+    body[data-theme="forest"] { --h0:#e7e5e4;--h1:#fef08a;--h2:#a7f3d0;--h3:#bae6fd;--h4:#fed7aa;--z0:#f5f5f4;--z1:#fef9c3;--z2:#dcfce7;--z3:#e0f2fe;--z4:#ffedd5; }
+    body[data-theme="ocean"] { --h0:#e2e8f0;--h1:#a5f3fc;--h2:#bfdbfe;--h3:#99f6e4;--h4:#c7d2fe;--z0:#f1f5f9;--z1:#ecfeff;--z2:#eff6ff;--z3:#f0fdfa;--z4:#eef2ff; }
+    body[data-theme="ocean"] { background-color: #e0f2fe !important; background-image: radial-gradient(circle at 18px 18px, rgba(125,211,252,.5) 3px, transparent 4px), radial-gradient(circle at 52px 46px, rgba(153,246,228,.55) 2px, transparent 3px), linear-gradient(180deg, #cffafe,#eff6ff 52%,#dbeafe); }
+    body[data-theme="ocean"] header { border-bottom-color: #7dd3fc !important; }
+    body[data-theme="ocean"] #pageTitle, body[data-theme="ocean"] #schoolBadge { color: #075985 !important; }
+    body[data-theme="ocean"] #schoolBadge, body[data-theme="ocean"] #block-toolbar, body[data-theme="ocean"] #weekQuickStats { background: #f0f9ff !important; border-color: #7dd3fc !important; color: #075985; }
+    body[data-theme="ocean"] #batchToolbar { background: transparent !important; border-top-color: #7dd3fc !important; }
+    body[data-theme="ocean"] .wood-board-frame { border-color: #0369a1; box-shadow: 0 8px 0 #075985, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="ocean"] .forest-footer { background: #f0f9ff; border-top-color: #7dd3fc; }
+    body[data-theme="ocean"] .forest-footer div { color: #075985; }
+    body[data-theme="sakura"] { --h0:#e7e5e4;--h1:#fbcfe8;--h2:#e9d5ff;--h3:#fecdd3;--h4:#fde68a;--z0:#f5f5f4;--z1:#fdf2f8;--z2:#faf5ff;--z3:#fff1f2;--z4:#fffbeb; }
+    body[data-theme="sakura"] { background-color: #fdf2f8 !important; background-image: radial-gradient(circle at 18px 18px, rgba(249,168,212,.45) 3px, transparent 4px), radial-gradient(circle at 52px 46px, rgba(216,180,254,.4) 2px, transparent 3px), linear-gradient(180deg, #fce7f3,#fff7ed 52%,#fae8ff); }
+    body[data-theme="sakura"] header { border-bottom-color: #f9a8d4 !important; }
+    body[data-theme="sakura"] #pageTitle, body[data-theme="sakura"] #schoolBadge { color: #9d174d !important; }
+    body[data-theme="sakura"] #schoolBadge, body[data-theme="sakura"] #block-toolbar, body[data-theme="sakura"] #weekQuickStats { background: #fff7fb !important; border-color: #f9a8d4 !important; color: #9d174d; }
+    body[data-theme="sakura"] #batchToolbar { background: transparent !important; border-top-color: #f9a8d4 !important; }
+    body[data-theme="sakura"] .wood-board-frame { border-color: #db2777; box-shadow: 0 8px 0 #9d174d, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="sakura"] .forest-footer { background: #fff7fb; border-top-color: #f9a8d4; }
+    body[data-theme="sakura"] .forest-footer div { color: #9d174d; }
+    body[data-theme="space"] { --h0:#cbd5e1;--h1:#c7d2fe;--h2:#ddd6fe;--h3:#bfdbfe;--h4:#f5d0fe;--z0:#e2e8f0;--z1:#e0e7ff;--z2:#ede9fe;--z3:#dbeafe;--z4:#fae8ff; }
+    body[data-theme="space"] { background-color: #312e81 !important; background-image: radial-gradient(circle at 18px 18px, rgba(254,240,138,.75) 3px, transparent 4px), radial-gradient(circle at 52px 46px, rgba(255,255,255,.6) 2px, transparent 3px), linear-gradient(180deg, #1e1b4b,#312e81 52%,#4c1d95); }
+    body[data-theme="space"] header { border-bottom-color: #a5b4fc !important; }
+    body[data-theme="space"] #pageTitle, body[data-theme="space"] #schoolBadge { color: #3730a3 !important; }
+    body[data-theme="space"] #schoolBadge, body[data-theme="space"] #block-toolbar, body[data-theme="space"] #weekQuickStats { background: #eef2ff !important; border-color: #a5b4fc !important; color: #3730a3; }
+    body[data-theme="space"] #batchToolbar { background: transparent !important; border-top-color: #a5b4fc !important; }
+    body[data-theme="space"] .wood-board-frame { border-color: #6366f1; box-shadow: 0 8px 0 #312e81, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="space"] .forest-footer { background: #eef2ff; border-top-color: #a5b4fc; }
+    body[data-theme="space"] .forest-footer div { color: #3730a3; }
+    body[data-theme="simple"] { --h0:#e2e8f0;--h1:#e2e8f0;--h2:#cbd5e1;--h3:#e2e8f0;--h4:#cbd5e1;--z0:#f8fafc;--z1:#ffffff;--z2:#f1f5f9;--z3:#ffffff;--z4:#f1f5f9; }
+    body[data-theme="simple"] { background-color: #f1f5f9 !important; background-image: radial-gradient(circle at 18px 18px, transparent 3px, transparent 4px), radial-gradient(circle at 52px 46px, transparent 2px, transparent 3px), linear-gradient(180deg, #f8fafc,#f1f5f9 52%,#e2e8f0); }
+    body[data-theme="simple"] header { border-bottom-color: #cbd5e1 !important; }
+    body[data-theme="simple"] #pageTitle, body[data-theme="simple"] #schoolBadge { color: #1e293b !important; }
+    body[data-theme="simple"] #schoolBadge, body[data-theme="simple"] #block-toolbar, body[data-theme="simple"] #weekQuickStats { background: #f8fafc !important; border-color: #cbd5e1 !important; color: #1e293b; }
+    body[data-theme="simple"] #batchToolbar { background: transparent !important; border-top-color: #cbd5e1 !important; }
+    body[data-theme="simple"] .wood-board-frame { border-color: #64748b; box-shadow: 0 8px 0 #475569, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="simple"] .forest-footer { background: #f8fafc; border-top-color: #cbd5e1; }
+    body[data-theme="simple"] .forest-footer div { color: #1e293b; }
+    .theme-card { border: 3px solid #e7e5e4; border-radius: 1.25rem; padding: 12px; text-align: left; background: #fff; }
+    .theme-card[aria-pressed="true"] { border-color: #059669; box-shadow: 0 0 0 3px #a7f3d0; }
+
     /* 森林分區格線與柔和底色 */
-    .zone-0 { background-color: #f5f5f4; }
-    .zone-1 { background-color: #fef9c3; }
-    .zone-2 { background-color: #dcfce7; }
-    .zone-3 { background-color: #e0f2fe; }
-    .zone-4 { background-color: #ffedd5; }
+    .zone-0 { background-color: var(--z0, #f5f5f4); }
+    .zh-0 { background-color: var(--h0); color: #1c1917; }
+    .zone-1 { background-color: var(--z1, #fef9c3); }
+    .zh-1 { background-color: var(--h1); color: #1c1917; }
+    .zone-2 { background-color: var(--z2, #dcfce7); }
+    .zh-2 { background-color: var(--h2); color: #1c1917; }
+    .zone-3 { background-color: var(--z3, #e0f2fe); }
+    .zh-3 { background-color: var(--h3); color: #1c1917; }
+    .zone-4 { background-color: var(--z4, #ffedd5); }
+    .zh-4 { background-color: var(--h4); color: #1c1917; }
 
     .zone-divider-right {
       border-right: 2.5px solid #a8a29e !important;
@@ -335,14 +384,14 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      #batchToolbar button, #stampBoard > div, .week-tile, .squirrel-mascot, .over20-track-cell {
+      .magnet-token.magnet-moving, #batchToolbar button, #stampBoard > div, .week-tile, .squirrel-mascot, .over20-track-cell {
         transition: none;
         animation: none;
       }
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col" data-theme="forest">
 
   <!-- 森林彩葉紙花畫布 -->
   <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-[80]"></canvas>
@@ -355,7 +404,7 @@
       <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <div class="flex items-center gap-2.5">
           <!-- 楠梓國小可愛松鼠吉祥物徽章 -->
-          <div class="squirrel-mascot w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-amber-600 flex items-center justify-center shadow-md border-2 border-amber-100 shrink-0" title="楠梓國小吉祥物：可愛小松鼠">
+          <div id="mascotBadge" class="squirrel-mascot w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-amber-600 flex items-center justify-center shadow-md border-2 border-amber-100 shrink-0" title="楠梓國小吉祥物：可愛小松鼠">
             <svg viewBox="0 0 64 64" class="w-10 h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M44 46C55 44 60 33 56 22C53 14 44 12 40 19C37 24 41 30 45 30C42 34 39 40 44 46Z" fill="#B45309"/>
               <path d="M45 43C53 41 56 32 53 24C51 18 45 17 42 22" stroke="#FDE68A" stroke-width="2.5" stroke-linecap="round"/>
@@ -376,7 +425,7 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-[11px] font-black text-emerald-800">🐿️ 楠梓國小森林樂園</span>
+              <span id="schoolBadge" class="px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-[11px] font-black text-emerald-800">🐿️ 楠梓國小森林樂園</span>
             </div>
             <h1 id="pageTitle" class="text-base sm:text-lg font-black leading-tight tracking-tight mt-0.5">班級榮譽加分板</h1>
             <p id="termSubtitle" class="text-[11px] font-bold text-amber-700"></p>
@@ -441,6 +490,10 @@
           <span>⚙️</span><span class="hidden sm:inline">名單與設定</span>
         </button>
 
+        <button id="modeBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-orange-300 bg-orange-100 text-orange-900 hover:bg-orange-200 shadow-xs">🎯 模式</button>
+
+        <button id="themeBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-pink-300 bg-pink-100 text-pink-900 hover:bg-pink-200 shadow-xs">🎨 風格</button>
+
         <button id="layoutEditToggleBtn" title="自由調整上方區塊順序與顯示" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-purple-300 bg-purple-100 text-purple-900 hover:bg-purple-200 flex items-center gap-1.5 shadow-xs">
           <span>↕️</span><span>調整順序</span>
         </button>
@@ -469,6 +522,8 @@
     
     <button type="button" id="setupBanner" class="hidden w-full mb-2.5 rounded-2xl border-4 border-orange-400 bg-amber-100 hover:bg-amber-200 px-4 py-3 text-lg font-black text-amber-950 text-center animate-pulse shadow-sm"></button>
 
+    <div id="starBanner" class="hidden mb-2.5 rounded-2xl border-4 border-yellow-400 bg-yellow-100 px-4 py-2 text-center font-black text-amber-950"></div>
+
     <!-- 可自由排列順序的上方功能區塊容器（每個區塊左上角皆有獨立顯示/隱藏開關） -->
     <div id="topCustomizableZone" class="space-y-2.5 mb-2.5">
       <!-- 區塊 A：固定加扣分列 -->
@@ -490,35 +545,7 @@
           </div>
         </div>
         <div id="batchToolbar" class="!border-0 !bg-transparent">
-          <div class="px-3 sm:px-4 pb-2 pt-0.5 space-y-1.5">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-sm font-black text-emerald-800 mr-1 bg-emerald-100 px-2.5 py-0.5 rounded-full">🌰 集松果加分</span>
-              <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">☀️ 準時到校 +1</button>
-              <button data-batch-add="作業繳齊" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📚 作業繳齊 +1</button>
-              <button data-batch-add="擦餐具" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🥢 擦餐具 +1</button>
-              <button data-batch-add="刷牙" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🪥 刷牙 +1</button>
-              <button id="batchGoodCustomBtn" class="px-3.5 py-1 text-sm font-black border-2 border-amber-400 bg-amber-200 text-amber-950 hover:bg-amber-300 shadow-xs">🌟 好表現</button>
-            </div>
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-sm font-black text-rose-800 mr-1 bg-rose-100 px-2.5 py-0.5 rounded-full">🍂 小提醒扣分</span>
-              <button data-top-deduct="遲到" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">⏰ 遲到</button>
-              <button data-top-deduct="上課不專心" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">💬 上課不專心</button>
-              <button data-top-deduct="桌面沒整理" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">🧹 桌面沒整理</button>
-              <button data-top-deduct="學用品沒帶" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">✏️ 學用品沒帶</button>
-              <button data-top-deduct="聯絡簿未簽" class="top-deduct-btn bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">📓 聯絡簿未簽</button>
-            </div>
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="text-sm font-black text-amber-900 mr-1 bg-amber-100 px-2.5 py-0.5 rounded-full">🌳 樹洞補電任務</span>
-              <button data-charge="整理書櫃" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📚 整理書櫃</button>
-              <button data-charge="幫忙擦黑板" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">🧽 幫忙擦黑板</button>
-              <button data-charge="補交作業" class="px-3 py-1 text-sm font-extrabold border-2 border-sky-300 bg-sky-50 text-sky-900 hover:bg-sky-100 shadow-xs">📝 補交作業</button>
-              <button data-charge="其他" class="px-3 py-1 text-sm font-extrabold border-2 border-amber-400 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">✨ 其他補電</button>
-              <span class="text-xs font-bold text-amber-800/80">（限在樹洞充電站的同學）</span>
-              <span class="mx-1 text-slate-300 hidden sm:inline">|</span>
-              <button data-custom="add" class="px-3.5 py-1 text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">＋ 其他加分</button>
-              <button data-custom="deduct" class="px-3.5 py-1 text-sm font-black bg-rose-600 hover:bg-rose-700 text-white shadow-xs">－ 其他扣分</button>
-            </div>
-          </div>
+          <div id="toolbarRows" class="px-3 sm:px-4 pb-2 pt-0.5 space-y-1.5"></div>
         </div>
       </div>
 
@@ -568,23 +595,9 @@
               <div class="w-[248px] shrink-0 flex items-center bg-amber-100/80 border-r-2 border-amber-300 px-2 py-2 text-amber-950">
                 <span class="w-10 text-center">座號</span>
                 <span class="w-24 pl-1">姓名</span>
-                <span class="flex-1 text-right pr-1">松果 / 榮譽章</span>
+                <span id="unitColumnLabel" class="flex-1 text-right pr-1">松果 / 榮譽章</span>
               </div>
-              <div class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
-                <div class="col-span-1 bg-stone-200 text-stone-700 flex items-center justify-center py-2 zone-divider-right text-[11px]">🌱起點</div>
-                <div class="col-span-5 bg-yellow-200 text-yellow-950 flex items-center justify-center gap-1 py-2 zone-divider-right">
-                  <span>🐣 小雞 1章</span><span class="text-[11px] opacity-80">(1–5)</span>
-                </div>
-                <div class="col-span-5 bg-emerald-200 text-emerald-950 flex items-center justify-center gap-1 py-2 zone-divider-right">
-                  <span>🐰 白兔 2章</span><span class="text-[11px] opacity-80">(6–10)</span>
-                </div>
-                <div class="col-span-5 bg-sky-200 text-sky-950 flex items-center justify-center gap-1 py-2 zone-divider-gold">
-                  <span>🐻 棕熊 3章</span><span class="text-[11px] opacity-80">(11–15)</span>
-                </div>
-                <div class="col-span-5 bg-orange-200 text-orange-950 flex items-center justify-center gap-1 py-2">
-                  <span>🦊 小狐 4章</span><span class="text-[11px] opacity-80">(16–20)</span>
-                </div>
-              </div>
+              <div id="zoneHeaderRow" class="flex-1 grid" style="grid-template-columns: repeat(21, minmax(0, 1fr));"></div>
             </div>
 
             <!-- 第二層：數字刻度 0 到 20 -->
@@ -713,6 +726,28 @@
     </div>
   </div>
 
+  <div id="modeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 p-3">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-5 animate-modal max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-lg font-black text-stone-800">🎯 選擇獎勵模式</h2>
+        <button type="button" data-close-modal="modeModal" class="px-3 py-1 rounded-full border border-stone-300 font-bold text-sm">關閉</button>
+      </div>
+      <p class="text-xs font-bold text-stone-500 mb-3">切換模式只改變計算與顯示方式，加扣分紀錄都會保留。</p>
+      <div id="modeList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      <button type="button" id="modeCustomBtn" class="mt-3 w-full px-4 py-2 rounded-full border-2 border-dashed border-stone-400 text-sm font-black">⚙️ 自訂細節（分數、項目、蓋章間隔）</button>
+    </div>
+  </div>
+
+  <div id="themeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 p-3">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-xl p-5 animate-modal max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-black text-stone-800">🎨 選擇班級風格</h2>
+        <button type="button" data-close-modal="themeModal" class="px-3 py-1 rounded-full border border-stone-300 font-bold text-sm">關閉</button>
+      </div>
+      <div id="themeList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+    </div>
+  </div>
+
   <!-- ==================== 彈出視窗 4：本週結算總覽與 CSV 匯出 ==================== -->
   <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 backdrop-blur-xs p-3">
     <div class="bg-white rounded-3xl shadow-2xl border-4 border-emerald-300 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
@@ -722,8 +757,9 @@
           <p id="summaryModalSub" class="text-xs font-bold text-emerald-700 mt-0.5"></p>
         </div>
         <div class="flex items-center gap-2">
+          <button id="exportTermBtn" class="px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-black shadow-sm">📚 匯出學期總表</button>
           <button id="exportCsvBtn" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-black shadow-sm transition flex items-center gap-1.5">
-            <span>⬇️</span><span>匯出 CSV 報表</span>
+            <span>⬇️</span><span>匯出本週報表</span>
           </button>
           <button data-close-modal="summaryModal" class="w-8 h-8 rounded-full bg-emerald-200/70 hover:bg-emerald-300 text-emerald-900 font-black flex items-center justify-center transition">✕</button>
         </div>
@@ -738,7 +774,7 @@
             <tr>
               <th class="py-2.5 px-3 rounded-tl-xl">座號</th>
               <th class="py-2.5 px-3">姓名</th>
-              <th class="py-2.5 px-3 text-center">本週松果</th>
+              <th class="py-2.5 px-3 text-center">目前分數</th>
               <th class="py-2.5 px-3 text-center">應蓋榮譽章</th>
               <th class="py-2.5 px-3 text-center">加分合計</th>
               <th class="py-2.5 px-3 text-center rounded-tr-xl">扣分合計</th>
@@ -763,6 +799,7 @@
         <button data-tab="roster" class="settings-tab px-4 py-2 text-sm font-black rounded-t-xl border-b-2 border-emerald-600 text-emerald-800 bg-white">✏️ 編修目前名單</button>
         <button data-tab="newclass" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">🏫 班級管理 / 新增班級</button>
         <button data-tab="prefs" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">📅 學期與週次</button>
+        <button data-tab="rules" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">🎁 獎勵設定</button>
         <button data-tab="backup" class="settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800">💾 備份還原</button>
       </div>
 
@@ -905,6 +942,12 @@
           </div>
         </div>
 
+        <div id="tab-rules" class="hidden space-y-3">
+          <div id="setRules" class="space-y-3"></div>
+          <button type="button" id="saveRulesBtn" class="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-black">儲存獎勵設定</button>
+          <p class="text-xs text-stone-500">只影響目前班級。原有紀錄會保留，分數與章數依新規則重新計算。</p>
+        </div>
+
         <!-- 分頁 4：備份還原 -->
         <div id="tab-backup" class="hidden space-y-4">
           <div class="p-4 rounded-2xl border border-stone-200 bg-stone-50 space-y-2.5">
@@ -953,8 +996,8 @@
 
   <!-- ==================== 森林草地頁尾 ==================== -->
   <footer class="forest-footer" aria-hidden="true">
-    🌲🐿️🌰🍄🌿🐣🐰🐻🦊🌻🍀🌈
-    <div class="text-xs font-extrabold tracking-normal text-emerald-800/80 mt-1">楠梓國小．森林好習慣榮譽樂園</div>
+    <span id="footerIcons">🌲🐿️🌰🍄🌿🐣🐰🐻🦊🌻🍀🌈</span>
+    <div id="footerTitle" class="text-xs font-extrabold tracking-normal text-emerald-800/80 mt-1">楠梓國小．森林好習慣榮譽樂園</div>
   </footer>
 
   <!-- ==================== 週次查詢 ==================== -->
@@ -974,7 +1017,7 @@
     <div class="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 w-full max-w-xl overflow-hidden animate-modal flex flex-col max-h-[92vh]">
       <div class="px-5 py-4 bg-gradient-to-r from-emerald-200 via-amber-200 to-orange-200">
         <h2 class="text-2xl font-black text-emerald-950">🐿️ 楠梓國小老師您好！請先新增名單</h2>
-        <p class="text-sm font-bold text-stone-800 mt-1">完成下面兩步，就能產生您班級的森林加分板。</p>
+        <p class="text-sm font-bold text-stone-800 mt-1">完成下面三步，就能產生您班級的森林加分板。</p>
       </div>
       <div class="p-5 overflow-y-auto space-y-5">
         <div class="space-y-2">
@@ -1009,6 +1052,10 @@
             <div id="wizSpecialDatesList" class="flex flex-wrap gap-1.5">
             </div>
           </div>
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-base font-black text-emerald-800">③ 獎勵方式與項目（可之後再修改）</h3>
+          <div id="wizRules" class="space-y-3"></div>
         </div>
       </div>
       <div class="px-5 py-3 border-t border-stone-200 flex justify-between gap-2">
@@ -1279,13 +1326,117 @@
       return `${m}/${day} ${hh}:${mm}`;
     }
 
-    function calcStamps(score) {
-      if (score <= 0) return 0;
-      if (score <= 5) return 1;
-      if (score <= 10) return 2;
-      if (score <= 15) return 3;
-      if (score <= 20) return 4;
-      return 5;
+    const item = (cat, name, fixed, pts = 1, once = false) => ({ cat, name, fixed, pts, once });
+    /** 舊版資料（分類清單）轉成可自訂分數的項目 */
+    const legacyItems = r => [
+      ...(r.daily || DAILY_ADD_ITEMS).map(n => item('add', n, true, 1, true)),
+      ...(r.bonus || ['好表現']).map(n => item('add', n, false)),
+      ...(r.deduct || DEDUCT_ITEMS).map(n => item('deduct', n, false)),
+      ...(r.charge || ['整理書櫃', '幫忙擦黑板', '補交作業']).map(n => item('charge', n, false))
+    ];
+    const DEFAULT_RULES = { mode: 'week', step: 5, count: 'enter', star: false, progress: false, groupRace: false, noDeduct: false, goal: 0, items: legacyItems({}) };
+    const THEMES = {
+      forest: { label: '森林樂園', place: '森林樂園', mascot: '🐿️', icon: '🌰', unit: '松果', station: '🌳 樹洞充電站', start: ['🌱', '橡果種子'], king: '松鼠王', champ: '楠梓松鼠王',
+        animals: [['🐣', '森林小雞'], ['🐰', '跳跳白兔'], ['🐻', '暖暖棕熊'], ['🦊', '聰明小狐'], ['🦉', '智慧貓頭鷹']], footer: '🌲🐿️🌰🍄🌿🐣🐰🐻🦊🌻🍀🌈' },
+      ocean: { label: '海洋探險', place: '海洋世界', mascot: '🐳', icon: '🐚', unit: '貝殼', station: '🪸 珊瑚充電站', start: ['🫧', '小泡泡'], king: '鯨魚王', champ: '深海鯨魚王',
+        animals: [['🐠', '熱帶小魚'], ['🦀', '活力螃蟹'], ['🐢', '穩健海龜'], ['🐬', '聰明海豚'], ['🐙', '智多章魚']], footer: '🌊🐳🐚🐠🦀🐢🐬🐙⭐⚓🏝️⛵' },
+      sakura: { label: '櫻花甜點', place: '甜點花園', mascot: '🦄', icon: '🌸', unit: '花瓣', station: '🍯 蜂蜜充電站', start: ['🌱', '小花苞'], king: '獨角獸', champ: '夢幻獨角獸',
+        animals: [['🍓', '草莓寶寶'], ['🧁', '杯子蛋糕'], ['🍩', '甜甜圈'], ['🍭', '彩虹棒棒糖'], ['🎂', '慶祝蛋糕']], footer: '🌸🦄🍓🧁🍩🍭🌷🦋🎀🍰🌈💖' },
+      space: { label: '星空冒險', place: '星際基地', mascot: '🚀', icon: '⭐', unit: '星星', station: '🔋 太空補給站', start: ['🌍', '地球出發'], king: '艦長', champ: '銀河艦長',
+        animals: [['🌙', '登月新手'], ['🛰️', '衛星巡航'], ['☄️', '彗星飛手'], ['🪐', '土星探險家'], ['🌌', '星雲達人']], footer: '🚀🌙⭐🪐🛰️☄️🌍👽🌟🔭🌌✨' },
+      simple: { label: '清爽簡約', place: '榮譽榜', mascot: '🏆', icon: '分', unit: '分', station: '🔋 加油區', start: ['⚪', '起點'], king: '榮譽王', champ: '超級榮譽王',
+        animals: [['🥉', '銅級'], ['🥈', '銀級'], ['🥇', '金級'], ['🎖️', '菁英'], ['💎', '鑽石']], footer: '🏅 📘 ✏️ 🎯 🏆' }
+    };
+    const getThemeKey = (cls = getCurrentClass()) => (THEMES[cls.theme] ? cls.theme : 'forest');
+    const getTheme = () => THEMES[getThemeKey()];
+    let squirrelSvg = '';
+    const THEME_SWATCH = {"forest": ["#e7e5e4", "#fef08a", "#a7f3d0", "#bae6fd", "#fed7aa"], "ocean": ["#e2e8f0", "#a5f3fc", "#bfdbfe", "#99f6e4", "#c7d2fe"], "sakura": ["#e7e5e4", "#fbcfe8", "#e9d5ff", "#fecdd3", "#fde68a"], "space": ["#cbd5e1", "#c7d2fe", "#ddd6fe", "#bfdbfe", "#f5d0fe"], "simple": ["#e2e8f0", "#e2e8f0", "#cbd5e1", "#e2e8f0", "#cbd5e1"]};
+
+    function applyTheme() {
+      const t = getTheme(), key = getThemeKey();
+      document.body.dataset.theme = key;
+      document.getElementById('schoolBadge').textContent = `${t.mascot} 楠梓國小${t.place}`;
+      const badge = document.getElementById('mascotBadge');
+      if (!squirrelSvg) squirrelSvg = badge.innerHTML;
+      badge.innerHTML = key === 'forest' ? squirrelSvg : `<span style="font-size:1.8rem">${t.mascot}</span>`;
+      document.getElementById('unitColumnLabel').textContent = `${t.unit} / 榮譽章`;
+      document.getElementById('footerIcons').textContent = t.footer;
+      document.getElementById('footerTitle').textContent = `楠梓國小．${t.place}好習慣榮譽榜`;
+      document.getElementById('thisWeekBtn').textContent = `${t.mascot} 回到本週`;
+    }
+
+    function openThemeModal() {
+      document.getElementById('themeList').innerHTML = Object.entries(THEMES).map(([k, t]) => `
+        <button type="button" class="theme-card" data-theme-key="${k}" aria-pressed="${k === getThemeKey()}">
+          <div class="text-base font-black text-stone-800">${t.mascot} ${t.label}</div>
+          <div class="text-xl mt-1">${t.animals.map(a => a[0]).join(' ')}</div>
+          <div class="mt-2 grid grid-cols-5 h-5 rounded-lg overflow-hidden border border-stone-200">${[0, 1, 2, 3, 4].map(i => `<span style="background:${THEME_SWATCH[k][i]}"></span>`).join('')}</div>
+        </button>`).join('');
+      openModal('themeModal');
+    }
+
+    const BASE_PRESET = { mode: 'week', step: 5, count: 'enter', star: false, progress: false, groupRace: false, noDeduct: false, goal: 0 };
+    const preset = (icon, label, desc, extra = {}) => ({ ...BASE_PRESET, ...extra, icon, label, desc });
+    const PRESETS = {
+      weekly: preset('🏅', '每週蓋章', '每週重新計分，每 5 分一個章'),
+      biweek: preset('📆', '雙週結算', '兩週累計一次，下一期重新開始', { mode: 'biweek' }),
+      month: preset('🗓️', '每月結算', '同一個月的週次累計，換月重新開始', { mode: 'month', count: 'full' }),
+      total: preset('📈', '連續累計 1～20 分', '整學期一直累加，超過 20 分金色顯示', { mode: 'total', count: 'full' }),
+      cycle: preset('🎁', '集滿 20 分換獎', '滿 20 分記 1 次獎勵，再從 1 分開始下一輪', { mode: 'cycle', count: 'full' }),
+      star: preset('🌟', '每週榮譽之星', '公布本週得分最高者，不蓋章', { step: 0, star: true }),
+      progress: preset('🚀', '進步之星', '公布比上週進步最多的同學', { progress: true }),
+      group: preset('👥', '小組競賽', '依各組平均分數排名次（需先分組）', { groupRace: true }),
+      team: preset('🤝', '全班合作目標', '全班分數加總，一起達成本週目標', { goal: 200 }),
+      cheer: preset('💖', '只加分鼓勵', '隱藏扣分與補電按鈕，適合中低年級', { noDeduct: true })
+    };
+    const PRESET_KEYS = Object.keys(BASE_PRESET);
+    const PERIOD = { week: '本週', biweek: '本期雙週', month: '本月', total: '累計', cycle: '本輪' };
+    const CYCLE_GOAL = 20;
+    const currentPresetKey = () => Object.keys(PRESETS).find(k => PRESET_KEYS.every(f => PRESETS[k][f] === getRules()[f]));
+    const ITEM_ICONS = {
+      '準時到校': '☀️', '作業繳齊': '📚', '擦餐具': '🥢', '刷牙': '🪥', '好表現': '🌟',
+      '遲到': '⏰', '上課不專心': '💬', '桌面沒整理': '🧹', '學用品沒帶': '✏️', '聯絡簿未簽': '📓',
+      '整理書櫃': '📚', '幫忙擦黑板': '🧽', '補交作業': '📝'
+    };
+    const CAT_ICONS = { add: '🌟', deduct: '🍂', charge: '🔧' };
+
+    const getRules = (cls = getCurrentClass()) => {
+      const r = cls.rules || {};
+      return { ...DEFAULT_RULES, ...r, count: r.count || 'enter', items: r.items || legacyItems(r) };
+    };
+
+    /** 章數上限：0～20 分的區數，超過 20 分再多 1 個 */
+    function maxStamps(rules = getRules()) {
+      if (!rules.step) return 0;
+      return (rules.count === 'full' ? Math.floor(20 / rules.step) : Math.ceil(20 / rules.step)) + (rules.mode === 'cycle' ? 0 : 1);
+    }
+
+    function calcStamps(score, rules = getRules()) {
+      if (!rules.step || score <= 0) return 0;
+      const top = maxStamps(rules);
+      if (score > 20 && rules.count === 'enter') return top;
+      const n = rules.count === 'full' ? Math.floor(score / rules.step) : Math.ceil(score / rules.step);
+      return Math.min(top, n);
+    }
+
+    /** 各章數對應的分數範圍文字 */
+    function stampRange(n, rules) {
+      const list = [];
+      for (let v = 0; v <= (rules.mode === 'cycle' ? 20 : 60); v++) if (calcStamps(v, rules) === n) list.push(v);
+      if (!list.length) return '';
+      const a = list[0], b = list[list.length - 1];
+      if (b === 60) return `${a}分以上`;
+      return a === b ? `${a}分` : `${a}–${b}分`;
+    }
+
+    const weekPoints = (studentId, week = appState.currentWeek) =>
+      getStudentLogs(studentId, week).reduce((sum, l) => sum + (l.delta || 0), 0);
+
+    /** 榮譽之星：該週得分最高且大於 0（同分並列） */
+    function getWeekStars(week = appState.currentWeek) {
+      const list = getCurrentClass().students.map(s => ({ s, v: weekPoints(s.id, week) }));
+      const best = Math.max(0, ...list.map(x => x.v));
+      return best > 0 ? list.filter(x => x.v === best) : [];
     }
 
     function playSound(type) {
@@ -1308,6 +1459,8 @@
           playTone(659.25, now + 0.08, 0.12, 'triangle', 0.15);
           playTone(783.99, now + 0.16, 0.14, 'triangle', 0.15);
           playTone(1046.5, now + 0.24, 0.26, 'sine', 0.16);
+        } else if (type === 'snap') {
+          playTone(180, now, 0.07, 'square', 0.08);
         } else if (type === 'deduct') {
           playTone(330.0, now, 0.14, 'triangle', 0.12);
           playTone(261.63, now + 0.11, 0.2, 'triangle', 0.12);
@@ -1464,19 +1617,197 @@
       return cls.weeklyLogs[wkKey][studentId];
     }
 
-    function getStudentScore(studentId, week = appState.currentWeek) {
-      const logs = getStudentLogs(studentId, week);
-      return logs.reduce((sum, item) => sum + (item.delta || 0), 0);
+    /** 該週所屬月份（以當週星期一為準）；未設定學期時每 4 週算一個月 */
+    function weekMonthKey(week) {
+      const term = getCurrentClass().term;
+      if (!term) return `m${Math.floor((week - 1) / 4)}`;
+      const d = mondayOf(toDate(term.start));
+      d.setDate(d.getDate() + (week - (Number(term.first) || 1)) * 7);
+      return `${d.getFullYear()}-${d.getMonth()}`;
     }
 
-    function hasAddedToday(studentId, itemName) {
+    /** 兩個週次是否屬於同一個結算期（雙週、每月） */
+    function periodKey(week, mode = getRules().mode) {
+      if (mode === 'biweek') return Math.floor((week - (Number(getCurrentClass().term?.first) || 1)) / 2);
+      if (mode === 'month') return weekMonthKey(week);
+      return mode === 'week' ? week : 'all';
+    }
+
+    /** 本結算期累計到指定週次的分數 */
+    function periodScore(studentId, week = appState.currentWeek) {
+      const mode = getRules().mode;
+      if (mode === 'week') return weekPoints(studentId, week);
+      const key = periodKey(week, mode);
+      return Object.keys(getCurrentClass().weeklyLogs || {}).map(Number)
+        .filter(no => no <= week && periodKey(no, mode) === key)
+        .reduce((sum, no) => sum + weekPoints(studentId, no), 0);
+    }
+
+    /** 加分板上顯示的分數；換獎模式只顯示本輪 1～20 分 */
+    function getStudentScore(studentId, week = appState.currentWeek) {
+      const raw = periodScore(studentId, week);
+      if (getRules().mode !== 'cycle' || raw <= 0) return raw;
+      return ((raw - 1) % CYCLE_GOAL) + 1;
+    }
+
+    const rewardCount = (studentId, week = appState.currentWeek) => Math.max(0, Math.floor(periodScore(studentId, week) / CYCLE_GOAL));
+
+    /** 進步之星：本週比上週增加最多（上週需有紀錄） */
+    function getProgressStars(week = appState.currentWeek) {
+      const students = getCurrentClass().students;
+      if (!students.some(s => getStudentLogs(s.id, week - 1).length)) return [];
+      const list = students.map(s => ({ s, v: weekPoints(s.id, week) - weekPoints(s.id, week - 1) }));
+      const best = Math.max(0, ...list.map(x => x.v));
+      return best > 0 ? list.filter(x => x.v === best) : [];
+    }
+
+    /** 加分板上方的榮譽看板（依啟用的模式顯示） */
+    function renderModeBanner() {
+      const rules = getRules(), cls = getCurrentClass(), label = PERIOD[rules.mode];
+      const chip = text => `<span class="inline-block mx-1 my-0.5 px-3 py-1 rounded-full bg-white border-2 border-amber-400">${text}</span>`;
+      const who = x => `${x.s.seat}號 ${escapeHtml(x.s.name)}`;
+      const lines = [];
+      if (rules.star) {
+        const list = getWeekStars();
+        lines.push('<span class="text-2xl">🌟 本週榮譽之星</span> ' + (list.length ? list.map(x => chip(`${who(x)}（${x.v}分）`)).join('') : '<span>還沒有人得分，加油！</span>'));
+      }
+      if (rules.progress) {
+        const list = getProgressStars();
+        lines.push('<span class="text-2xl">🚀 本週進步之星</span> ' + (list.length ? list.map(x => chip(`${who(x)}（進步 ${x.v} 分）`)).join('') : '<span>和上週比較，目前還沒有進步紀錄</span>'));
+      }
+      if (rules.groupRace) {
+        const ranks = getGroups(cls).map(g => {
+          const members = cls.students.filter(s => (s.group || 0) === g);
+          return { g, avg: members.reduce((a, s) => a + periodScore(s.id), 0) / members.length };
+        }).sort((a, b) => b.avg - a.avg);
+        const medal = r => r.avg > 0 ? (['🥇', '🥈', '🥉'][ranks.filter(o => o.avg > r.avg).length] || '') : '';
+        lines.push(`<span class="text-2xl">👥 小組競賽</span> <span class="text-xs">（${label}平均）</span> ` + (ranks.length ? ranks.map(r => chip(`${medal(r)} ${groupName(r.g)} ${r.avg.toFixed(1)}分`)).join('') : '<span>請先在下方分組列設定分組</span>'));
+      }
+      if (rules.goal > 0) {
+        const sum = cls.students.reduce((a, s) => a + periodScore(s.id), 0);
+        const pct = Math.max(0, Math.min(100, Math.round(sum / rules.goal * 100)));
+        lines.push(`<span class="text-2xl">🤝 全班合作目標</span> <span>${label} ${sum} / ${rules.goal} 分 ${sum >= rules.goal ? '🎉 達成！' : `還差 ${rules.goal - sum} 分`}</span>
+          <div class="mt-1 h-4 rounded-full bg-white border-2 border-amber-400 overflow-hidden"><div class="h-full bg-emerald-500" style="width:${pct}%"></div></div>`);
+      }
+      const el = document.getElementById('starBanner');
+      el.classList.toggle('hidden', !lines.length);
+      el.innerHTML = lines.map(l => `<div class="py-0.5">${l}</div>`).join('');
+    }
+
+    function openModeModal() {
+      const cur = currentPresetKey();
+      document.getElementById('modeList').innerHTML = Object.entries(PRESETS).map(([k, m]) => `
+        <button type="button" class="theme-card" data-mode-key="${k}" aria-pressed="${k === cur}">
+          <div class="text-base font-black text-stone-800">${m.icon} ${m.label}</div>
+          <div class="text-xs font-bold text-stone-600 mt-1">${m.desc}</div>
+        </button>`).join('');
+      openModal('modeModal');
+    }
+
+    function hasAddedToday(studentId, itemName, type = 'add') {
       const today = getTodayStr();
       const logs = getStudentLogs(studentId);
-      return logs.some(l => l.type === 'add' && l.item === itemName && l.dateStr === today);
+      return logs.some(l => l.type === type && l.item === itemName && l.dateStr === today);
     }
 
     function requireTeacherMode(onSuccess) {
       onSuccess();
+    }
+
+    // ==================== 獎勵設定表單 ====================
+
+    const CATS = [
+      ['add', '➕ 加分項目', 'border-emerald-200 bg-emerald-50/60'],
+      ['deduct', '➖ 扣分項目', 'border-rose-200 bg-rose-50/60'],
+      ['charge', '🔧 補電任務（限負分同學，完成後加分）', 'border-sky-200 bg-sky-50/60']
+    ];
+
+    function itemRowHtml(it) {
+      const f = 'px-2 py-1.5 rounded-lg border-2 border-stone-300 bg-white text-sm font-bold';
+      return `<div class="item-row flex flex-wrap items-center gap-1.5">
+        <input class="item-name ${f} flex-1 min-w-[120px]" maxlength="12" placeholder="項目名稱" aria-label="項目名稱" value="${escapeHtml(it.name)}" />
+        <select class="item-fixed ${f}" aria-label="給分方式"><option value="1" ${it.fixed ? 'selected' : ''}>固定分數</option><option value="" ${it.fixed ? '' : 'selected'}>點選時自訂</option></select>
+        <input class="item-pts ${f} w-16 text-center disabled:opacity-30" type="number" min="1" max="20" aria-label="固定分數" value="${it.pts || 1}" ${it.fixed ? '' : 'disabled'} />
+        <label class="flex items-center gap-1 text-xs font-bold text-stone-600"><input type="checkbox" class="item-once w-4 h-4" ${it.once ? 'checked' : ''} ${it.fixed ? '' : 'disabled'} />每天限一次</label>
+        <button type="button" class="item-remove px-2 py-1 rounded-full border border-stone-300 bg-white text-xs font-bold" aria-label="刪除項目">🗑️</button>
+      </div>`;
+    }
+
+    function fillRulesForm(p, rules) {
+      const f = 'w-full px-3 py-2 rounded-xl border-2 border-stone-300 bg-white text-sm font-bold';
+      const opt = (v, text, cur) => `<option value="${v}" ${String(cur) === String(v) ? 'selected' : ''}>${text}</option>`;
+      const box = document.getElementById(p + 'Rules');
+      box.innerHTML = `
+        <div class="flex flex-wrap gap-2 items-center">
+          <span class="text-xs font-black text-stone-600">快速套用：</span>
+          ${Object.entries(PRESETS).map(([k, v]) => `<button type="button" data-preset="${k}" class="px-3 py-1.5 rounded-full border-2 border-amber-400 bg-amber-100 hover:bg-amber-200 text-xs font-black">${v.icon} ${v.label}</button>`).join('')}
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <label class="text-xs font-bold text-stone-600">計分方式<select id="${p}Mode" class="${f}">${opt('week', '每週重新計算', rules.mode)}${opt('biweek', '雙週結算', rules.mode)}${opt('month', '每月結算', rules.mode)}${opt('total', '整學期連續累計', rules.mode)}${opt('cycle', '集滿 20 分換獎（循環）', rules.mode)}</select></label>
+          <label class="text-xs font-bold text-stone-600">蓋章間隔<select id="${p}Step" class="${f}">${opt(4, '每 4 分', rules.step)}${opt(5, '每 5 分', rules.step)}${opt(10, '每 10 分', rules.step)}${opt(20, '每 20 分', rules.step)}${opt(0, '不蓋章', rules.step)}</select></label>
+          <label class="text-xs font-bold text-stone-600">何時蓋章<select id="${p}StampWhen" class="${f}">${opt('enter', '進入該區就蓋（1分起）', rules.count)}${opt('full', '集滿才蓋', rules.count)}</select></label>
+        </div>
+        <label class="flex items-center gap-2 text-sm font-black text-amber-900"><input type="checkbox" id="${p}Star" class="w-5 h-5 accent-amber-500" ${rules.star ? 'checked' : ''} /> 🌟 公布每週榮譽之星（本週得分最高者）</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm font-black text-amber-900">
+          ${[['progress', 'Progress', '🚀 公布進步之星'], ['groupRace', 'Group', '👥 小組競賽排名'], ['noDeduct', 'NoDeduct', '💖 只加分（隱藏扣分）']].map(([k, id, text]) => `<label class="flex items-center gap-2"><input type="checkbox" id="${p}${id}" class="w-5 h-5 accent-amber-500" ${rules[k] ? 'checked' : ''} />${text}</label>`).join('')}
+          <label class="flex items-center gap-2">🤝 全班目標分數<input type="number" id="${p}Goal" min="0" max="9999" value="${rules.goal || 0}" class="w-24 px-2 py-1 rounded-lg border-2 border-stone-300 bg-white" /><span class="text-xs text-stone-500">0＝不使用</span></label>
+        </div>
+        ${CATS.map(([cat, label, tone]) => `<div class="rounded-2xl border-2 ${tone} p-2.5 space-y-1.5">
+          <div class="text-sm font-black text-stone-700">${label}</div>
+          <div class="space-y-1.5" data-cat-list="${cat}">${rules.items.filter(i => i.cat === cat).map(itemRowHtml).join('')}</div>
+          <button type="button" data-add-item-cat="${cat}" class="px-3 py-1 rounded-full border-2 border-dashed border-stone-400 bg-white text-xs font-black">＋ 新增項目</button>
+        </div>`).join('')}
+        <p class="text-xs text-stone-500">經常用的項目選「固定分數」，點一下直接加扣；分數每次不同的選「點選時自訂」。名稱最多 12 字、不可重複。「其他加分／扣分／補電」按鈕固定保留。</p>`;
+      box.onclick = e => {
+        const add = e.target.closest('[data-add-item-cat]');
+        if (add) {
+          const list = box.querySelector(`[data-cat-list="${add.dataset.addItemCat}"]`);
+          list.insertAdjacentHTML('beforeend', itemRowHtml({ name: '', fixed: true, pts: 1 }));
+          list.lastElementChild.querySelector('.item-name').focus();
+        }
+        e.target.closest('.item-remove')?.closest('.item-row').remove();
+      };
+      box.onchange = e => {
+        if (!e.target.classList.contains('item-fixed')) return;
+        const row = e.target.closest('.item-row');
+        row.querySelectorAll('.item-pts, .item-once').forEach(el => { el.disabled = !e.target.value; });
+      };
+      box.querySelectorAll('[data-preset]').forEach(btn => {
+        btn.onclick = () => {
+          const v = PRESETS[btn.dataset.preset];
+          [['Mode', 'mode'], ['Step', 'step'], ['StampWhen', 'count']].forEach(([id, k]) => { document.getElementById(p + id).value = v[k]; });
+          document.getElementById(p + 'Star').checked = v.star;
+          document.getElementById(p + 'Progress').checked = v.progress;
+          document.getElementById(p + 'Group').checked = v.groupRace;
+          document.getElementById(p + 'NoDeduct').checked = v.noDeduct;
+          document.getElementById(p + 'Goal').value = v.goal;
+          showToast(`已套用「${v.label}」，記得儲存`, 'info');
+        };
+      });
+    }
+
+    function readRulesForm(p) {
+      const v = k => document.getElementById(p + k).value;
+      const rules = { mode: v('Mode'), step: Number(v('Step')), count: v('StampWhen'), star: document.getElementById(p + 'Star').checked,
+        progress: document.getElementById(p + 'Progress').checked, groupRace: document.getElementById(p + 'Group').checked,
+        noDeduct: document.getElementById(p + 'NoDeduct').checked, goal: Number(document.getElementById(p + 'Goal').value) };
+      if (!Number.isInteger(rules.goal) || rules.goal < 0 || rules.goal > 9999) return { error: '全班目標分數請填 0～9999 的整數' };
+      const seen = new Set(['其他']);
+      rules.items = [];
+      for (const [cat] of CATS) {
+        for (const row of document.querySelectorAll(`#${p}Rules [data-cat-list="${cat}"] .item-row`)) {
+          const name = row.querySelector('.item-name').value.trim();
+          if (!name) continue;
+          if (name.length > 12) return { error: `「${name}」超過 12 個字` };
+          if (seen.has(name)) return { error: `項目「${name}」重複（「其他」不需填寫）` };
+          seen.add(name);
+          const fixed = !!row.querySelector('.item-fixed').value;
+          const pts = fixed ? Number(row.querySelector('.item-pts').value) : 1;
+          if (!Number.isInteger(pts) || pts < 1 || pts > 20) return { error: `「${name}」的分數請填 1～20 的整數` };
+          rules.items.push(item(cat, name, fixed, pts, fixed && row.querySelector('.item-once').checked));
+        }
+      }
+      return { rules };
     }
 
     // ==================== 週次查詢 ====================
@@ -1502,7 +1833,7 @@
           <button type="button" data-week="${w.no}" class="week-tile ${border}">
             <div class="text-base font-black text-stone-800">第 ${w.no} 週</div>
             <div class="text-xs font-bold text-stone-500">${w.range || '&nbsp;'}</div>
-            <div class="text-xs font-black h-5 text-orange-600">${w.no === today ? '🐿️本週 ' : ''}${hasLog ? '🌟' : ''}</div>
+            <div class="text-xs font-black h-5 text-orange-600">${w.no === today ? getTheme().mascot + '本週 ' : ''}${hasLog ? '🌟' : ''}</div>
           </button>`;
       }).join('');
       openModal('weekPickerModal');
@@ -1541,7 +1872,7 @@
       if (!hasClassParam()) return;
       const cls = getCurrentClass();
       history.replaceState(null, '', classUrl(cls));
-      document.title = `楠梓國小．森林榮譽加分板 (${cls.name})`;
+      document.title = `楠梓國小．榮譽加分板 (${cls.name})`;
       document.getElementById('pageTitle').textContent = `${cls.name} 榮譽加分板`;
       document.getElementById('classSelect').parentElement.classList.toggle('hidden', appState.classes.length <= 1);
     }
@@ -1581,9 +1912,9 @@
 
     const MAX_GROUPS = 12;
     const groupName = g => g ? `第${g}組` : '未分組';
+    /** 有使用中的組別（由小到大） */
     const getGroups = (cls = getCurrentClass()) => [...new Set(cls.students.map(s => s.group || 0).filter(Boolean))].sort((a, b) => a - b);
 
-    /** 產生單列學生編修 HTML */
     function buildRosterEditorRowHtml(seat, name, stuId = '', group = 0) {
       return `
         <div class="roster-edit-row grid grid-cols-12 gap-2 items-center px-2 py-1 rounded-xl hover:bg-emerald-50/70" data-stu-id="${escapeHtml(stuId)}">
@@ -1641,7 +1972,7 @@
         const id = r.dataset.stuId || '';
         const group = Number(r.querySelector('.edit-group-select')?.value || 0);
         if (!name) continue;
-        parsed.push({ seat: Number.isInteger(seat) && seat > 0 ? seat : 0, name, id, group });
+        parsed.push({ seat: Number.isInteger(seat) && seat > 0 ? seat : 0, name, id, group: Number(r.querySelector('.edit-group-select').value) });
       }
       return parsed;
     }
@@ -1774,7 +2105,7 @@
     function openWizard(forceNewClass = false) {
       const cls = getCurrentClass();
       const placeholder = isPlaceholderRoster(cls);
-      wizardCreateNewMode = forceNewClass || !placeholder;
+      wizardCreateNewMode = forceNewClass;
 
       if (wizardCreateNewMode && !placeholder) {
         document.getElementById('wizName').value = '';
@@ -1787,6 +2118,7 @@
         document.getElementById('wizCount').textContent = placeholder ? '尚未輸入名單' : `目前 ${cls.students.length} 位學生`;
       }
       fillTermForm('wiz');
+      fillRulesForm('wiz', wizardCreateNewMode ? DEFAULT_RULES : getRules());
       renderAllSpecialDatesLists();
       openModal('wizardModal');
     }
@@ -1799,6 +2131,8 @@
       if (new Set(parsed.map(p => p.seat)).size !== parsed.length) return showToast('座號有重複，請檢查名單', 'warning');
       const { term, error } = readTermForm('wiz');
       if (error) return showToast(error, 'warning');
+      const { rules, error: rulesError } = readRulesForm('wiz');
+      if (rulesError) return showToast(rulesError, 'warning');
 
       let targetCls;
       if (wizardCreateNewMode) {
@@ -1823,6 +2157,7 @@
         targetCls.students = mergeRoster(targetCls, parsed);
       }
 
+      targetCls.rules = rules;
       applyTerm(targetCls, term);
       selectedStudentIds.clear();
       saveState();
@@ -1836,6 +2171,18 @@
     }
 
     function bindTermEvents() {
+      document.getElementById('saveRulesBtn').addEventListener('click', () => {
+        const { rules, error } = readRulesForm('set');
+        if (error) return showToast(error, 'warning');
+        getCurrentClass().rules = rules;
+        selectedStudentIds.clear();
+        saveState();
+        document.getElementById('boardBody').dataset.view = '';
+        renderTopControls();
+        renderBoard();
+        closeModal('settingsModal');
+        showToast('已套用本班獎勵設定', 'success');
+      });
       document.getElementById('weekPickerBtn').addEventListener('click', openWeekPicker);
       document.getElementById('thisWeekBtn').addEventListener('click', () => goToWeek(getTodayWeek()));
       document.getElementById('weekGrid').addEventListener('click', e => {
@@ -1853,6 +2200,36 @@
         updateTermPreview('set');
       }));
       document.getElementById('saveRosterBtn').addEventListener('click', saveRoster);
+
+      const countSel = document.getElementById('autoGroupCount');
+      countSel.innerHTML = Array.from({ length: MAX_GROUPS - 1 }, (_, i) => `<option value="${i + 2}" ${i + 2 === 6 ? 'selected' : ''}>分 ${i + 2} 組</option>`).join('');
+      document.getElementById('autoGroupBtn').addEventListener('click', () => {
+        const seatOf = r => Number(r.querySelector('.edit-seat-input').value) || 999;
+        const rows = [...document.querySelectorAll('#rosterEditorRows .roster-edit-row')].sort((a, b) => seatOf(a) - seatOf(b));
+        const n = Number(countSel.value);
+        if (rows.length < n) return showToast('學生人數少於組數', 'warning');
+        const cycle = document.getElementById('autoGroupMethod').value === 'cycle';
+        rows.forEach((r, i) => { r.querySelector('.edit-group-select').value = cycle ? (i % n) + 1 : Math.floor(i * n / rows.length) + 1; });
+        showToast(`已分成 ${n} 組，請按「儲存名單修改」`, 'info');
+      });
+      document.getElementById('clearGroupBtn').addEventListener('click', () => {
+        document.querySelectorAll('#rosterEditorRows .edit-group-select').forEach(el => { el.value = 0; });
+        showToast('已清除分組，請按「儲存名單修改」', 'info');
+      });
+
+      document.getElementById('groupBar').addEventListener('click', e => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        if (btn.dataset.sortBy) {
+          getCurrentClass().sortByGroup = btn.dataset.sortBy === 'group';
+          saveState();
+          renderBoard();
+        } else if (btn.dataset.editGroups !== undefined) {
+          renderSettingsModal();
+          openModal('settingsModal');
+          document.querySelector('.settings-tab[data-tab="roster"]').click();
+        }
+      });
 
       // 新增轉入學生按鈕
       document.getElementById('addTransferStudentBtn').addEventListener('click', () => {
@@ -1882,40 +2259,6 @@
 
       document.getElementById('rosterEditorRows').addEventListener('input', () => {
         updateEditRosterCountHint();
-      });
-
-      // 自動分組與清除分組事件
-      const countSel = document.getElementById('autoGroupCount');
-      countSel.innerHTML = Array.from({ length: MAX_GROUPS - 1 }, (_, i) => `<option value="${i + 2}" ${i + 2 === 6 ? 'selected' : ''}>分 ${i + 2} 組</option>`).join('');
-      document.getElementById('autoGroupBtn').addEventListener('click', () => {
-        const seatOf = r => Number(r.querySelector('.edit-seat-input').value) || 999;
-        const rows = [...document.querySelectorAll('#rosterEditorRows .roster-edit-row')].sort((a, b) => seatOf(a) - seatOf(b));
-        const n = Number(countSel.value);
-        if (rows.length < n) return showToast('學生人數少於組數', 'warning');
-        const cycle = document.getElementById('autoGroupMethod').value === 'cycle';
-        rows.forEach((r, i) => {
-          r.querySelector('.edit-group-select').value = cycle ? (i % n) + 1 : Math.floor(i * n / rows.length) + 1;
-        });
-        showToast(`已分成 ${n} 組，請按「儲存名單修改」生效`, 'info');
-      });
-      document.getElementById('clearGroupBtn').addEventListener('click', () => {
-        document.querySelectorAll('#rosterEditorRows .edit-group-select').forEach(el => { el.value = 0; });
-        showToast('已清除分組，請按「儲存名單修改」生效', 'info');
-      });
-
-      // 分組快捷列：切換座號排列/分組排列、調整分組
-      document.getElementById('groupBar').addEventListener('click', e => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        if (btn.dataset.sortBy) {
-          getCurrentClass().sortByGroup = btn.dataset.sortBy === 'group';
-          saveState();
-          renderBoard();
-        } else if (btn.dataset.editGroups !== undefined) {
-          renderSettingsModal();
-          openModal('settingsModal');
-          document.querySelector('.settings-tab[data-tab="roster"]').click();
-        }
       });
 
       // 文字框同步回列表
@@ -1978,27 +2321,62 @@
 
     // ==================== 渲染介面 ====================
 
+    /** 第 i 格屬於第幾區、用哪個底色 */
+    function cellStyle(i) {
+      const step = getRules().step || 5;
+      const zone = i === 0 ? 0 : ((Math.ceil(i / step) - 1) % 4) + 1;
+      const divider = i === 20 ? '' : (i % step === 0 ? 'zone-divider-right' : 'border-r border-white');
+      return { zone, divider };
+    }
+
     function renderScaleHeader() {
-      const row = document.getElementById('scaleNumbersRow');
+      const rules = getRules();
+      const step = rules.step || 5;
+      const t = getTheme();
+      const icons = t.animals.map(a => a[0]);
+      let zones = `<div class="zh-0 flex items-center justify-center py-2 zone-divider-right text-[11px]">${t.start[0]}起點</div>`;
+      for (let n = 1, from = 1; from <= 20; n++, from += step) {
+        const to = Math.min(20, from + step - 1);
+        const stampAt = rules.count === 'full' ? Math.floor(to / step) : n;
+        const label = rules.step ? `${icons[(n - 1) % 5]} ${rules.count === 'full' ? `${to}分得 ${stampAt}章` : `${n}章`}` : icons[(n - 1) % 5];
+        zones += `<div class="zh-${((n - 1) % 4) + 1} flex items-center justify-center gap-1 py-2 zone-divider-right" style="grid-column: span ${to - from + 1};"><span>${label}</span><span class="text-[11px] opacity-80">(${from}–${to})</span></div>`;
+      }
+      document.getElementById('zoneHeaderRow').innerHTML = zones;
       let html = '';
       for (let i = 0; i <= 20; i++) {
-        let zoneClass = 'zone-0 text-stone-500';
-        if (i >= 1 && i <= 5) zoneClass = 'zone-1 text-yellow-950';
-        else if (i >= 6 && i <= 10) zoneClass = 'zone-2 text-emerald-950';
-        else if (i >= 11 && i <= 15) zoneClass = 'zone-3 text-sky-950';
-        else if (i >= 16) zoneClass = 'zone-4 text-orange-950';
-
-        let divider = 'border-r border-stone-200/80';
-        if (i === 0 || i === 5 || i === 10) divider = 'zone-divider-right';
-        else if (i === 15) divider = 'zone-divider-gold';
-        else if (i === 20) divider = '';
-
-        html += `<div class="py-1 text-center ${zoneClass} ${divider}">${i}</div>`;
+        const { zone, divider } = cellStyle(i);
+        html += `<div class="py-1 text-center zone-${zone} ${divider}">${i}</div>`;
       }
-      row.innerHTML = html;
+      document.getElementById('scaleNumbersRow').innerHTML = html;
+    }
+
+    function renderToolbar() {
+      const r = getRules(), t = getTheme();
+      const tone = {
+        add: 'bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100',
+        deduct: 'bg-rose-50 border-rose-300 text-rose-900 hover:bg-rose-100',
+        charge: 'bg-sky-50 border-sky-300 text-sky-900 hover:bg-sky-100'
+      };
+      const btn = it => `<button data-item="${escapeHtml(it.name)}" class="px-3 py-1 text-sm font-extrabold border-2 shadow-xs ${tone[it.cat]}">${ITEM_ICONS[it.name] || CAT_ICONS[it.cat]} ${escapeHtml(it.name)}${it.fixed ? ` ${it.cat === 'deduct' ? '-' : '+'}${it.pts}` : ''}</button>`;
+      const row = (title, titleCls, body) =>
+        `<div class="flex flex-wrap items-center gap-1.5"><span class="text-sm font-black mr-1 px-2.5 py-0.5 rounded-full ${titleCls}">${title}</span>${body}</div>`;
+      const main = r.items.filter(i => i.cat !== 'charge' && !(r.noDeduct && i.cat === 'deduct'));
+      const fixed = main.filter(i => i.fixed);
+      document.getElementById('toolbarRows').innerHTML =
+        (fixed.length ? row('📌 固定項目', 'text-emerald-800 bg-emerald-100', fixed.map(btn).join('')) : '') +
+        row('✏️ 自訂分數', 'text-rose-800 bg-rose-100',
+          main.filter(i => !i.fixed).map(btn).join('') +
+          `<button data-custom="add" class="px-3.5 py-1 text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">＋ 其他加分</button>
+           ${r.noDeduct ? '' : '<button data-custom="deduct" class="px-3.5 py-1 text-sm font-black bg-rose-600 hover:bg-rose-700 text-white shadow-xs">－ 其他扣分</button>'}`) +
+        (r.noDeduct ? '' : row(`${t.station.split(' ')[0]} 補電任務`, 'text-amber-900 bg-amber-100',
+          r.items.filter(i => i.cat === 'charge').map(btn).join('') +
+          `<button data-charge="其他" class="px-3 py-1 text-sm font-extrabold border-2 border-amber-400 bg-amber-100 text-amber-950 hover:bg-amber-200 shadow-xs">✨ 其他補電</button>
+           <span class="text-xs font-bold text-amber-800/80">（限負分同學）</span>`));
     }
 
     function renderTopControls() {
+      applyTheme();
+      renderToolbar();
       const classSelect = document.getElementById('classSelect');
       classSelect.innerHTML = appState.classes
         .map(c => `<option value="${c.id}" ${c.id === appState.currentClassId ? 'selected' : ''}>${escapeHtml(c.name)}</option>`)
@@ -2027,21 +2405,9 @@
     function buildGridCellsHtml(isOver20 = false) {
       let html = '';
       for (let i = 0; i <= 20; i++) {
-        let zoneClass = 'zone-0';
-        if (i >= 1 && i <= 5) zoneClass = 'zone-1';
-        else if (i >= 6 && i <= 10) zoneClass = 'zone-2';
-        else if (i >= 11 && i <= 15) zoneClass = 'zone-3';
-        else if (i >= 16) zoneClass = 'zone-4';
-
-        // 超過 20 分：整條加分區域變色為皇家閃耀金漸層！
-        if (isOver20 && i >= 1) {
-          zoneClass = 'over20-track-cell';
-        }
-
-        let divider = isOver20 ? 'border-r border-amber-300/70' : 'border-r border-white';
-        if (i === 0 || i === 5 || i === 10) divider = 'zone-divider-right';
-        else if (i === 15) divider = 'zone-divider-gold';
-        else if (i === 20) divider = '';
+        const style = cellStyle(i);
+        const zoneClass = isOver20 && i >= 1 ? 'over20-track-cell' : `zone-${style.zone}`;
+        const divider = isOver20 && i % (getRules().step || 5) !== 0 ? 'border-r border-amber-300/70' : style.divider;
 
         html += `<div class="${zoneClass} ${divider} h-full"></div>`;
       }
@@ -2059,26 +2425,25 @@
       const { members, total, selected } = groupStats(g);
       return `<button type="button" data-select-group="${g}" aria-pressed="${selected}" class="group-header w-full flex flex-wrap items-center gap-2 px-3 py-1.5 text-left text-sm font-black border-y-2 ${selected ? 'bg-emerald-200 border-emerald-500 text-emerald-950' : 'bg-sky-100 border-sky-300 text-sky-950'}">
         <span class="px-2.5 py-0.5 rounded-full bg-white border border-sky-400">${selected ? '✅' : '👥'} ${groupName(g)}</span>
-        <span>${members.length} 人｜合計 ${total} 🌰｜平均 ${(total / members.length).toFixed(1)} 🌰</span>
-        <span class="text-xs opacity-75">${selected ? '（再點一下取消全組）' : '（點一下選整組）'}</span>
+        <span>${members.length} 人｜合計 ${total} 分｜平均 ${(total / members.length).toFixed(1)} 分</span>
+        <span class="text-xs">${selected ? '再點一下取消' : '點一下選整組'}</span>
       </button>`;
     }
 
     function renderGroupBar(groups, byGroup) {
       const bar = document.getElementById('groupBar');
-      if (!bar) return;
       if (!groups.length) {
-        bar.innerHTML = '<span class="text-sm font-black text-sky-900">👥 尚未分組</span><button type="button" data-edit-groups class="px-3 py-1 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-black">設定分組</button>';
+        bar.innerHTML = '<span class="text-sm font-black text-sky-900">👥 尚未分組</span><button type="button" data-edit-groups class="px-3 py-1 rounded-full bg-sky-600 text-white text-xs font-black">設定分組</button>';
         return;
       }
-      const sortBtn = (v, text, on) => `<button type="button" data-sort-by="${v}" aria-pressed="${on}" class="px-3 py-1 text-xs sm:text-sm font-black transition ${on ? 'bg-sky-600 text-white' : 'bg-white text-sky-900 hover:bg-sky-50'}">${text}</button>`;
+      const sortBtn = (v, text, on) => `<button type="button" data-sort-by="${v}" aria-pressed="${on}" class="px-3 py-1 text-sm font-black ${on ? 'bg-sky-600 text-white' : 'bg-white text-sky-900'}">${text}</button>`;
       const chips = groups.map(g => {
         const { total, selected } = groupStats(g);
-        return `<button type="button" data-select-group="${g}" aria-pressed="${selected}" class="px-3 py-1 rounded-full border-2 text-xs sm:text-sm font-black transition ${selected ? 'bg-emerald-600 border-emerald-700 text-white shadow-xs' : 'bg-sky-50 border-sky-300 text-sky-950 hover:bg-sky-100'}">${selected ? '✅ ' : ''}${groupName(g)} <span class="text-xs opacity-85">${total}🌰</span></button>`;
+        return `<button type="button" data-select-group="${g}" aria-pressed="${selected}" class="px-3 py-1 rounded-full border-2 text-sm font-black ${selected ? 'bg-emerald-600 border-emerald-700 text-white' : 'bg-sky-50 border-sky-300 text-sky-950 hover:bg-sky-100'}">${selected ? '✅ ' : ''}${groupName(g)} <span class="text-xs opacity-80">${total}分</span></button>`;
       }).join('');
       bar.innerHTML = `<span class="inline-flex rounded-full border-2 border-sky-600 overflow-hidden">${sortBtn('seat', '座號排列', !byGroup)}${sortBtn('group', '分組排列', byGroup)}</span>
-        <span class="text-xs sm:text-sm font-black text-sky-900 ml-1">選整組：</span>${chips}
-        <button type="button" data-edit-groups class="px-3 py-1 rounded-full border border-sky-300 bg-white hover:bg-sky-50 text-xs font-black text-sky-800">✏️ 調整分組</button>`;
+        <span class="text-sm font-black text-sky-900 ml-1">選整組：</span>${chips}
+        <button type="button" data-edit-groups class="px-3 py-1 rounded-full border border-sky-300 bg-white text-xs font-black text-sky-800">✏️ 調整分組</button>`;
     }
 
     function toggleGroup(g) {
@@ -2088,13 +2453,14 @@
       renderBoard();
     }
 
-    let lastRenderedScores = {};
-
-    function renderBoard(animateSlide = false) {
+    function renderBoard() {
       const cls = getCurrentClass();
       const body = document.getElementById('boardBody');
       const students = cls.students;
-      const prevScoresSnapshot = { ...lastRenderedScores };
+      const rules = getRules();
+      const starIds = new Set(rules.star ? getWeekStars().map(x => x.s.id) : []);
+      renderScaleHeader();
+      const theme = getTheme();
 
       let totalStamps = 0;
       let over20Count = 0;
@@ -2116,21 +2482,18 @@
         if (isOver20) over20Count++;
 
         const clampedSlot = Math.max(0, Math.min(20, score));
-        const targetLeftPercent = ((clampedSlot + 0.5) / 21) * 100;
-        const oldScoreVal = prevScoresSnapshot[stu.id];
-        const hasMoved = animateSlide && typeof oldScoreVal === 'number' && oldScoreVal !== score;
-        const oldClampedSlot = hasMoved ? Math.max(0, Math.min(20, oldScoreVal)) : clampedSlot;
-        const initialLeftPercent = ((oldClampedSlot + 0.5) / 21) * 100;
-        lastRenderedScores[stu.id] = score;
+        const leftPercent = ((clampedSlot + 0.5) / 21) * 100;
         const isSelected = selectedStudentIds.has(stu.id);
 
+        const rewards = rules.mode === 'cycle' ? rewardCount(stu.id) : 0;
         const scoreBadgeHtml = `
-            <span class="text-xs font-extrabold whitespace-nowrap ${score < 0 ? 'text-amber-900' : (isOver20 ? 'text-amber-700 font-black' : 'text-stone-600')}">${score}🌰</span>
-            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-sm font-black border whitespace-nowrap ${stamps >= 5 ? 'bg-gradient-to-r from-amber-300 to-yellow-200 text-amber-950 border-amber-500 shadow-2xs' : (stamps ? 'bg-amber-100 text-amber-950 border-amber-300' : 'bg-stone-100 text-stone-400 border-stone-200')}">${stamps >= 5 ? '🐿️' : '🏅'}${stamps}</span>
+            ${rewards ? `<span class="text-xs font-black whitespace-nowrap px-1 rounded-full bg-pink-100 border border-pink-300 text-pink-800" title="已集滿 ${rewards} 次">🎁${rewards}</span>` : ''}
+            <span class="text-xs font-extrabold whitespace-nowrap ${score < 0 ? 'text-amber-900' : (isOver20 ? 'text-amber-700 font-black' : 'text-stone-600')}">${score}${theme.icon}</span>
+            <span class="${rules.step ? 'inline-flex' : 'hidden'} items-center px-1.5 py-0.5 rounded-full text-sm font-black border whitespace-nowrap ${isOver20 && stamps ? 'bg-gradient-to-r from-amber-300 to-yellow-200 text-amber-950 border-amber-500 shadow-2xs' : (stamps ? 'bg-amber-100 text-amber-950 border-amber-300' : 'bg-stone-100 text-stone-400 border-stone-200')}">${isOver20 ? theme.mascot : '🏅'}${stamps}</span>
         `;
 
         const over20FloatingHtml = isOver20
-          ? `<div class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 z-20 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-[11px] font-black shadow-md border-2 border-yellow-200 whitespace-nowrap">👑 松鼠王 +${score - 20} (5章)</div>`
+          ? `<div class="pointer-events-none absolute left-[6%] top-1/2 -translate-y-1/2 z-20 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-[11px] font-black shadow-md border-2 border-yellow-200 whitespace-nowrap">👑 ${theme.king} +${score - 20}${rules.step ? ` (${stamps}章)` : ''}</div>`
           : '';
 
         const magnetExtraClass = isOver20 ? 'magnet-over20' : (score < 0 ? 'magnet-charge' : '');
@@ -2145,10 +2508,10 @@
           <div class="student-row group flex items-stretch h-[42px] hover:bg-emerald-50/50 transition-colors ${rowHighlightClass}" data-student-id="${stu.id}">
             <div class="w-[248px] shrink-0 flex items-center px-2 border-r-2 border-amber-300 ${leftPanelBg} cursor-pointer select-none" data-action="open-student" data-student-id="${stu.id}">
               ${isBatchMode ? `
-                <input type="checkbox" class="batch-checkbox w-4 h-4 mr-1.5 accent-emerald-600 cursor-pointer rounded" data-student-id="${stu.id}" ${isSelected ? 'checked' : ''} />
+                <input type="checkbox" class="batch-checkbox w-4 h-4 mr-1.5 accent-emerald-600 cursor-pointer rounded shrink-0" data-student-id="${stu.id}" ${isSelected ? 'checked' : ''} />
               ` : ''}
-              <span class="w-8 text-center font-black text-sm ${isOver20 ? 'text-amber-700' : 'text-stone-500'}">${stu.seat}</span>
-              <span class="w-[78px] font-black text-[15px] ${isOver20 ? 'text-amber-950' : 'text-stone-800'} truncate pl-0.5" title="${escapeHtml(stu.name)}${stu.group ? `（${groupName(stu.group)}）` : ''}">${isOver20 ? '👑' : ''}${escapeHtml(stu.name)}</span>
+              <span class="${rewards ? 'w-5' : 'w-8'} shrink-0 text-center font-black text-sm ${isOver20 ? 'text-amber-700' : 'text-stone-500'}">${stu.seat}</span>
+              <span class="${rewards ? 'w-[60px]' : 'w-[78px]'} shrink-0 font-black text-[15px] ${isOver20 ? 'text-amber-950' : 'text-stone-800'} truncate pl-0.5" title="${escapeHtml(stu.name)}${stu.group ? `（${groupName(stu.group)}）` : ''}">${starIds.has(stu.id) ? '⭐' : (isOver20 ? '👑' : '')}${escapeHtml(stu.name)}</span>
               <div class="flex-1 flex items-center justify-end gap-1">
                 ${scoreBadgeHtml}
                 <button type="button" data-action="open-log" data-student-id="${stu.id}" title="查看本週加減分明細" class="w-6 h-6 rounded-lg hover:bg-amber-100 flex items-center justify-center text-xs text-stone-500 hover:text-stone-800 transition">
@@ -2161,7 +2524,7 @@
               <div class="grid h-full w-full" style="grid-template-columns: repeat(21, minmax(0, 1fr));">
                 ${isOver20 ? over20GridCellsHtml : normalGridCellsHtml}
               </div>
-              <div class="magnet-token mag-c${stu.colorIndex % 8} ${magnetExtraClass} ${hasMoved ? 'magnet-sliding' : ''}" data-target-left="${targetLeftPercent}" style="left: ${initialLeftPercent}%;" title="${escapeHtml(stu.name)}：目前 ${score} 分（${stamps} 個榮譽章）">
+              <div data-magnet="${stu.id}" class="magnet-token mag-c${stu.colorIndex % 8} ${magnetExtraClass}" style="left: ${leftPercent}%;" title="${escapeHtml(stu.name)}：目前 ${score} 分（${stamps} 個榮譽章）">
                 ${score < 0 ? score : stu.seat}
               </div>
               ${over20FloatingHtml}
@@ -2169,61 +2532,73 @@
           </div>
         `;
       });
-
-      const rowsHtml = rowList.map((rowHtml, i) => {
+      const rowsHtml = rowList.map((html, i) => {
         const g = ordered[i].group || 0;
-        if (!byGroup || (i > 0 && (ordered[i - 1].group || 0) === g)) return rowHtml;
-        return groupHeaderHtml(g) + rowHtml;
+        if (!byGroup || (i > 0 && (ordered[i - 1].group || 0) === g)) return html;
+        return groupHeaderHtml(g) + html;
       }).join('');
 
       renderGroupBar(groups, byGroup);
 
-      body.innerHTML = rowsHtml;
-
-      if (animateSlide) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            body.querySelectorAll('.magnet-token.magnet-sliding').forEach(el => {
-              el.style.left = `${el.dataset.targetLeft}%`;
-              setTimeout(() => el.classList.remove('magnet-sliding'), 520);
-            });
-          });
-        });
+      // 記住磁鐵原位置，重畫後從原位置滑到新位置
+      const viewKey = `${byGroup}|${cls.id}|${cls.term ? cls.term.year + cls.term.sem : ''}|${appState.currentWeek}`;
+      const oldLeft = {};
+      if (body.dataset.view === viewKey) {
+        body.querySelectorAll('.magnet-token').forEach(m => { oldLeft[m.dataset.magnet] = m.style.left; });
       }
-
-      const cardStyle = [
-        'bg-stone-100 border-stone-300',
-        'bg-yellow-100 border-yellow-400',
-        'bg-emerald-100 border-emerald-400',
-        'bg-sky-100 border-sky-400',
-        'bg-orange-100 border-orange-400',
-        'bg-gradient-to-br from-amber-100 via-yellow-200 to-orange-200 border-amber-500'
-      ];
-      const animalNames = ['橡果種子', '森林小雞', '跳跳白兔', '暖暖棕熊', '聰明小狐', '楠梓松鼠王'];
-      const animalIcons = ['🌱', '🐣', '🐰', '🐻', '🦊', '🐿️'];
-      const ranges = ['0分', '1–5分', '6–10分', '11–15分', '16–20分', '21分以上'];
+      body.innerHTML = rowsHtml;
+      body.dataset.view = viewKey;
+      const moved = [];
+      body.querySelectorAll('.magnet-token').forEach(m => {
+        const from = oldLeft[m.dataset.magnet];
+        if (from === undefined || from === m.style.left) return;
+        const to = m.style.left;
+        m.style.transition = 'none';
+        m.style.left = from;
+        moved.push([m, to]);
+      });
+      if (moved.length) {
+        void body.offsetWidth;
+        moved.forEach(([m, to]) => {
+          m.style.transition = '';
+          m.classList.add('magnet-moving');
+          m.style.left = to;
+          m.addEventListener('animationend', () => m.classList.remove('magnet-moving'), { once: true });
+        });
+        setTimeout(() => playSound('snap'), 950);
+      }
 
       const low = students.filter(s => getStudentScore(s.id) < 0);
       const strip = document.getElementById('chargeStrip');
       strip.classList.toggle('hidden', low.length === 0);
       strip.classList.toggle('flex', low.length > 0);
-      strip.innerHTML = '<span>🌳 樹洞充電站 🔋</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-400 text-stone-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1.5 rounded bg-amber-900 text-yellow-300">${-getStudentScore(s.id)}</span> 顆松果</span>`).join('');
+      strip.innerHTML = `<span>${theme.station}</span>` + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-400 text-stone-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1.5 rounded bg-amber-900 text-yellow-300">${-getStudentScore(s.id)}</span> ${theme.unit}</span>`).join('');
 
-      document.getElementById('stampBoard').innerHTML = ranges.map((range, n) => {
-        const list = students.filter(s => { const v = getStudentScore(s.id); return v >= 0 && calcStamps(v) === n; });
+      const top = maxStamps(rules);
+      const board = document.getElementById('stampBoard');
+      board.style.gridTemplateColumns = 'repeat(auto-fit, minmax(145px, 1fr))';
+      board.innerHTML = !rules.step ? '' : Array.from({ length: top + 1 }, (_, n) => {
+        const range = stampRange(n, rules);
+        if (!range) return '';
+        const list = students.filter(s => { const v = getStudentScore(s.id); return v >= 0 && calcStamps(v, rules) === n; });
+        const isTop = n === top;
+        const [icon, title] = n === 0 ? theme.start : (isTop ? [theme.mascot, theme.champ] : theme.animals[(n - 1) % 5]);
+        const style = isTop ? 'bg-gradient-to-br from-amber-100 via-yellow-200 to-orange-200 border-amber-500' : `zh-${n === 0 ? 0 : ((n - 1) % 4) + 1} border-white`;
         return `
-          <div class="p-2.5 text-center ${cardStyle[n]}">
-            <span class="animal" aria-hidden="true">${animalIcons[n]}</span>
-            <div class="text-xs font-black text-amber-900/80">${animalNames[n]}</div>
-            <div class="text-xl font-black text-stone-800 mt-0.5">${n === 5 ? '👑' : '🏅'} ${n} 個章</div>
+          <div class="p-2.5 text-center ${style}">
+            <span class="animal" aria-hidden="true">${icon}</span>
+            <div class="text-xs font-black text-amber-900/80">${title}</div>
+            <div class="text-xl font-black text-stone-800 mt-0.5">${isTop ? '👑' : '🏅'} ${n} 個章</div>
             <div class="text-xs font-bold text-stone-600">${range}｜${list.length} 人</div>
             <div class="flex flex-wrap justify-center gap-1 mt-1.5">${list.map(s => `<span title="${escapeHtml(s.name)}" class="min-w-[26px] px-1 rounded-full bg-white border border-amber-300 text-sm font-black text-stone-800 shadow-2xs">${s.seat}</span>`).join('')}</div>
           </div>`;
       }).join('');
 
+      renderModeBanner();
+
       document.getElementById('weekQuickStats').textContent =
-        `🐿️ 第 ${appState.currentWeek} 週 ｜ 全班 ${students.length} 人 ｜ 本週累計 ${totalStamps} 個榮譽章 ｜ 圓圈內是座號` +
-        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位晉升楠梓松鼠王（整列金光閃耀！）` : '') +
+        `${theme.mascot} 第 ${appState.currentWeek} 週 ｜ 全班 ${students.length} 人${rules.step ? ` ｜ 目前共 ${totalStamps} 個榮譽章` : ''}${rules.mode !== 'week' ? ` ｜ 📈 ${PERIOD[rules.mode]}計分` : ''} ｜ 圓圈內是座號` +
+        (over20Count > 0 ? ` ｜ 👑 ${over20Count} 位晉升${theme.champ}（整列金光閃耀！）` : '') +
         (cls.term && appState.currentWeek !== getTodayWeek() ? ' ｜ ⚠️ 目前不是本週，加扣分會記在這一週' : '');
     }
 
@@ -2245,7 +2620,8 @@
 
       const oldScore = getStudentScore(studentId);
       const oldStamps = calcStamps(oldScore);
-      const delta = type === 'add' ? 1 : -1;
+      const preset1 = getRules().items.find(i => i.name === item && i.fixed && (i.cat === 'deduct' ? 'deduct' : 'add') === type);
+      const delta = (type === 'add' ? 1 : -1) * (preset1 ? preset1.pts : 1);
       const newScore = oldScore + delta;
       const newStamps = calcStamps(newScore);
 
@@ -2298,8 +2674,8 @@
 
       document.getElementById('actionModalName').textContent = `${stu.seat}號 ${stu.name}`;
       document.getElementById('actionModalStats').textContent =
-        `第 ${appState.currentWeek} 週 ｜ 目前 ${score} 顆松果 ｜ 應蓋 ${stamps} 個榮譽章` +
-        (score > 20 ? `（🐿️ 楠梓松鼠王 +${score - 20}）` : '');
+        `第 ${appState.currentWeek} 週 ｜ 目前 ${score} 分 ｜ 應蓋 ${stamps} 個榮譽章` +
+        (score > 20 ? `（${getTheme().champ} +${score - 20}）` : '');
 
       document.getElementById('goodBehaviorNote').value = '';
       document.getElementById('deductOtherNote').value = '';
@@ -2391,8 +2767,9 @@
         showToast('請先點選至少一位學生！', 'warning');
         return;
       }
+      const once = getRules().items.some(i => i.name === item && i.fixed && i.once);
       const ids = Array.from(selectedStudentIds)
-        .filter(id => !(type === 'add' && DAILY_ADD_ITEMS.includes(item) && hasAddedToday(id, item)));
+        .filter(id => !(once && hasAddedToday(id, item, type)));
       const skipped = selectedStudentIds.size - ids.length;
       ids.forEach(id => {
         const logs = getStudentLogs(id);
@@ -2415,8 +2792,8 @@
       }
       selectedStudentIds.clear();
       renderTopControls();
-      renderBoard(true);
-      showToast(`已為 ${ids.length} 位學生記錄「${item === '其他' && note.trim() ? note.trim() : item} ${type === 'add' ? '+' : '-'}${points}」` + (skipped ? `（${skipped} 人今天已加過）` : ''), type === 'add' ? 'success' : 'warning');
+      renderBoard();
+      showToast(`已為 ${ids.length} 位學生記錄「${item === '其他' && note.trim() ? note.trim() : item} ${type === 'add' ? '+' : '-'}${points}」` + (skipped ? `（${skipped} 人今天已記過）` : ''), type === 'add' ? 'success' : 'warning');
     }
 
     // ==================== 本週結算與 CSV 匯出 ====================
@@ -2426,7 +2803,12 @@
       const students = cls.students;
 
       document.getElementById('summaryModalTitle').textContent = `📊 ${cls.name} — 第 ${appState.currentWeek} 週結算總覽`;
-      document.getElementById('summaryModalSub').textContent = '榮譽章標準：≤0分(0章)、1–5分(1章)、6–10分(2章)、11–15分(3章)、16–20分(4章)、21分以上(5章小松鼠王)';
+      const rules = getRules();
+      const starIds = new Set(getWeekStars().map(x => x.s.id));
+      document.getElementById('summaryModalSub').textContent =
+        (rules.mode === 'week' ? '每週計算' : `${PERIOD[rules.mode]}計分（累計到本週）`) +
+        (rules.step ? '｜' + Array.from({ length: maxStamps(rules) + 1 }, (_, n) => stampRange(n, rules) ? `${stampRange(n, rules)}(${n}章)` : '').filter(Boolean).join('、') : '｜不蓋章') +
+        (rules.star ? `｜本週榮譽之星：${getWeekStars().map(x => x.s.name).join('、') || '尚無'}` : '');
 
       let totalStamps = 0;
       let totalAdds = 0;
@@ -2435,7 +2817,7 @@
 
       const rows = students.map(stu => {
         const logs = getStudentLogs(stu.id);
-        const score = logs.reduce((s, l) => s + l.delta, 0);
+        const score = getStudentScore(stu.id);
         const stamps = calcStamps(score);
         const addCount = logs.reduce((s, l) => s + Math.max(l.delta, 0), 0);
         const deductCount = logs.reduce((s, l) => s - Math.min(l.delta, 0), 0);
@@ -2444,15 +2826,16 @@
         totalAdds += addCount;
         totalDeducts += deductCount;
         if (score > 20) over20++;
+        const star = (rules.star && starIds.has(stu.id) ? '⭐ ' : '') + (rules.mode === 'cycle' && rewardCount(stu.id) ? `🎁${rewardCount(stu.id)} ` : '');
 
         return `
           <tr class="hover:bg-emerald-50/40">
             <td class="py-2 px-3 font-bold text-stone-500">${stu.seat}</td>
-            <td class="py-2 px-3 font-extrabold text-stone-800">${escapeHtml(stu.name)}</td>
+            <td class="py-2 px-3 font-extrabold text-stone-800">${star}${escapeHtml(stu.name)}</td>
             <td class="py-2 px-3 text-center font-black ${score < 0 ? 'text-rose-600' : (score > 20 ? 'text-amber-600' : 'text-stone-800')}">${score}</td>
             <td class="py-2 px-3 text-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-extrabold ${stamps === 5 ? 'bg-amber-200 text-amber-950' : (stamps > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-500')}">
-                ${stamps === 5 ? '🐿️ ' : ''}${stamps} 個章
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-extrabold ${score > 20 ? 'bg-amber-200 text-amber-950' : (stamps > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-500')}">
+                ${score > 20 ? getTheme().mascot + ' ' : ''}${stamps} 個章
               </span>
             </td>
             <td class="py-2 px-3 text-center font-bold text-emerald-700">+${addCount}</td>
@@ -2468,7 +2851,7 @@
           <div class="text-xl font-black text-emerald-700 mt-0.5">${totalStamps} 個</div>
         </div>
         <div class="bg-white rounded-2xl p-3 border-2 border-amber-200">
-          <div class="text-xs font-bold text-stone-500">楠梓松鼠王（5章）</div>
+          <div class="text-xs font-bold text-stone-500">超過 20 分</div>
           <div class="text-xl font-black text-amber-600 mt-0.5">${over20} 人</div>
         </div>
         <div class="bg-white rounded-2xl p-3 border-2 border-sky-200">
@@ -2486,16 +2869,18 @@
 
     function exportWeeklyCsv() {
       const cls = getCurrentClass();
-      const header = ['座號', '姓名', '組別', '週次', '本週總分', '應蓋榮譽章數', '加分合計', '扣分合計'];
+      const rules = getRules();
+      const starIds = new Set(getWeekStars().map(x => x.s.id));
+      const header = ['座號', '姓名', '組別', '週次', `${PERIOD[rules.mode]}分數`, '應蓋榮譽章數', '本週加分合計', '本週扣分合計', '榮譽之星'];
       const lines = [header.join(',')];
 
       cls.students.forEach(stu => {
         const logs = getStudentLogs(stu.id);
-        const score = logs.reduce((s, l) => s + l.delta, 0);
+        const score = getStudentScore(stu.id);
         const stamps = calcStamps(score);
         const addCount = logs.reduce((s, l) => s + Math.max(l.delta, 0), 0);
         const deductCount = logs.reduce((s, l) => s - Math.min(l.delta, 0), 0);
-        lines.push([stu.seat, `"${stu.name.replace(/"/g, '""')}"`, groupName(stu.group || 0), `第${appState.currentWeek}週`, score, stamps, addCount, deductCount].join(','));
+        lines.push([stu.seat, `"${stu.name.replace(/"/g, '""')}"`, groupName(stu.group || 0), `第${appState.currentWeek}週`, score, stamps, addCount, deductCount, rules.star && starIds.has(stu.id) ? '是' : ''].join(','));
       });
 
       const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
@@ -2508,6 +2893,83 @@
       a.remove();
       URL.revokeObjectURL(url);
       showToast('已匯出本週結算 CSV 報表！', 'success');
+    }
+
+    /** 學期總表：每位學生每週得分、榮譽章與合計 */
+    function exportTermCsv() {
+      const cls = getCurrentClass();
+      const rules = getRules();
+      const hasData = no => Object.values(cls.weeklyLogs?.[String(no)] || {}).some(l => l.length);
+      const dataWeeks = Object.keys(cls.weeklyLogs || {}).map(Number).filter(hasData).sort((a, b) => a - b);
+      const first = dataWeeks[0] ?? appState.currentWeek;
+      const last = Math.max(first, dataWeeks.at(-1) ?? first, getTodayWeek() ?? first);
+      const list = getWeekList();
+      const weeks = [...new Set([...list.map(w => w.no).filter(n => n >= first && n <= last), ...dataWeeks])].sort((a, b) => a - b);
+      const label = no => {
+        const range = list.find(w => w.no === no)?.range;
+        return `第${no}週${range ? `(${range})` : ''}`;
+      };
+      // 避免以 = + - @ 開頭的文字被試算表當成公式
+      const q = v => typeof v === 'number' ? v : `"${String(v).replace(/^[=+\-@]/, "'$&").replace(/"/g, '""')}"`;
+      const rows = [];
+      const push = (...cells) => rows.push(cells.map(q).join(','));
+      const term = cls.term ? `${cls.term.year}學年度${cls.term.sem}學期` : '';
+      const sum = a => a.reduce((x, y) => x + y, 0);
+      const starWeeks = rules.star ? weeks.map(w => new Set(getWeekStars(w).map(x => x.s.id))) : [];
+
+      push(`${cls.name} ${term} 學期總表`);
+      push('匯出日期', getTodayStr());
+      push('');
+      push('一、每週得分');
+      push('座號', '姓名', '組別', ...weeks.map(label), '學期總分', '加分合計', '扣分合計',
+        ...(rules.mode === 'cycle' ? ['集滿換獎次數'] : (rules.step ? [rules.mode === 'total' ? '累計榮譽章' : '榮譽章合計'] : [])), ...(rules.star ? ['榮譽之星次數'] : []));
+      cls.students.forEach(stu => {
+        const pts = weeks.map(w => weekPoints(stu.id, w));
+        const logs = weeks.flatMap(w => getStudentLogs(stu.id, w));
+        const total = sum(pts);
+        push(stu.seat, stu.name, groupName(stu.group || 0), ...pts, total,
+          sum(logs.map(l => Math.max(l.delta, 0))), -sum(logs.map(l => Math.min(l.delta, 0))),
+          ...(rules.mode === 'cycle' ? [Math.max(0, Math.floor(total / CYCLE_GOAL))] : (rules.step ? [rules.mode === 'total' ? calcStamps(total, rules)
+            // 每個結算期取最後一週的章數再加總
+            : sum(weeks.filter((w, i) => i === weeks.length - 1 || periodKey(weeks[i + 1]) !== periodKey(w)).map(w => calcStamps(getStudentScore(stu.id, w), rules)))] : [])),
+          ...(rules.star ? [starWeeks.filter(set => set.has(stu.id)).length] : []));
+      });
+
+      if (rules.step) {
+        push('');
+        push(rules.mode === 'week' ? '二、每週榮譽章' : `二、各週結束時的榮譽章（${PERIOD[rules.mode]}分數）`);
+        push('座號', '姓名', ...weeks.map(label));
+        cls.students.forEach(stu => push(stu.seat, stu.name, ...weeks.map(w => calcStamps(getStudentScore(stu.id, w), rules))));
+      }
+
+      push('');
+      push(rules.step ? '三、加扣分明細' : '二、加扣分明細');
+      push('週次', '日期', '座號', '姓名', '項目', '分數', '備註');
+      weeks.forEach(w => cls.students.forEach(stu => getStudentLogs(stu.id, w).forEach(l =>
+        push(label(w), l.dateStr, stu.seat, stu.name, l.item, l.delta, l.note || ''))));
+
+      const groups = getGroups(cls);
+      if (groups.length) {
+        push('');
+        push('附表：各組每週得分（依目前分組計算）');
+        push('組別', '人數', ...weeks.map(label), '學期總分');
+        groups.forEach(g => {
+          const { members } = groupStats(g);
+          const pts = weeks.map(w => sum(members.map(s => weekPoints(s.id, w))));
+          push(groupName(g), members.length, ...pts, sum(pts));
+        });
+      }
+
+      const blob = new Blob(['\uFEFF' + rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `楠梓國小_${cls.name}_${term || '本學期'}_學期總表.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('已匯出學期總表！', 'success');
     }
 
     // ==================== 班級與名單管理 ====================
@@ -2562,6 +3024,7 @@
       }).join('');
 
       fillTermForm('set');
+      fillRulesForm('set', getRules());
       renderAllSpecialDatesLists();
 
     }
@@ -2573,7 +3036,7 @@
         btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
       });
 
-      ['studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal', 'weekPickerModal'].forEach(id => {
+      ['modeModal', 'themeModal', 'studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal', 'weekPickerModal'].forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('click', (e) => {
           if (e.target === el) closeModal(id);
@@ -2636,47 +3099,28 @@
         renderBoard();
       });
 
-      document.querySelectorAll('.batch-action-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          requireTeacherMode(() => applyBatchScore('add', btn.dataset.batchAdd, '', 1));
-        });
-      });
-
-      document.querySelectorAll('.top-deduct-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          requireTeacherMode(() => {
-            askScore('deduct', btn.dataset.topDeduct);
-          });
-        });
-      });
-
-      document.querySelectorAll('[data-custom]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          requireTeacherMode(() => askScore(btn.dataset.custom, '其他'));
-        });
-      });
-
-      document.querySelectorAll('[data-charge]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          requireTeacherMode(() => {
-            if (selectedStudentIds.size === 0) return showToast('請先點選樹洞充電站的同學', 'warning');
-            const skipped = [...selectedStudentIds].filter(id => getStudentScore(id) >= 0);
-            skipped.forEach(id => selectedStudentIds.delete(id));
-            if (selectedStudentIds.size === 0) {
-              renderTopControls();
-              renderBoard();
-              return showToast('選取的同學不在充電站，未加分', 'warning');
-            }
-            renderTopControls();
-            renderBoard();
-            if (skipped.length) showToast(`${skipped.length} 位不在充電站的同學不列入`, 'info');
-            askScore('add', btn.dataset.charge, '補電任務');
-          });
-        });
-      });
-
-      document.getElementById('batchGoodCustomBtn').addEventListener('click', () => {
-        requireTeacherMode(() => askScore('add', '好表現'));
+      document.getElementById('batchToolbar').addEventListener('click', e => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const d = btn.dataset;
+        if (d.custom) return askScore(d.custom, '其他');
+        const it = d.item ? getRules().items.find(i => i.name === d.item) : null;
+        if (!it && !d.charge) return;
+        const isCharge = !!d.charge || it.cat === 'charge';
+        if (isCharge) {
+          if (selectedStudentIds.size === 0) return showToast(`請先點選${getTheme().station.split(' ')[1]}的同學`, 'warning');
+          const skipped = [...selectedStudentIds].filter(id => getStudentScore(id) >= 0);
+          skipped.forEach(id => selectedStudentIds.delete(id));
+          renderTopControls();
+          renderBoard();
+          if (selectedStudentIds.size === 0) return showToast('選取的同學分數不是負的，未加分', 'warning');
+          if (skipped.length) showToast(`${skipped.length} 位非負分同學不列入`, 'info');
+        }
+        const type = !isCharge && it.cat === 'deduct' ? 'deduct' : 'add';
+        const name = it ? it.name : d.charge;
+        const note = isCharge ? '補電任務' : '';
+        if (it?.fixed) return applyBatchScore(type, name, note, it.pts);
+        askScore(type, name, note);
       });
 
       function askScore(type, item, fixedNote = '') {
@@ -2686,7 +3130,7 @@
         }
         const sign = type === 'add' ? '+' : '-';
         const needReason = item === '其他';
-        const askNote = needReason || item === '好表現';
+        const askNote = needReason || (type === 'add' && !fixedNote);
         const itemLabel = item === '其他'
           ? (fixedNote === '補電任務' ? '其他補電任務' : (type === 'add' ? '其他加分' : '其他扣分'))
           : item;
@@ -2746,7 +3190,7 @@
           if (checkbox.checked) selectedStudentIds.add(id);
           else selectedStudentIds.delete(id);
           renderTopControls();
-          e.target.closest('.student-row').classList.toggle('bg-emerald-100/85', checkbox.checked);
+          renderBoard();
           return;
         }
 
@@ -2781,7 +3225,7 @@
           }
           const res = recordScore(activeStudentId, 'add', item);
           if (res) {
-            renderBoard(true);
+            renderBoard();
             openStudentActionModal(activeStudentId);
             showToast(`${res.stu.name}「${item}」+1！（目前 ${res.newScore} 分）`, 'success');
           }
@@ -2805,7 +3249,7 @@
           const item = btn.dataset.deductItem;
           const res = recordScore(activeStudentId, 'deduct', item);
           if (res) {
-            renderBoard(true);
+            renderBoard();
             openStudentActionModal(activeStudentId);
             showToast(`${res.stu.name}「${item}」-1（目前 ${res.newScore} 分）`, 'warning');
           }
@@ -2839,7 +3283,7 @@
           if (idx !== -1) {
             logs.splice(idx, 1);
             saveState();
-            renderBoard(true);
+            renderBoard();
             openStudentLogModal(stuId);
             showToast('已復原該筆紀錄', 'info');
           }
@@ -2848,6 +3292,36 @@
 
       document.getElementById('summaryBtn').addEventListener('click', openSummaryModal);
       document.getElementById('exportCsvBtn').addEventListener('click', exportWeeklyCsv);
+      document.getElementById('exportTermBtn').addEventListener('click', exportTermCsv);
+      document.getElementById('themeBtn').addEventListener('click', openThemeModal);
+      document.getElementById('modeBtn').addEventListener('click', openModeModal);
+      document.getElementById('modeList').addEventListener('click', e => {
+        const card = e.target.closest('[data-mode-key]');
+        if (!card) return;
+        const m = PRESETS[card.dataset.modeKey];
+        getCurrentClass().rules = { ...getRules(), ...Object.fromEntries(PRESET_KEYS.map(k => [k, m[k]])) };
+        saveState();
+        renderTopControls();
+        renderBoard();
+        closeModal('modeModal');
+        showToast(`已切換為「${m.label}」模式`, 'success');
+      });
+      document.getElementById('modeCustomBtn').addEventListener('click', () => {
+        closeModal('modeModal');
+        renderSettingsModal();
+        openModal('settingsModal');
+        document.querySelector('.settings-tab[data-tab="rules"]').click();
+      });
+      document.getElementById('themeList').addEventListener('click', e => {
+        const card = e.target.closest('[data-theme-key]');
+        if (!card) return;
+        getCurrentClass().theme = card.dataset.themeKey;
+        saveState();
+        renderTopControls();
+        renderBoard();
+        closeModal('themeModal');
+        showToast(`已切換為「${getTheme().label}」風格`, 'success');
+      });
 
       document.getElementById('settingsBtn').addEventListener('click', () => {
         requireTeacherMode(() => {
@@ -2863,7 +3337,7 @@
             t.className = 'settings-tab px-4 py-2 text-sm font-bold rounded-t-xl border-b-2 border-transparent text-stone-500 hover:text-stone-800';
           });
           tab.className = 'settings-tab px-4 py-2 text-sm font-black rounded-t-xl border-b-2 border-emerald-600 text-emerald-800 bg-white';
-          ['roster', 'newclass', 'prefs', 'backup'].forEach(name => {
+          ['roster', 'newclass', 'prefs', 'rules', 'backup'].forEach(name => {
             document.getElementById(`tab-${name}`).classList.toggle('hidden', name !== target);
           });
         });
@@ -2911,6 +3385,8 @@
             colorIndex: idx % 8
           })),
           weeklyLogs: {},
+          rules: JSON.parse(JSON.stringify(getRules())),
+          theme: getThemeKey(),
           term: getCurrentClass().term ? { ...getCurrentClass().term } : undefined
         };
 
@@ -3376,7 +3852,7 @@
         const isDisabled = alreadyDone || isLockedByTime;
 
         let cardClass = 'bg-white hover:bg-amber-50 border-amber-300 text-stone-800 cursor-pointer';
-        let badgeHtml = `<div class="mt-1 text-xs font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">點我 +1 (${score}🌰)</div>`;
+        let badgeHtml = `<div class="mt-1 text-xs font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900">點我 +${getRules().items.find(i => i.name === currentTask.name && i.fixed && i.cat === 'add')?.pts || 1} (${score}${getTheme().icon})</div>`;
 
         if (alreadyDone) {
           cardClass = 'bg-emerald-100/90 border-emerald-400 text-emerald-900 cursor-default';
@@ -3635,9 +4111,9 @@
 
         const res = recordScore(stuId, 'add', currentTask.name, '學生自助打卡');
         if (res) {
-          renderBoard(true);
+          renderBoard();
           renderKioskContent();
-          showToast(`🎉 ${res.stu.seat}號 ${res.stu.name} 完成「${currentTask.name}」+1！`, 'success');
+          showToast(`🎉 ${res.stu.seat}號 ${res.stu.name} 完成「${currentTask.name}」+${res.newScore - res.oldScore > 0 ? res.newScore - res.oldScore : 1}！`, 'success');
         }
       });
     }
@@ -3649,7 +4125,6 @@
       loadState();
       openClassFromUrl();
       jumpToTodayWeek();
-      renderScaleHeader();
       renderTopControls();
       renderBoard();
       bindEvents();
