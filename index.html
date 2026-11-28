@@ -166,6 +166,48 @@
     .mag-c6 { background: radial-gradient(circle at 32% 28%, #d97706, #92400e 72%, #78350f); }
     .mag-c7 { background: radial-gradient(circle at 32% 28%, #c084fc, #9333ea 72%, #7e22ce); }
 
+    /* ===== 風格配色 ===== */
+    body[data-theme="forest"] { --h0:#e7e5e4;--h1:#fef08a;--h2:#a7f3d0;--h3:#bae6fd;--h4:#fed7aa;--z0:#f5f5f4;--z1:#fef9c3;--z2:#dcfce7;--z3:#e0f2fe;--z4:#ffedd5; }
+    body[data-theme="ocean"] { --h0:#e2e8f0;--h1:#a5f3fc;--h2:#bfdbfe;--h3:#99f6e4;--h4:#c7d2fe;--z0:#f1f5f9;--z1:#ecfeff;--z2:#eff6ff;--z3:#f0fdfa;--z4:#eef2ff; }
+    body[data-theme="ocean"] { background-color: #e0f2fe !important; background-image: radial-gradient(circle at 18px 18px, rgba(125,211,252,.5) 3px, transparent 4px), radial-gradient(circle at 52px 46px, rgba(153,246,228,.55) 2px, transparent 3px), linear-gradient(180deg, #cffafe,#eff6ff 52%,#dbeafe); }
+    body[data-theme="ocean"] header { border-bottom-color: #7dd3fc !important; }
+    body[data-theme="ocean"] #pageTitle, body[data-theme="ocean"] #schoolBadge { color: #075985 !important; }
+    body[data-theme="ocean"] #schoolBadge, body[data-theme="ocean"] #block-toolbar, body[data-theme="ocean"] #weekQuickStats { background: #f0f9ff !important; border-color: #7dd3fc !important; color: #075985; }
+    body[data-theme="ocean"] #batchToolbar { background: transparent !important; border-top-color: #7dd3fc !important; }
+    body[data-theme="ocean"] .wood-board-frame { border-color: #0369a1; box-shadow: 0 8px 0 #075985, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="ocean"] .forest-footer { background: #f0f9ff; border-top-color: #7dd3fc; }
+    body[data-theme="ocean"] .forest-footer div { color: #075985; }
+    body[data-theme="sakura"] { --h0:#e7e5e4;--h1:#fbcfe8;--h2:#e9d5ff;--h3:#fecdd3;--h4:#fde68a;--z0:#f5f5f4;--z1:#fdf2f8;--z2:#faf5ff;--z3:#fff1f2;--z4:#fffbeb; }
+    body[data-theme="sakura"] { background-color: #fdf2f8 !important; background-image: radial-gradient(circle at 18px 18px, rgba(249,168,212,.45) 3px, transparent 4px), radial-gradient(circle at 52px 46px, rgba(216,180,254,.4) 2px, transparent 3px), linear-gradient(180deg, #fce7f3,#fff7ed 52%,#fae8ff); }
+    body[data-theme="sakura"] header { border-bottom-color: #f9a8d4 !important; }
+    body[data-theme="sakura"] #pageTitle, body[data-theme="sakura"] #schoolBadge { color: #9d174d !important; }
+    body[data-theme="sakura"] #schoolBadge, body[data-theme="sakura"] #block-toolbar, body[data-theme="sakura"] #weekQuickStats { background: #fff7fb !important; border-color: #f9a8d4 !important; color: #9d174d; }
+    body[data-theme="sakura"] #batchToolbar { background: transparent !important; border-top-color: #f9a8d4 !important; }
+    body[data-theme="sakura"] .wood-board-frame { border-color: #db2777; box-shadow: 0 8px 0 #9d174d, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="sakura"] .forest-footer { background: #fff7fb; border-top-color: #f9a8d4; }
+    body[data-theme="sakura"] .forest-footer div { color: #9d174d; }
+    body[data-theme="space"] { --h0:#cbd5e1;--h1:#c7d2fe;--h2:#ddd6fe;--h3:#bfdbfe;--h4:#f5d0fe;--z0:#e2e8f0;--z1:#e0e7ff;--z2:#ede9fe;--z3:#dbeafe;--z4:#fae8ff; }
+    body[data-theme="space"] { background-color: #312e81 !important; background-image: radial-gradient(circle at 18px 18px, rgba(254,240,138,.75) 3px, transparent 4px), radial-gradient(circle at 52px 46px, rgba(255,255,255,.6) 2px, transparent 3px), linear-gradient(180deg, #1e1b4b,#312e81 52%,#4c1d95); }
+    body[data-theme="space"] header { border-bottom-color: #a5b4fc !important; }
+    body[data-theme="space"] #pageTitle, body[data-theme="space"] #schoolBadge { color: #3730a3 !important; }
+    body[data-theme="space"] #schoolBadge, body[data-theme="space"] #block-toolbar, body[data-theme="space"] #weekQuickStats { background: #eef2ff !important; border-color: #a5b4fc !important; color: #3730a3; }
+    body[data-theme="space"] #batchToolbar { background: transparent !important; border-top-color: #a5b4fc !important; }
+    body[data-theme="space"] .wood-board-frame { border-color: #6366f1; box-shadow: 0 8px 0 #312e81, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="space"] .forest-footer { background: #eef2ff; border-top-color: #a5b4fc; }
+    body[data-theme="space"] .forest-footer div { color: #3730a3; }
+    body[data-theme="simple"] { --h0:#e2e8f0;--h1:#e2e8f0;--h2:#cbd5e1;--h3:#e2e8f0;--h4:#cbd5e1;--z0:#f8fafc;--z1:#ffffff;--z2:#f1f5f9;--z3:#ffffff;--z4:#f1f5f9; }
+    body[data-theme="simple"] { background-color: #f1f5f9 !important; background-image: radial-gradient(circle at 18px 18px, transparent 3px, transparent 4px), radial-gradient(circle at 52px 46px, transparent 2px, transparent 3px), linear-gradient(180deg, #f8fafc,#f1f5f9 52%,#e2e8f0); }
+    body[data-theme="simple"] header { border-bottom-color: #cbd5e1 !important; }
+    body[data-theme="simple"] #pageTitle, body[data-theme="simple"] #schoolBadge { color: #1e293b !important; }
+    body[data-theme="simple"] #schoolBadge, body[data-theme="simple"] #block-toolbar, body[data-theme="simple"] #weekQuickStats { background: #f8fafc !important; border-color: #cbd5e1 !important; color: #1e293b; }
+    body[data-theme="simple"] #batchToolbar { background: transparent !important; border-top-color: #cbd5e1 !important; }
+    body[data-theme="simple"] .wood-board-frame { border-color: #64748b; box-shadow: 0 8px 0 #475569, 0 14px 28px rgba(15,23,42,.18); }
+    body[data-theme="simple"] .forest-footer { background: #f8fafc; border-top-color: #cbd5e1; }
+    body[data-theme="simple"] .forest-footer div { color: #1e293b; }
+    .theme-card { border: 3px solid #e7e5e4; border-radius: 1.25rem; padding: 12px; text-align: left; background: #fff; }
+    .theme-card[aria-pressed="true"] { border-color: #059669; box-shadow: 0 0 0 3px #a7f3d0; }
+
+
     /* 森林分區格線與柔和底色 */
     .zone-0 { background-color: #f5f5f4; }
     .zone-1 { background-color: #fef9c3; }
@@ -376,7 +418,7 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-[11px] font-black text-emerald-800">🐿️ 楠梓國小森林樂園</span>
+              <span id="schoolBadge" class="px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-[11px] font-black text-emerald-800">🐿️ 楠梓國小森林樂園</span>
             </div>
             <h1 id="pageTitle" class="text-base sm:text-lg font-black leading-tight tracking-tight mt-0.5">班級榮譽加分板</h1>
             <p id="termSubtitle" class="text-[11px] font-bold text-amber-700"></p>
@@ -440,6 +482,8 @@
         <button id="settingsBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 flex items-center gap-1.5 shadow-xs">
           <span>⚙️</span><span class="hidden sm:inline">名單與設定</span>
         </button>
+
+        <button id="themeBtn" type="button" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-pink-300 bg-pink-100 text-pink-900 hover:bg-pink-200 shadow-xs">🎨 風格</button>
 
         <button id="layoutEditToggleBtn" title="自由調整上方區塊順序與顯示" class="px-3.5 py-1.5 text-xs sm:text-sm font-black border-2 border-purple-300 bg-purple-100 text-purple-900 hover:bg-purple-200 flex items-center gap-1.5 shadow-xs">
           <span>↕️</span><span>調整順序</span>
@@ -713,6 +757,17 @@
     </div>
   </div>
 
+  <!-- ==================== 彈出視窗：選擇班級風格 ==================== -->
+  <div id="themeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 p-3">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-xl p-5 animate-modal max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-black text-stone-800">🎨 選擇班級風格</h2>
+        <button type="button" data-close-modal="themeModal" class="px-3 py-1 rounded-full border border-stone-300 font-bold text-sm">關閉</button>
+      </div>
+      <div id="themeList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+    </div>
+  </div>
+
   <!-- ==================== 彈出視窗 4：本週結算總覽與 CSV 匯出 ==================== -->
   <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/50 backdrop-blur-xs p-3">
     <div class="bg-white rounded-3xl shadow-2xl border-4 border-emerald-300 w-full max-w-3xl overflow-hidden animate-modal flex flex-col max-h-[88vh]">
@@ -953,8 +1008,8 @@
 
   <!-- ==================== 森林草地頁尾 ==================== -->
   <footer class="forest-footer" aria-hidden="true">
-    🌲🐿️🌰🍄🌿🐣🐰🐻🦊🌻🍀🌈
-    <div class="text-xs font-extrabold tracking-normal text-emerald-800/80 mt-1">楠梓國小．森林好習慣榮譽樂園</div>
+    <span id="footerIcons">🌲🐿️🌰🍄🌿🐣🐰🐻🦊🌻🍀🌈</span>
+    <div id="footerTitle" class="text-xs font-extrabold tracking-normal text-emerald-800/80 mt-1">楠梓國小．森林好習慣榮譽樂園</div>
   </footer>
 
   <!-- ==================== 週次查詢 ==================== -->
@@ -1255,6 +1310,47 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
+
+    const THEMES = {
+      forest: { label: '森林樂園', place: '森林樂園', mascot: '🐿️', icon: '🌰', unit: '松果', station: '🌳 樹洞充電站', start: ['🌱', '橡果種子'], king: '松鼠王', champ: '楠梓松鼠王',
+        animals: [['🐣', '森林小雞'], ['🐰', '跳跳白兔'], ['🐻', '暖暖棕熊'], ['🦊', '聰明小狐'], ['🦉', '智慧貓頭鷹']], footer: '🌲🐿️🌰🍄🌿🐣🐰🐻🦊🌻🍀🌈' },
+      ocean: { label: '海洋探險', place: '海洋世界', mascot: '🐳', icon: '🐚', unit: '貝殼', station: '🪸 珊瑚充電站', start: ['🫧', '小泡泡'], king: '鯨魚王', champ: '深海鯨魚王',
+        animals: [['🐠', '熱帶小魚'], ['🦀', '活力螃蟹'], ['🐢', '穩健海龜'], ['🐬', '聰明海豚'], ['🐙', '智多章魚']], footer: '🌊🐳🐚🐠🦀🐢🐬🐙⭐⚓🏝️⛵' },
+      sakura: { label: '櫻花甜點', place: '甜點花園', mascot: '🦄', icon: '🌸', unit: '花瓣', station: '🍯 蜂蜜充電站', start: ['🌱', '小花苞'], king: '獨角獸', champ: '夢幻獨角獸',
+        animals: [['🍓', '草莓寶寶'], ['🧁', '杯子蛋糕'], ['🍩', '甜甜圈'], ['🍭', '彩虹棒棒糖'], ['🎂', '慶祝蛋糕']], footer: '🌸🦄🍓🧁🍩🍭🌷🦋🎀🍰🌈💖' },
+      space: { label: '星空冒險', place: '星際基地', mascot: '🚀', icon: '⭐', unit: '星星', station: '🔋 太空補給站', start: ['🌍', '地球出發'], king: '艦長', champ: '銀河艦長',
+        animals: [['🌙', '登月新手'], ['🛰️', '衛星巡航'], ['☄️', '彗星飛手'], ['🪐', '土星探險家'], ['🌌', '星雲達人']], footer: '🚀🌙⭐🪐🛰️☄️🌍👽🌟🔭🌌✨' },
+      simple: { label: '清爽簡約', place: '榮譽榜', mascot: '🏆', icon: '分', unit: '分', station: '🔋 加油區', start: ['⚪', '起點'], king: '榮譽王', champ: '超級榮譽王',
+        animals: [['🥉', '銅級'], ['🥈', '銀級'], ['🥇', '金級'], ['🎖️', '菁英'], ['💎', '鑽石']], footer: '🏅 📘 ✏️ 🎯 🏆' }
+    };
+    const getThemeKey = (cls = getCurrentClass()) => (THEMES[cls.theme] ? cls.theme : 'forest');
+    const getTheme = () => THEMES[getThemeKey()];
+    let squirrelSvg = '';
+    const THEME_SWATCH = {"forest": ["#e7e5e4", "#fef08a", "#a7f3d0", "#bae6fd", "#fed7aa"], "ocean": ["#e2e8f0", "#a5f3fc", "#bfdbfe", "#99f6e4", "#c7d2fe"], "sakura": ["#e7e5e4", "#fbcfe8", "#e9d5ff", "#fecdd3", "#fde68a"], "space": ["#cbd5e1", "#c7d2fe", "#ddd6fe", "#bfdbfe", "#f5d0fe"], "simple": ["#e2e8f0", "#e2e8f0", "#cbd5e1", "#e2e8f0", "#cbd5e1"]};
+
+    function applyTheme() {
+      const t = getTheme(), key = getThemeKey();
+      document.body.dataset.theme = key;
+      document.getElementById('schoolBadge').textContent = `${t.mascot} 楠梓國小${t.place}`;
+      const badge = document.getElementById('mascotBadge');
+      if (!squirrelSvg) squirrelSvg = badge.innerHTML;
+      badge.innerHTML = key === 'forest' ? squirrelSvg : `<span style="font-size:1.8rem">${t.mascot}</span>`;
+      document.getElementById('unitColumnLabel').textContent = `${t.unit} / 榮譽章`;
+      document.getElementById('footerIcons').textContent = t.footer;
+      document.getElementById('footerTitle').textContent = `楠梓國小．${t.place}好習慣榮譽榜`;
+      document.getElementById('thisWeekBtn').textContent = `${t.mascot} 回到本週`;
+    }
+
+    function openThemeModal() {
+      document.getElementById('themeList').innerHTML = Object.entries(THEMES).map(([k, t]) => `
+        <button type="button" class="theme-card" data-theme-key="${k}" aria-pressed="${k === getThemeKey()}">
+          <div class="text-base font-black text-stone-800">${t.mascot} ${t.label}</div>
+          <div class="text-xl mt-1">${t.animals.map(a => a[0]).join(' ')}</div>
+          <div class="mt-2 grid grid-cols-5 h-5 rounded-lg overflow-hidden border border-stone-200">${[0, 1, 2, 3, 4].map(i => `<span style="background:${THEME_SWATCH[k][i]}"></span>`).join('')}</div>
+        </button>`).join('');
+      openModal('themeModal');
+    }
+
 
     // ==================== 工具函式 ====================
 
@@ -1999,6 +2095,7 @@
     }
 
     function renderTopControls() {
+      applyTheme();
       const classSelect = document.getElementById('classSelect');
       classSelect.innerHTML = appState.classes
         .map(c => `<option value="${c.id}" ${c.id === appState.currentClassId ? 'selected' : ''}>${escapeHtml(c.name)}</option>`)
@@ -2191,23 +2288,38 @@
         });
       }
 
+      const theme = getTheme();
       const cardStyle = [
-        'bg-stone-100 border-stone-300',
-        'bg-yellow-100 border-yellow-400',
-        'bg-emerald-100 border-emerald-400',
-        'bg-sky-100 border-sky-400',
-        'bg-orange-100 border-orange-400',
+        'zh-0 border-stone-300',
+        'zh-1 border-amber-400',
+        'zh-2 border-emerald-400',
+        'zh-3 border-sky-400',
+        'zh-4 border-orange-400',
         'bg-gradient-to-br from-amber-100 via-yellow-200 to-orange-200 border-amber-500'
       ];
-      const animalNames = ['橡果種子', '森林小雞', '跳跳白兔', '暖暖棕熊', '聰明小狐', '楠梓松鼠王'];
-      const animalIcons = ['🌱', '🐣', '🐰', '🐻', '🦊', '🐿️'];
+      const animalNames = [
+        theme.start[1],
+        theme.animals[0][1],
+        theme.animals[1][1],
+        theme.animals[2][1],
+        theme.animals[3][1],
+        theme.champ
+      ];
+      const animalIcons = [
+        theme.start[0],
+        theme.animals[0][0],
+        theme.animals[1][0],
+        theme.animals[2][0],
+        theme.animals[3][0],
+        theme.mascot
+      ];
       const ranges = ['0分', '1–5分', '6–10分', '11–15分', '16–20分', '21分以上'];
 
       const low = students.filter(s => getStudentScore(s.id) < 0);
       const strip = document.getElementById('chargeStrip');
       strip.classList.toggle('hidden', low.length === 0);
       strip.classList.toggle('flex', low.length > 0);
-      strip.innerHTML = '<span>🌳 樹洞充電站 🔋</span>' + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-400 text-stone-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1.5 rounded bg-amber-900 text-yellow-300">${-getStudentScore(s.id)}</span> 顆松果</span>`).join('');
+      strip.innerHTML = `<span>${theme.station} 🔋</span>` + low.map(s => `<span title="${escapeHtml(s.name)}" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-400 text-stone-800 whitespace-nowrap">${s.seat}號 還差 <span class="px-1.5 rounded bg-amber-900 text-yellow-300">${-getStudentScore(s.id)}</span> ${theme.unit}</span>`).join('');
 
       document.getElementById('stampBoard').innerHTML = ranges.map((range, n) => {
         const list = students.filter(s => { const v = getStudentScore(s.id); return v >= 0 && calcStamps(v) === n; });
@@ -2573,7 +2685,7 @@
         btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
       });
 
-      ['studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal', 'weekPickerModal'].forEach(id => {
+      ['themeModal', 'studentActionModal', 'studentLogModal', 'summaryModal', 'settingsModal', 'batchDetailModal', 'weekPickerModal'].forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('click', (e) => {
           if (e.target === el) closeModal(id);
@@ -2847,6 +2959,17 @@
       });
 
       document.getElementById('summaryBtn').addEventListener('click', openSummaryModal);
+      document.getElementById('themeBtn').addEventListener('click', openThemeModal);
+      document.getElementById('themeList').addEventListener('click', e => {
+        const card = e.target.closest('[data-theme-key]');
+        if (!card) return;
+        getCurrentClass().theme = card.dataset.themeKey;
+        saveState();
+        renderTopControls();
+        renderBoard();
+        closeModal('themeModal');
+        showToast(`已切換為「${getTheme().label}」風格`, 'success');
+      });
       document.getElementById('exportCsvBtn').addEventListener('click', exportWeeklyCsv);
 
       document.getElementById('settingsBtn').addEventListener('click', () => {
