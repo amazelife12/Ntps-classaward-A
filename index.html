@@ -872,8 +872,8 @@
           </div>
         </div>
 
-        <!-- 分頁 3：學期與週次 -->
-        <div id="tab-prefs" class="hidden space-y-3">
+        <!-- 分頁 3：學期與週次（含特殊日設定） -->
+        <div id="tab-prefs" class="hidden space-y-4">
           <div class="grid grid-cols-2 gap-3">
             <div><label class="block text-xs font-bold text-stone-600 mb-1">學年度</label><input id="setYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
             <div><label class="block text-xs font-bold text-stone-600 mb-1">學期</label><select id="setSem" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
@@ -885,7 +885,24 @@
           <button type="button" id="saveTermBtn" class="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-black">儲存學期設定</button>
           <p class="text-xs text-stone-500">換到另一個學年度或學期時，原學期紀錄會保存；把學年度與學期改回來就能調閱。</p>
 
-
+          <!-- 特殊日行事曆設定（補課日 / 放假日） -->
+          <div class="p-4 rounded-2xl bg-teal-50/70 border-2 border-teal-200 space-y-2.5">
+            <div>
+              <h3 class="text-sm font-black text-teal-950">📅 特殊日設定（補課日／補假日）</h3>
+              <p class="text-xs font-bold text-stone-600 mt-0.5">預設週一～週五為上課日；加入「補課/活動日」則週末也會自動跳出打卡，加入「補假/放假日」則當天暫停跳出。</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <input id="setSpecialDateInput" type="date" class="px-2.5 py-1.5 rounded-xl border border-teal-300 bg-white text-xs font-black text-stone-800" />
+              <select id="setSpecialDateType" class="px-2.5 py-1.5 rounded-xl border border-teal-300 bg-white text-xs font-black text-teal-950">
+                <option value="workday">🏫 補課/活動日（要跳出）</option>
+                <option value="holiday">🏖️ 補假/放假日（不跳出）</option>
+              </select>
+              <input id="setSpecialDateNote" type="text" maxlength="14" placeholder="備註（例：運動會）" class="w-32 px-2.5 py-1.5 rounded-xl border border-stone-300 bg-white text-xs font-bold" />
+              <button type="button" id="setAddSpecialDateBtn" class="px-3 py-1.5 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-black">＋ 加入並儲存</button>
+            </div>
+            <div id="setSpecialDatesList" class="flex flex-wrap gap-1.5 pt-1">
+            </div>
+          </div>
         </div>
 
         <!-- 分頁 4：備份還原 -->
@@ -966,8 +983,8 @@
           <textarea id="wizRoster" rows="6" placeholder="從 Excel 複製「座號、姓名」兩欄貼上，一行一人&#10;1 王小明&#10;2 陳美美" class="w-full px-3 py-2 rounded-xl border-2 border-emerald-300 text-sm"></textarea>
           <p id="wizCount" class="text-sm font-bold text-emerald-700">尚未輸入名單</p>
         </div>
-        <div class="space-y-2">
-          <h3 class="text-base font-black text-emerald-800">② 學期日期（自動排週次）</h3>
+        <div class="space-y-2.5">
+          <h3 class="text-base font-black text-emerald-800">② 學期日期與特殊日（自動排週次）</h3>
           <div class="grid grid-cols-2 gap-3">
             <div><label class="block text-xs font-bold text-stone-600 mb-1">學年度</label><input id="wizYear" type="number" min="100" max="200" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
             <div><label class="block text-xs font-bold text-stone-600 mb-1">學期</label><select id="wizSem" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm"><option value="上">上學期</option><option value="下">下學期</option></select></div>
@@ -976,6 +993,22 @@
             <div class="col-span-2"><label class="block text-xs font-bold text-stone-600 mb-1">開學日那一週算第幾週</label><input id="wizFirst" type="number" min="0" max="10" value="1" class="w-full px-3 py-2 rounded-xl border border-stone-300 bg-white text-sm" /></div>
           </div>
           <p id="wizPreview" class="text-sm font-bold text-emerald-800 bg-emerald-50 rounded-xl px-3 py-2"></p>
+
+          <!-- 首次設定同步設定特殊日 -->
+          <div class="p-3 rounded-2xl bg-teal-50/70 border border-teal-200 space-y-2">
+            <div class="text-xs font-black text-teal-950">📅 特殊日設定（選填：如運動會補課日、彈性補假日）</div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <input id="wizSpecialDateInput" type="date" class="px-2.5 py-1 rounded-xl border border-teal-300 bg-white text-xs font-black text-stone-800" />
+              <select id="wizSpecialDateType" class="px-2.5 py-1 rounded-xl border border-teal-300 bg-white text-xs font-black text-teal-950">
+                <option value="workday">🏫 補課/活動日（要跳出）</option>
+                <option value="holiday">🏖️ 補假/放假日（不跳出）</option>
+              </select>
+              <input id="wizSpecialDateNote" type="text" maxlength="14" placeholder="備註（例：運動會）" class="w-28 px-2.5 py-1 rounded-xl border border-stone-300 bg-white text-xs font-bold" />
+              <button type="button" id="wizAddSpecialDateBtn" class="px-3 py-1 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-black">＋ 加入</button>
+            </div>
+            <div id="wizSpecialDatesList" class="flex flex-wrap gap-1.5">
+            </div>
+          </div>
         </div>
       </div>
       <div class="px-5 py-3 border-t border-stone-200 flex justify-between gap-2">
@@ -1045,25 +1078,15 @@
         <div id="kioskConfigRows" class="space-y-2">
         </div>
 
-        <!-- 特殊日行事曆設定（補課日 / 放假日） -->
-        <div class="p-3 rounded-2xl bg-white border-2 border-teal-200 space-y-2">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h4 class="text-xs sm:text-sm font-black text-teal-950">📅 特殊日設定（補課日／補假日）</h4>
-              <p class="text-[11px] font-bold text-stone-500">預設週一～週五為上課日；加入「補課日」則週末也會自動跳出，加入「放假日」則當天暫停跳出。</p>
-            </div>
-            <div class="flex flex-wrap items-center gap-1.5">
-              <input id="specialDateInput" type="date" class="px-2.5 py-1 rounded-xl border border-teal-300 text-xs font-black text-stone-800" />
-              <select id="specialDateType" class="px-2.5 py-1 rounded-xl border border-teal-300 bg-teal-50 text-xs font-black text-teal-950">
-                <option value="workday">🏫 補課/活動日（要跳出）</option>
-                <option value="holiday">🏖️ 補假/放假日（不跳出）</option>
-              </select>
-              <input id="specialDateNote" type="text" maxlength="14" placeholder="備註（例：運動會）" class="w-28 sm:w-32 px-2.5 py-1 rounded-xl border border-stone-300 text-xs font-bold" />
-              <button type="button" id="addSpecialDateBtn" class="px-3 py-1 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-xs font-black">＋ 加入日期</button>
-            </div>
+        <!-- 目前特殊日行事曆狀態與前往設定按鈕 -->
+        <div class="p-3 rounded-2xl bg-white border-2 border-teal-200 flex flex-wrap items-center justify-between gap-2">
+          <div class="space-y-1">
+            <div class="text-xs font-black text-teal-950">📅 已設定的特殊日（補課日／補假日）：</div>
+            <div id="kioskSpecialDatesSummary" class="flex flex-wrap gap-1.5"></div>
           </div>
-          <div id="specialDatesList" class="flex flex-wrap gap-1.5 pt-1">
-          </div>
+          <button type="button" id="jumpToTermSpecialDatesBtn" class="px-3.5 py-1.5 rounded-full bg-teal-100 hover:bg-teal-200 border border-teal-400 text-teal-950 text-xs font-black shrink-0">
+            📅 前往「學期與週次」設定特殊日
+          </button>
         </div>
 
         <div class="flex items-center justify-between pt-1">
@@ -1764,6 +1787,7 @@
         document.getElementById('wizCount').textContent = placeholder ? '尚未輸入名單' : `目前 ${cls.students.length} 位學生`;
       }
       fillTermForm('wiz');
+      renderAllSpecialDatesLists();
       openModal('wizardModal');
     }
 
@@ -2538,6 +2562,7 @@
       }).join('');
 
       fillTermForm('set');
+      renderAllSpecialDatesLists();
 
     }
 
@@ -3381,26 +3406,58 @@
         `「${currentTask.name}」已完成：${doneCount} / ${students.length} 人`;
     }
 
-    function renderSpecialDatesTags() {
-      const wrap = document.getElementById('specialDatesList');
-      if (!wrap) return;
-      if (tempSpecialDates.length === 0) {
-        wrap.innerHTML = '<span class="text-xs text-stone-400 font-bold">目前無特殊日設定（完全依週一～週五運作）</span>';
-        return;
-      }
-      wrap.innerHTML = tempSpecialDates.map((sd, idx) => {
-        const isWork = sd.type === 'workday';
-        return `
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black border ${
-            isWork ? 'bg-amber-100 border-amber-400 text-amber-950' : 'bg-sky-100 border-sky-400 text-sky-950'
-          }">
-            <span>${isWork ? '🏫 補課/活動' : '🏖️ 補假/放假'}</span>
-            <span>${escapeHtml(sd.date)}</span>
-            ${sd.note ? `<span>(${escapeHtml(sd.note)})</span>` : ''}
-            <button type="button" data-del-special-idx="${idx}" class="ml-0.5 text-rose-600 hover:text-rose-800 font-black" title="移除此日期">✕</button>
-          </span>
-        `;
-      }).join('');
+    function renderAllSpecialDatesLists() {
+      const cfg = getKioskConfig();
+      const list = cfg.specialDates || [];
+      const buildTagsHtml = (editable = true) => {
+        if (list.length === 0) {
+          return '<span class="text-xs text-stone-400 font-bold">目前無特殊日設定（完全依週一～週五運作）</span>';
+        }
+        return list.map((sd, idx) => {
+          const isWork = sd.type === 'workday';
+          return `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-black border ${
+              isWork ? 'bg-amber-100 border-amber-400 text-amber-950' : 'bg-sky-100 border-sky-400 text-sky-950'
+            }">
+              <span>${isWork ? '🏫 補課/活動' : '🏖️ 補假/放假'}</span>
+              <span>${escapeHtml(sd.date)}</span>
+              ${sd.note ? `<span>(${escapeHtml(sd.note)})</span>` : ''}
+              ${editable ? `<button type="button" data-del-special-idx="${idx}" class="ml-0.5 text-rose-600 hover:text-rose-800 font-black" title="移除此日期">✕</button>` : ''}
+            </span>
+          `;
+        }).join('');
+      };
+
+      const setWrap = document.getElementById('setSpecialDatesList');
+      if (setWrap) setWrap.innerHTML = buildTagsHtml(true);
+
+      const wizWrap = document.getElementById('wizSpecialDatesList');
+      if (wizWrap) wizWrap.innerHTML = buildTagsHtml(true);
+
+      const kioskSum = document.getElementById('kioskSpecialDatesSummary');
+      if (kioskSum) kioskSum.innerHTML = buildTagsHtml(false);
+    }
+
+    function addSpecialDateItem(prefix) {
+      const dateInput = document.getElementById(`${prefix}SpecialDateInput`);
+      const typeSelect = document.getElementById(`${prefix}SpecialDateType`);
+      const noteInput = document.getElementById(`${prefix}SpecialDateNote`);
+      const dateVal = dateInput?.value;
+      const typeVal = typeSelect?.value || 'workday';
+      const noteVal = noteInput?.value.trim() || '';
+      if (!dateVal) return showToast('請先選擇日期', 'warning');
+
+      const cfg = getKioskConfig();
+      cfg.specialDates = (cfg.specialDates || []).filter(d => d.date !== dateVal);
+      cfg.specialDates.push({ date: dateVal, type: typeVal, note: noteVal });
+      cfg.specialDates.sort((a, b) => a.date.localeCompare(b.date));
+      kioskDismissedSlots = {};
+      saveState();
+
+      if (dateInput) dateInput.value = '';
+      if (noteInput) noteInput.value = '';
+      renderAllSpecialDatesLists();
+      showToast(`已儲存特殊日：${dateVal}（${typeVal === 'workday' ? '補課/活動日' : '補假/放假日'}）`, 'success');
     }
 
     /** 渲染打卡視窗內的「專屬打卡項目與時間設定」列表 */
@@ -3409,8 +3466,7 @@
       document.getElementById('kioskAutoPopupCheck').checked = cfg.autoPopup !== false;
       const rowsWrap = document.getElementById('kioskConfigRows');
       rowsWrap.innerHTML = cfg.tasks.map(t => buildKioskConfigRowHtml(t)).join('');
-      tempSpecialDates = JSON.parse(JSON.stringify(cfg.specialDates || []));
-      renderSpecialDatesTags();
+      renderAllSpecialDatesLists();
     }
 
     function buildKioskConfigRowHtml(t = { id: genId('kt'), icon: '🏃', name: '', start: '09:10', end: '09:25', onlyDate: getTodayStr() }) {
@@ -3486,27 +3542,31 @@
         delBtn.closest('.kiosk-cfg-row')?.remove();
       });
 
-      // 加入特殊日（補課日 / 放假日）
-      document.getElementById('addSpecialDateBtn').addEventListener('click', () => {
-        const dateVal = document.getElementById('specialDateInput').value;
-        const typeVal = document.getElementById('specialDateType').value;
-        const noteVal = document.getElementById('specialDateNote').value.trim();
-        if (!dateVal) return showToast('請先選擇日期', 'warning');
-        tempSpecialDates = tempSpecialDates.filter(d => d.date !== dateVal);
-        tempSpecialDates.push({ date: dateVal, type: typeVal, note: noteVal });
-        tempSpecialDates.sort((a, b) => a.date.localeCompare(b.date));
-        document.getElementById('specialDateInput').value = '';
-        document.getElementById('specialDateNote').value = '';
-        renderSpecialDatesTags();
+      // 學期設定 & 首次設定精靈中的「加入特殊日」按鈕
+      document.getElementById('setAddSpecialDateBtn').addEventListener('click', () => addSpecialDateItem('set'));
+      document.getElementById('wizAddSpecialDateBtn').addEventListener('click', () => addSpecialDateItem('wiz'));
+
+      // 移除特殊日標籤（適用於學期設定與首次設定精靈）
+      ['setSpecialDatesList', 'wizSpecialDatesList'].forEach(listId => {
+        document.getElementById(listId).addEventListener('click', (e) => {
+          const delBtn = e.target.closest('[data-del-special-idx]');
+          if (!delBtn) return;
+          const idx = Number(delBtn.dataset.delSpecialIdx);
+          const cfg = getKioskConfig();
+          cfg.specialDates.splice(idx, 1);
+          kioskDismissedSlots = {};
+          saveState();
+          renderAllSpecialDatesLists();
+          showToast('已移除該特殊日設定', 'info');
+        });
       });
 
-      // 移除特殊日標籤
-      document.getElementById('specialDatesList').addEventListener('click', (e) => {
-        const delBtn = e.target.closest('[data-del-special-idx]');
-        if (!delBtn) return;
-        const idx = Number(delBtn.dataset.delSpecialIdx);
-        tempSpecialDates.splice(idx, 1);
-        renderSpecialDatesTags();
+      // 從打卡設定面板直接跳轉至「⚙️ 名單與設定 -> 📅 學期與週次」
+      document.getElementById('jumpToTermSpecialDatesBtn').addEventListener('click', () => {
+        closeModal('studentKioskModal');
+        renderSettingsModal();
+        openModal('settingsModal');
+        document.querySelector('.settings-tab[data-tab="prefs"]').click();
       });
 
       // 恢復預設打卡項目與時間
@@ -3539,7 +3599,7 @@
         appState.settings.kioskConfig = {
           autoPopup: document.getElementById('kioskAutoPopupCheck').checked,
           tasks: newTasks,
-          specialDates: tempSpecialDates
+          specialDates: getKioskConfig().specialDates
         };
         kioskDismissedSlots = {};
         saveState();
