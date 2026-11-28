@@ -306,6 +306,34 @@
       animation: kioskPulseBorder 2s infinite ease-in-out;
     }
 
+
+    /* 每個區塊左上角常駐顯示/隱藏控制標籤 */
+    .corner-vis-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 1.5px solid #cbd5e1;
+      background: rgba(255, 255, 255, 0.92);
+      color: #475569;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+    .corner-vis-bar:hover {
+      background: #fef9c3;
+      border-color: #f59e0b;
+      color: #92400e;
+      transform: scale(1.03);
+    }
+    .section-collapsed-body {
+      display: none !important;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       #batchToolbar button, #stampBoard > div, .week-tile, .squirrel-mascot, .over20-track-cell {
         transition: none;
@@ -377,18 +405,23 @@
 
       <!-- 中央 / 右側：兒童友善即時日期、星期與時間看板 + 功能按鈕 -->
       <div class="flex flex-wrap items-center gap-2">
-        <!-- 兒童友善超大字日期與時鐘（高對比醒目底色） -->
-        <div id="kidClockWidget" class="flex items-center gap-3 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 border-2 border-amber-300 rounded-2xl px-4 py-2 shadow-md select-none" title="現在日期與時間">
-          <div class="flex items-center gap-2">
-            <span class="text-xl sm:text-2xl">📅</span>
-            <span id="kidDateText" class="text-lg sm:text-2xl font-black text-white tracking-wide drop-shadow-xs">--月--日</span>
-            <span id="kidWeekdayBadge" class="px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-950 text-sm sm:text-base font-black shadow-xs">星期--</span>
-          </div>
-          <div class="h-6 w-0.5 bg-emerald-400/60"></div>
-          <div class="flex items-center gap-1.5">
-            <span class="text-xl sm:text-2xl">⏰</span>
-            <span id="kidPeriodBadge" class="text-xs sm:text-sm font-black text-emerald-950 bg-amber-200 px-2 py-0.5 rounded-lg">上午</span>
-            <span id="kidTimeText" class="text-xl sm:text-3xl font-black text-yellow-300 tabular-nums tracking-tight drop-shadow-xs">00:00</span>
+        <!-- 兒童友善超大字日期與時鐘（左上角帶常駐顯示/隱藏控制） -->
+        <div id="clockSectionWrap" class="relative flex flex-col items-start">
+          <button type="button" data-corner-toggle="clock" class="corner-vis-bar mb-0.5" title="點擊切換顯示或隱藏日期時間">
+            <span>👁️ 日期時間</span>
+          </button>
+          <div id="kidClockWidget" class="flex items-center gap-3 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 border-2 border-amber-300 rounded-2xl px-4 py-1.5 shadow-md select-none" title="現在日期與時間">
+            <div class="flex items-center gap-2">
+              <span class="text-xl sm:text-2xl">📅</span>
+              <span id="kidDateText" class="text-lg sm:text-2xl font-black text-white tracking-wide drop-shadow-xs">--月--日</span>
+              <span id="kidWeekdayBadge" class="px-2.5 py-0.5 rounded-full bg-amber-400 text-stone-950 text-sm sm:text-base font-black shadow-xs">星期--</span>
+            </div>
+            <div class="h-6 w-0.5 bg-emerald-400/60"></div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl sm:text-2xl">⏰</span>
+              <span id="kidPeriodBadge" class="text-xs sm:text-sm font-black text-emerald-950 bg-amber-200 px-2 py-0.5 rounded-lg">上午</span>
+              <span id="kidTimeText" class="text-xl sm:text-3xl font-black text-yellow-300 tabular-nums tracking-tight drop-shadow-xs">00:00</span>
+            </div>
           </div>
         </div>
 
@@ -418,34 +451,13 @@
       </div>
     </div>
 
-    <!-- ==================== 常駐：區塊顯示 / 隱藏快速切換列 ==================== -->
-    <div id="quickVisibilityBar" class="border-t border-emerald-200 bg-gradient-to-r from-emerald-50/90 via-amber-50/90 to-emerald-50/90 px-3 sm:px-5 py-1.5">
-      <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-2">
-        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <span class="text-xs font-black text-emerald-900 bg-white px-2.5 py-1 rounded-full border border-emerald-300">👁️ 區塊顯示：</span>
-          <label class="inline-flex items-center gap-1 bg-white hover:bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-300 text-xs font-extrabold text-stone-700 cursor-pointer select-none shadow-2xs">
-            <input type="checkbox" data-toggle-block="clock" checked class="accent-emerald-600" /> 📅 日期時間
-          </label>
-          <label class="inline-flex items-center gap-1 bg-white hover:bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-300 text-xs font-extrabold text-stone-700 cursor-pointer select-none shadow-2xs">
-            <input type="checkbox" data-toggle-block="toolbar" checked class="accent-emerald-600" /> 🌰 加扣分列
-          </label>
-          <label class="inline-flex items-center gap-1 bg-white hover:bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-300 text-xs font-extrabold text-stone-700 cursor-pointer select-none shadow-2xs">
-            <input type="checkbox" data-toggle-block="stamps" checked class="accent-emerald-600" /> 🐿️ 榮譽章看板
-          </label>
-          <label class="inline-flex items-center gap-1 bg-white hover:bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-300 text-xs font-extrabold text-stone-700 cursor-pointer select-none shadow-2xs">
-            <input type="checkbox" data-toggle-block="stats" checked class="accent-emerald-600" /> 📊 本週統計
-          </label>
-          <label class="inline-flex items-center gap-1 bg-white hover:bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-300 text-xs font-extrabold text-stone-700 cursor-pointer select-none shadow-2xs">
-            <input type="checkbox" data-toggle-block="kioskBtn" checked class="accent-emerald-600" /> 🖐️ 自助打卡鈕
-          </label>
-          <label class="inline-flex items-center gap-1 bg-white hover:bg-amber-50 px-2.5 py-1 rounded-full border border-amber-300 text-xs font-extrabold text-amber-900 cursor-pointer select-none shadow-2xs">
-            <input type="checkbox" id="compactToolbarCheck" class="accent-amber-600" /> 📏 精簡高度
-          </label>
-        </div>
-        <div id="layoutOrderHintBar" class="hidden flex items-center gap-1.5 text-xs font-black text-purple-900">
-          <span>⬆️⬇️ 請點擊下方區塊右上角調整上下順序</span>
-          <button type="button" id="resetLayoutBtn" class="px-2.5 py-0.5 rounded-full bg-white border border-purple-300 hover:bg-purple-100 text-xs font-black text-purple-900">🔄 恢復預設</button>
-          <button type="button" id="finishLayoutBtn" class="px-3 py-0.5 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-black">✅ 完成排序</button>
+    <!-- ==================== 排序模式提示列（僅在點擊「↕️ 調整順序」時出現） ==================== -->
+    <div id="layoutOrderHintBar" class="hidden border-t-2 border-purple-300 bg-purple-50/95 px-3 sm:px-5 py-1.5">
+      <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-2 text-xs font-black text-purple-950">
+        <span>⬆️⬇️ 順序調整模式：請點擊各區塊右上角的「⬆️ 上移 / ⬇️ 下移」調換位置</span>
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="resetLayoutBtn" class="px-3 py-1 rounded-full bg-white border border-purple-300 hover:bg-purple-100 text-xs font-black text-purple-900">🔄 恢復預設</button>
+          <button type="button" id="finishLayoutBtn" class="px-3.5 py-1 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-black">✅ 完成排序</button>
         </div>
       </div>
     </div>
@@ -457,20 +469,28 @@
     
     <button type="button" id="setupBanner" class="hidden w-full mb-2.5 rounded-2xl border-4 border-orange-400 bg-amber-100 hover:bg-amber-200 px-4 py-3 text-lg font-black text-amber-950 text-center animate-pulse shadow-sm"></button>
 
-    <!-- 可自由排列順序的上方功能區塊容器 -->
+    <!-- 可自由排列順序的上方功能區塊容器（每個區塊左上角皆有獨立顯示/隱藏開關） -->
     <div id="topCustomizableZone" class="space-y-2.5 mb-2.5">
       <!-- 區塊 A：固定加扣分列 -->
       <div id="block-toolbar" data-block-key="toolbar" class="layout-block rounded-2xl border-2 border-emerald-200 bg-gradient-to-b from-emerald-50/95 to-amber-50/95 shadow-xs">
-        <div class="layout-move-controls items-center justify-between w-full px-3 pt-1.5 pb-0.5 border-b border-amber-200 text-xs font-black text-amber-900">
-          <span>📦 區塊：集松果加分 / 扣分 / 補電任務列</span>
-          <div class="flex items-center gap-1">
-            <button type="button" data-move-block="up" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
-            <button type="button" data-move-block="down" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
-            <button type="button" data-hide-this-block="toolbar" class="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-300 text-rose-700 hover:bg-rose-100">🙈 隱藏</button>
+        <!-- 區塊左上角控制列（常駐顯示/隱藏 + 精簡高度；調整順序時右側出現上下移） -->
+        <div class="flex items-center justify-between w-full px-3 pt-1.5 pb-1">
+          <div class="flex items-center gap-1.5">
+            <button type="button" data-corner-toggle="toolbar" class="corner-vis-bar" title="點擊切換顯示或隱藏加扣分按鈕列">
+              <span>👁️ 加扣分列</span>
+            </button>
+            <label id="compactToolbarWrap" class="corner-vis-bar !text-amber-900 !border-amber-300 cursor-pointer" title="切換精簡按鈕高度">
+              <input type="checkbox" id="compactToolbarCheck" class="accent-amber-600" />
+              <span>📏 精簡高度</span>
+            </label>
+          </div>
+          <div class="layout-move-controls items-center gap-1 text-xs font-black text-amber-900">
+            <button type="button" data-move-block="up" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
+            <button type="button" data-move-block="down" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
           </div>
         </div>
         <div id="batchToolbar" class="!border-0 !bg-transparent">
-          <div class="px-3 sm:px-4 py-2 space-y-1.5">
+          <div class="px-3 sm:px-4 pb-2 pt-0.5 space-y-1.5">
             <div class="flex flex-wrap items-center gap-1.5">
               <span class="text-sm font-black text-emerald-800 mr-1 bg-emerald-100 px-2.5 py-0.5 rounded-full">🌰 集松果加分</span>
               <button data-batch-add="準時到校" class="batch-action-btn bg-emerald-50 border-emerald-300 text-emerald-900 hover:bg-emerald-100 px-3 py-1 text-sm font-extrabold border-2 shadow-xs">☀️ 準時到校 +1</button>
@@ -504,12 +524,14 @@
 
       <!-- 區塊 B：森林動物榮譽章看板 -->
       <div id="block-stamps" data-block-key="stamps" class="layout-block">
-        <div class="layout-move-controls items-center justify-between w-full px-3 py-1 mb-1 rounded-xl bg-amber-100/80 border border-amber-300 text-xs font-black text-amber-900">
-          <span>📦 區塊：森林動物榮譽章階梯看板</span>
-          <div class="flex items-center gap-1">
-            <button type="button" data-move-block="up" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
-            <button type="button" data-move-block="down" class="px-2 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
-            <button type="button" data-hide-this-block="stamps" class="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-300 text-rose-700 hover:bg-rose-100">🙈 隱藏</button>
+        <!-- 區塊左上角控制列（常駐顯示/隱藏；調整順序時右側出現上下移） -->
+        <div class="flex items-center justify-between w-full px-1 mb-1">
+          <button type="button" data-corner-toggle="stamps" class="corner-vis-bar" title="點擊切換顯示或隱藏動物榮譽章看板">
+            <span>👁️ 榮譽章看板</span>
+          </button>
+          <div class="layout-move-controls items-center gap-1 text-xs font-black text-amber-900">
+            <button type="button" data-move-block="up" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬆️ 上移</button>
+            <button type="button" data-move-block="down" class="px-2.5 py-0.5 rounded-full bg-white border border-amber-300 hover:bg-amber-100">⬇️ 下移</button>
           </div>
         </div>
         <div id="stampBoard" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"></div>
@@ -517,7 +539,14 @@
     </div>
 
     <div id="chargeStrip" class="hidden mb-2.5 flex-wrap items-center gap-1.5 rounded-2xl border-2 border-amber-400 bg-amber-50 px-3.5 py-2 text-sm font-extrabold text-amber-950 shadow-xs"></div>
-    <div id="weekQuickStats" class="mb-2.5 text-sm font-extrabold text-emerald-900 bg-white/80 inline-block px-3.5 py-1 rounded-full border border-emerald-200"></div>
+
+    <!-- 區塊 C：本週統計列（左上角帶常駐顯示/隱藏控制） -->
+    <div id="statsSectionWrap" class="mb-2.5 flex flex-wrap items-center gap-2">
+      <button type="button" data-corner-toggle="stats" class="corner-vis-bar" title="點擊切換顯示或隱藏本週統計列">
+        <span>👁️ 本週統計</span>
+      </button>
+      <div id="weekQuickStats" class="text-sm font-extrabold text-emerald-900 bg-white/80 inline-block px-3.5 py-1 rounded-full border border-emerald-200"></div>
+    </div>
 
     <!-- 原木框磁鐵加分板容器 -->
     <div class="bg-white wood-board-frame overflow-hidden">
@@ -2803,11 +2832,18 @@
     }
 
 
-    // ==================== 老師自由調整上方版面順序與顯示 ====================
+    // ==================== 各區塊左上角獨立顯示/隱藏 & 順序調整 ====================
     const DEFAULT_LAYOUT_PREFS = {
       order: ['toolbar', 'stamps'],
-      visible: { clock: true, toolbar: true, stamps: true, stats: true, kioskBtn: true },
+      visible: { clock: true, toolbar: true, stamps: true, stats: true },
       compact: false
+    };
+
+    const CORNER_LABELS = {
+      clock: '日期時間',
+      toolbar: '加扣分列',
+      stamps: '榮譽章看板',
+      stats: '本週統計'
     };
 
     function getLayoutPrefs() {
@@ -2827,30 +2863,44 @@
         });
       }
 
-      // 顯示 / 隱藏控制
+      // 1. 日期時間看板
       const clockEl = document.getElementById('kidClockWidget');
-      if (clockEl) clockEl.classList.toggle('hidden', prefs.visible.clock === false);
+      const clockVis = prefs.visible.clock !== false;
+      if (clockEl) clockEl.classList.toggle('section-collapsed-body', !clockVis);
 
-      const toolbarBlock = document.getElementById('block-toolbar');
-      if (toolbarBlock) toolbarBlock.classList.toggle('hidden', prefs.visible.toolbar === false);
+      // 2. 加扣分列（保留左上角標籤，折疊下方按鈕區）
+      const toolbarBody = document.getElementById('batchToolbar');
+      const compactWrap = document.getElementById('compactToolbarWrap');
+      const toolbarVis = prefs.visible.toolbar !== false;
+      if (toolbarBody) toolbarBody.classList.toggle('section-collapsed-body', !toolbarVis);
+      if (compactWrap) compactWrap.classList.toggle('hidden', !toolbarVis);
 
-      const stampsBlock = document.getElementById('block-stamps');
-      if (stampsBlock) stampsBlock.classList.toggle('hidden', prefs.visible.stamps === false);
+      // 3. 榮譽章看板（保留左上角標籤，折疊下方卡片）
+      const stampsBody = document.getElementById('stampBoard');
+      const stampsVis = prefs.visible.stamps !== false;
+      if (stampsBody) stampsBody.classList.toggle('section-collapsed-body', !stampsVis);
 
-      const statsEl = document.getElementById('weekQuickStats');
-      if (statsEl) statsEl.classList.toggle('hidden', prefs.visible.stats === false);
+      // 4. 本週統計列（保留左上角標籤，折疊統計文字）
+      const statsBody = document.getElementById('weekQuickStats');
+      const statsVis = prefs.visible.stats !== false;
+      if (statsBody) statsBody.classList.toggle('section-collapsed-body', !statsVis);
 
-      const kioskBtnEl = document.getElementById('openKioskBtn');
-      if (kioskBtnEl) kioskBtnEl.classList.toggle('hidden', prefs.visible.kioskBtn === false);
+      // 更新每個區塊左上角按鈕的文字與外觀
+      document.querySelectorAll('[data-corner-toggle]').forEach(btn => {
+        const key = btn.dataset.cornerToggle;
+        const isVis = prefs.visible[key] !== false;
+        const label = CORNER_LABELS[key] || key;
+        if (isVis) {
+          btn.innerHTML = `<span>👁️ ${label}</span>`;
+          btn.classList.remove('!bg-stone-200', '!text-stone-500', '!border-stone-300');
+        } else {
+          btn.innerHTML = `<span>🙈 ${label}（已隱藏，點此顯示）</span>`;
+          btn.classList.add('!bg-stone-200', '!text-stone-500', '!border-stone-300');
+        }
+      });
 
       // 精簡高度模式
       document.body.classList.toggle('compact-toolbar', !!prefs.compact);
-
-      // 同步控制列勾選狀態
-      document.querySelectorAll('[data-toggle-block]').forEach(cb => {
-        const k = cb.dataset.toggleBlock;
-        cb.checked = prefs.visible[k] !== false;
-      });
       const compactCb = document.getElementById('compactToolbarCheck');
       if (compactCb) compactCb.checked = !!prefs.compact;
     }
@@ -2875,7 +2925,7 @@
 
       finishBtn.addEventListener('click', () => {
         setEditing(false);
-        showToast('已儲存您的版面排列設定！', 'success');
+        showToast('已儲存您的版面順序設定！', 'success');
       });
 
       resetBtn.addEventListener('click', () => {
@@ -2885,17 +2935,19 @@
         showToast('已恢復預設版面排列', 'info');
       });
 
-      // 上移 / 下移 / 隱藏區塊
+      // 點擊任一區塊左上角的「👁️ / 🙈」控制膠囊切換顯示或隱藏
+      document.addEventListener('click', (e) => {
+        const cornerBtn = e.target.closest('[data-corner-toggle]');
+        if (!cornerBtn) return;
+        const key = cornerBtn.dataset.cornerToggle;
+        const prefs = getLayoutPrefs();
+        prefs.visible[key] = !(prefs.visible[key] !== false);
+        saveState();
+        applyLayoutPrefs();
+      });
+
+      // 上移 / 下移區塊
       document.getElementById('topCustomizableZone').addEventListener('click', (e) => {
-        const hideBtn = e.target.closest('[data-hide-this-block]');
-        if (hideBtn) {
-          const prefs = getLayoutPrefs();
-          prefs.visible[hideBtn.dataset.hideThisBlock] = false;
-          saveState();
-          applyLayoutPrefs();
-          showToast('已隱藏該區塊，可隨時在上方紫色列重新勾選顯示', 'info');
-          return;
-        }
         const moveBtn = e.target.closest('[data-move-block]');
         if (!moveBtn) return;
         const block = moveBtn.closest('.layout-block');
@@ -2915,16 +2967,6 @@
         applyLayoutPrefs();
       });
 
-      // 勾選顯示或隱藏區塊
-      document.querySelectorAll('[data-toggle-block]').forEach(cb => {
-        cb.addEventListener('change', () => {
-          const prefs = getLayoutPrefs();
-          prefs.visible[cb.dataset.toggleBlock] = cb.checked;
-          saveState();
-          applyLayoutPrefs();
-        });
-      });
-
       // 精簡高度模式
       document.getElementById('compactToolbarCheck').addEventListener('change', (e) => {
         const prefs = getLayoutPrefs();
@@ -2933,7 +2975,6 @@
         applyLayoutPrefs();
       });
     }
-
 
     // ==================== 學生自助打卡站（獨立項目與時間設定 + 逾時鎖定） ====================
     const DEFAULT_KIOSK_CONFIG = {
