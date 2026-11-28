@@ -510,6 +510,7 @@
 
     <div id="chargeStrip" class="hidden mb-2.5 flex-wrap items-center gap-1.5 rounded-2xl border-2 border-amber-400 bg-amber-50 px-3.5 py-2 text-sm font-extrabold text-amber-950 shadow-xs"></div>
     <div id="weekQuickStats" class="mb-2.5 text-sm font-extrabold text-emerald-900 bg-white/80 inline-block px-3.5 py-1 rounded-full border border-emerald-200"></div>
+    <div id="groupBar" class="mb-2.5 flex flex-wrap items-center gap-1.5 rounded-2xl border-2 border-sky-300 bg-white/95 px-3 py-2"></div>
 
     <!-- 原木框磁鐵加分板容器 -->
     <div class="bg-white wood-board-frame overflow-hidden">
@@ -738,12 +739,25 @@
               <input id="editClassName" type="text" maxlength="30" class="w-full px-3 py-2 rounded-xl border border-emerald-300 bg-white text-sm font-bold" />
             </div>
 
+            <div class="flex flex-wrap items-center gap-2 rounded-xl border-2 border-sky-300 bg-sky-50 px-3 py-2 text-sm font-black text-sky-950">
+              <span>👥 自動分組</span>
+              <select id="autoGroupCount" aria-label="組數" class="px-2 py-1 rounded-lg border border-sky-300 bg-white"></select>
+              <select id="autoGroupMethod" aria-label="分組方式" class="px-2 py-1 rounded-lg border border-sky-300 bg-white">
+                <option value="block">座號連續同組</option>
+                <option value="cycle">依座號輪流分配</option>
+              </select>
+              <button type="button" id="autoGroupBtn" class="px-3 py-1 rounded-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-black">套用</button>
+              <button type="button" id="clearGroupBtn" class="px-3 py-1 rounded-full border border-sky-300 bg-white text-xs font-black">清除分組</button>
+              <span class="text-xs font-bold text-sky-800">套用後可逐一調整，記得按儲存</span>
+            </div>
+
             <!-- 視覺化逐列名單編修器 -->
             <div class="bg-white rounded-2xl border border-emerald-200 overflow-hidden">
               <div class="grid grid-cols-12 gap-2 px-3 py-2 bg-emerald-100/80 text-xs font-black text-emerald-950">
-                <div class="col-span-3 text-center">座號</div>
-                <div class="col-span-6">學生姓名</div>
-                <div class="col-span-3 text-center">操作</div>
+                <div class="col-span-2 text-center">座號</div>
+                <div class="col-span-5">學生姓名</div>
+                <div class="col-span-3">組別</div>
+                <div class="col-span-2 text-center">操作</div>
               </div>
               <div id="rosterEditorRows" class="divide-y divide-stone-100 max-h-[280px] overflow-y-auto p-1.5 space-y-1">
               </div>
@@ -1528,7 +1542,7 @@
           old = cls.students.find(s => s.seat === p.seat && !used.has(s.id) && !newNames.has(s.name));
           if (old) used.add(old.id);
         }
-        return { id: old ? old.id : genId('stu'), seat: p.seat, name: p.name, colorIndex: old ? old.colorIndex : i % 8 };
+        return { id: old ? old.id : genId('stu'), seat: p.seat, name: p.name, colorIndex: old ? old.colorIndex : i % 8, group: p.group ?? old?.group ?? 0 };
       }).sort((a, b) => a.seat - b.seat);
     }
 
@@ -1540,16 +1554,26 @@
     }
 
     /** 產生單列學生編修 HTML */
-    function buildRosterEditorRowHtml(seat, name, stuId = '') {
+    const MAX_GROUPS = 12;
+    const groupName = g => g ? `第${g}組` : '未分組';
+    /** 有使用中的組別（由小到大） */
+    const getGroups = (cls = getCurrentClass()) => [...new Set(cls.students.map(s => s.group || 0).filter(Boolean))].sort((a, b) => a - b);
+
+    function buildRosterEditorRowHtml(seat, name, stuId = '', group = 0) {
       return `
         <div class="roster-edit-row grid grid-cols-12 gap-2 items-center px-2 py-1 rounded-xl hover:bg-emerald-50/70" data-stu-id="${escapeHtml(stuId)}">
-          <div class="col-span-3">
+          <div class="col-span-2">
             <input type="number" min="1" max="99" value="${seat}" class="edit-seat-input w-full px-2 py-1.5 rounded-lg border border-stone-300 text-center text-sm font-black text-stone-700 focus:outline-none focus:border-emerald-500" />
           </div>
-          <div class="col-span-6">
+          <div class="col-span-5">
             <input type="text" maxlength="20" value="${escapeHtml(name)}" placeholder="輸入學生姓名" class="edit-name-input w-full px-2.5 py-1.5 rounded-lg border border-stone-300 text-sm font-extrabold text-stone-800 focus:outline-none focus:border-emerald-500" />
           </div>
-          <div class="col-span-3 text-center">
+          <div class="col-span-3">
+            <select aria-label="組別" class="edit-group-select w-full px-1 py-1.5 rounded-lg border border-stone-300 bg-white text-sm font-bold">
+              ${Array.from({ length: MAX_GROUPS + 1 }, (_, g) => `<option value="${g}" ${g === group ? 'selected' : ''}>${groupName(g)}</option>`).join('')}
+            </select>
+          </div>
+          <div class="col-span-2 text-center">
             <button type="button" class="remove-student-row-btn px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-black transition" title="移除此學生（轉出）">
               🗑️ 轉出
             </button>
@@ -1578,7 +1602,7 @@
       document.getElementById('editClassName').value = cls.name;
       const rowsWrap = document.getElementById('rosterEditorRows');
       rowsWrap.innerHTML = cls.students
-        .map(s => buildRosterEditorRowHtml(s.seat, s.name, s.id))
+        .map(s => buildRosterEditorRowHtml(s.seat, s.name, s.id, s.group || 0))
         .join('');
       updateEditRosterCountHint();
     }
@@ -1591,7 +1615,7 @@
         const name = r.querySelector('.edit-name-input').value.trim();
         const id = r.dataset.stuId || '';
         if (!name) continue;
-        parsed.push({ seat: Number.isInteger(seat) && seat > 0 ? seat : 0, name, id });
+        parsed.push({ seat: Number.isInteger(seat) && seat > 0 ? seat : 0, name, id, group: Number(r.querySelector('.edit-group-select').value) });
       }
       return parsed;
     }
@@ -1819,6 +1843,36 @@
       }));
       document.getElementById('saveRosterBtn').addEventListener('click', saveRoster);
 
+      const countSel = document.getElementById('autoGroupCount');
+      countSel.innerHTML = Array.from({ length: MAX_GROUPS - 1 }, (_, i) => `<option value="${i + 2}" ${i + 2 === 6 ? 'selected' : ''}>分 ${i + 2} 組</option>`).join('');
+      document.getElementById('autoGroupBtn').addEventListener('click', () => {
+        const seatOf = r => Number(r.querySelector('.edit-seat-input').value) || 999;
+        const rows = [...document.querySelectorAll('#rosterEditorRows .roster-edit-row')].sort((a, b) => seatOf(a) - seatOf(b));
+        const n = Number(countSel.value);
+        if (rows.length < n) return showToast('學生人數少於組數', 'warning');
+        const cycle = document.getElementById('autoGroupMethod').value === 'cycle';
+        rows.forEach((r, i) => { r.querySelector('.edit-group-select').value = cycle ? (i % n) + 1 : Math.floor(i * n / rows.length) + 1; });
+        showToast(`已分成 ${n} 組，請按「儲存名單修改」`, 'info');
+      });
+      document.getElementById('clearGroupBtn').addEventListener('click', () => {
+        document.querySelectorAll('#rosterEditorRows .edit-group-select').forEach(el => { el.value = 0; });
+        showToast('已清除分組，請按「儲存名單修改」', 'info');
+      });
+
+      document.getElementById('groupBar').addEventListener('click', e => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        if (btn.dataset.sortBy) {
+          getCurrentClass().sortByGroup = btn.dataset.sortBy === 'group';
+          saveState();
+          renderBoard();
+        } else if (btn.dataset.editGroups !== undefined) {
+          renderSettingsModal();
+          openModal('settingsModal');
+          document.querySelector('.settings-tab[data-tab="roster"]').click();
+        }
+      });
+
       // 新增轉入學生按鈕
       document.getElementById('addTransferStudentBtn').addEventListener('click', () => {
         const rows = Array.from(document.querySelectorAll('#rosterEditorRows .roster-edit-row'));
@@ -1857,7 +1911,9 @@
         const rowsWrap = document.getElementById('rosterEditorRows');
         rowsWrap.innerHTML = parsed.map(p => {
           const old = cls.students.find(s => s.name === p.name) || cls.students.find(s => s.seat === p.seat);
-          return buildRosterEditorRowHtml(p.seat, p.name, old ? old.id : '');
+          const row = [...rowsWrap.querySelectorAll('.roster-edit-row')].find(r => r.querySelector('.edit-name-input').value.trim() === p.name);
+          const group = row ? Number(row.querySelector('.edit-group-select').value) : (old?.group || 0);
+          return buildRosterEditorRowHtml(p.seat, p.name, old ? old.id : '', group);
         }).join('');
         updateEditRosterCountHint();
         showToast(`已套用 ${parsed.length} 筆名單，請記得按「儲存名單修改」`, 'info');
@@ -1999,6 +2055,45 @@
       return html;
     }
 
+    function groupStats(g) {
+      const members = getCurrentClass().students.filter(s => (s.group || 0) === g);
+      const total = members.reduce((a, s) => a + getStudentScore(s.id), 0);
+      const selected = members.length > 0 && members.every(s => selectedStudentIds.has(s.id));
+      return { members, total, selected };
+    }
+
+    function groupHeaderHtml(g) {
+      const { members, total, selected } = groupStats(g);
+      return `<button type="button" data-select-group="${g}" aria-pressed="${selected}" class="group-header w-full flex flex-wrap items-center gap-2 px-3 py-1.5 text-left text-sm font-black border-y-2 ${selected ? 'bg-emerald-200 border-emerald-500 text-emerald-950' : 'bg-sky-100 border-sky-300 text-sky-950'}">
+        <span class="px-2.5 py-0.5 rounded-full bg-white border border-sky-400">${selected ? '✅' : '👥'} ${groupName(g)}</span>
+        <span>${members.length} 人｜合計 ${total} 分｜平均 ${(total / members.length).toFixed(1)} 分</span>
+        <span class="text-xs">${selected ? '再點一下取消' : '點一下選整組'}</span>
+      </button>`;
+    }
+
+    function renderGroupBar(groups, byGroup) {
+      const bar = document.getElementById('groupBar');
+      if (!groups.length) {
+        bar.innerHTML = '<span class="text-sm font-black text-sky-900">👥 尚未分組</span><button type="button" data-edit-groups class="px-3 py-1 rounded-full bg-sky-600 text-white text-xs font-black">設定分組</button>';
+        return;
+      }
+      const sortBtn = (v, text, on) => `<button type="button" data-sort-by="${v}" aria-pressed="${on}" class="px-3 py-1 text-sm font-black ${on ? 'bg-sky-600 text-white' : 'bg-white text-sky-900'}">${text}</button>`;
+      const chips = groups.map(g => {
+        const { total, selected } = groupStats(g);
+        return `<button type="button" data-select-group="${g}" aria-pressed="${selected}" class="px-3 py-1 rounded-full border-2 text-sm font-black ${selected ? 'bg-emerald-600 border-emerald-700 text-white' : 'bg-sky-50 border-sky-300 text-sky-950 hover:bg-sky-100'}">${selected ? '✅ ' : ''}${groupName(g)} <span class="text-xs opacity-80">${total}分</span></button>`;
+      }).join('');
+      bar.innerHTML = `<span class="inline-flex rounded-full border-2 border-sky-600 overflow-hidden">${sortBtn('seat', '座號排列', !byGroup)}${sortBtn('group', '分組排列', byGroup)}</span>
+        <span class="text-sm font-black text-sky-900 ml-1">選整組：</span>${chips}
+        <button type="button" data-edit-groups class="px-3 py-1 rounded-full border border-sky-300 bg-white text-xs font-black text-sky-800">✏️ 調整分組</button>`;
+    }
+
+    function toggleGroup(g) {
+      const { members, selected } = groupStats(g);
+      members.forEach(s => selected ? selectedStudentIds.delete(s.id) : selectedStudentIds.add(s.id));
+      renderTopControls();
+      renderBoard();
+    }
+
     function renderBoard() {
       const cls = getCurrentClass();
       const body = document.getElementById('boardBody');
@@ -2014,7 +2109,13 @@
       const normalGridCellsHtml = buildGridCellsHtml(false);
       const over20GridCellsHtml = buildGridCellsHtml(true);
 
-      const rowsHtml = students.map(stu => {
+      const groups = getGroups(cls);
+      const byGroup = !!cls.sortByGroup && groups.length > 0;
+      const ordered = byGroup
+        ? [...students].sort((a, b) => (a.group || 99) - (b.group || 99) || a.seat - b.seat)
+        : students;
+
+      const rowList = ordered.map(stu => {
         const score = getStudentScore(stu.id);
         const stamps = calcStamps(score);
         const isOver20 = score > 20;
@@ -2069,10 +2170,17 @@
             </div>
           </div>
         `;
+      });
+      const rowsHtml = rowList.map((html, i) => {
+        const g = ordered[i].group || 0;
+        if (!byGroup || (i > 0 && (ordered[i - 1].group || 0) === g)) return html;
+        return groupHeaderHtml(g) + html;
       }).join('');
 
+      renderGroupBar(groups, byGroup);
+
       // 記住磁鐵原位置，重畫後從原位置滑到新位置
-      const viewKey = `${cls.id}|${cls.term ? cls.term.year + cls.term.sem : ''}|${appState.currentWeek}`;
+      const viewKey = `${byGroup}|${cls.id}|${cls.term ? cls.term.year + cls.term.sem : ''}|${appState.currentWeek}`;
       const oldLeft = {};
       if (body.dataset.view === viewKey) {
         body.querySelectorAll('.magnet-token').forEach(m => { oldLeft[m.dataset.magnet] = m.style.left; });
@@ -2406,7 +2514,7 @@
       const cls = getCurrentClass();
       const rules = getRules();
       const starIds = new Set(getWeekStars().map(x => x.s.id));
-      const header = ['座號', '姓名', '週次', rules.mode === 'total' ? '累計總分' : '本週總分', '應蓋榮譽章數', '本週加分合計', '本週扣分合計', '榮譽之星'];
+      const header = ['座號', '姓名', '組別', '週次', rules.mode === 'total' ? '累計總分' : '本週總分', '應蓋榮譽章數', '本週加分合計', '本週扣分合計', '榮譽之星'];
       const lines = [header.join(',')];
 
       cls.students.forEach(stu => {
@@ -2415,7 +2523,7 @@
         const stamps = calcStamps(score);
         const addCount = logs.reduce((s, l) => s + Math.max(l.delta, 0), 0);
         const deductCount = logs.reduce((s, l) => s - Math.min(l.delta, 0), 0);
-        lines.push([stu.seat, `"${stu.name.replace(/"/g, '""')}"`, `第${appState.currentWeek}週`, score, stamps, addCount, deductCount, rules.star && starIds.has(stu.id) ? '是' : ''].join(','));
+        lines.push([stu.seat, `"${stu.name.replace(/"/g, '""')}"`, groupName(stu.group || 0), `第${appState.currentWeek}週`, score, stamps, addCount, deductCount, rules.star && starIds.has(stu.id) ? '是' : ''].join(','));
       });
 
       const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
@@ -2456,13 +2564,13 @@
       push('匯出日期', getTodayStr());
       push('');
       push('一、每週得分');
-      push('座號', '姓名', ...weeks.map(label), '學期總分', '加分合計', '扣分合計',
+      push('座號', '姓名', '組別', ...weeks.map(label), '學期總分', '加分合計', '扣分合計',
         ...(rules.step ? [rules.mode === 'total' ? '累計榮譽章' : '榮譽章合計'] : []), ...(rules.star ? ['榮譽之星次數'] : []));
       cls.students.forEach(stu => {
         const pts = weeks.map(w => weekPoints(stu.id, w));
         const logs = weeks.flatMap(w => getStudentLogs(stu.id, w));
         const total = sum(pts);
-        push(stu.seat, stu.name, ...pts, total,
+        push(stu.seat, stu.name, groupName(stu.group || 0), ...pts, total,
           sum(logs.map(l => Math.max(l.delta, 0))), -sum(logs.map(l => Math.min(l.delta, 0))),
           ...(rules.step ? [rules.mode === 'total' ? calcStamps(total, rules) : sum(pts.map(v => calcStamps(v, rules)))] : []),
           ...(rules.star ? [starWeeks.filter(set => set.has(stu.id)).length] : []));
@@ -2487,6 +2595,18 @@
       push('週次', '日期', '座號', '姓名', '項目', '分數', '備註');
       weeks.forEach(w => cls.students.forEach(stu => getStudentLogs(stu.id, w).forEach(l =>
         push(label(w), l.dateStr, stu.seat, stu.name, l.item, l.delta, l.note || ''))));
+
+      const groups = getGroups(cls);
+      if (groups.length) {
+        push('');
+        push('附表：各組每週得分（依目前分組計算）');
+        push('組別', '人數', ...weeks.map(label), '學期總分');
+        groups.forEach(g => {
+          const { members } = groupStats(g);
+          const pts = weeks.map(w => sum(members.map(s => weekPoints(s.id, w))));
+          push(groupName(g), members.length, ...pts, sum(pts));
+        });
+      }
 
       const blob = new Blob(['\uFEFF' + rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -2704,6 +2824,11 @@
         openModal('batchDetailModal');
       }
 
+      ['groupBar', 'boardBody'].forEach(id => document.getElementById(id).addEventListener('click', e => {
+        const btn = e.target.closest('[data-select-group]');
+        if (btn) toggleGroup(Number(btn.dataset.selectGroup));
+      }));
+
       document.getElementById('boardBody').addEventListener('click', (e) => {
         const checkbox = e.target.closest('.batch-checkbox');
         if (checkbox) {
@@ -2711,7 +2836,7 @@
           if (checkbox.checked) selectedStudentIds.add(id);
           else selectedStudentIds.delete(id);
           renderTopControls();
-          e.target.closest('.student-row').classList.toggle('bg-emerald-100/85', checkbox.checked);
+          renderBoard();
           return;
         }
 
